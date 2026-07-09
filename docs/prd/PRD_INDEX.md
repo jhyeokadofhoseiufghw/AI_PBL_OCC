@@ -5,7 +5,7 @@
 > **프로젝트명(가칭)**: 소규모 공연을 위한 피드형 예매 및 운영 관리 플랫폼  
 > **문서 목적**: Antigravity 프로젝트 폴더에 넣고, AI가 전체 PRD 문맥을 빠르게 탐색/참조할 수 있도록 만든 **색인형 README**  
 > **기준 스택**: Next.js(App Router) + Neon DB + Gemini CLI + Antigravity  
-> **문서 범위**: 7일 MVP 기준 PRD 초안
+> **문서 범위**: 4일 MVP 기준 PRD 초안
 
 ---
 
@@ -50,7 +50,7 @@
 - 관객(Audience)은 **비회원 예매 사용자**다.
 - 핵심 목표는 **기획자의 예매/운영 관리 시간 절감**이다.
 - 피드는 단순 부가 기능이 아니라 **공연 발견 → 예매 유입 구조**다.
-- PRD는 **7일 MVP** 기준이며, 자동화보다 **명확한 수동 운영 플로우**를 우선한다.
+- PRD는 **4일 MVP** 기준이며, 자동화보다 **명확한 수동 운영 플로우**를 우선한다.
 
 ---
 
@@ -78,8 +78,8 @@
 | 6 | [section-06-data-model.md](./section-06-data-model.md) | 데이터 모델 / DB 설계 | **“데이터를 어떤 테이블과 필드로 저장하는가?”** | organizers / events / ticket_types / seats / reservations / feed_posts 중심의 DB 스키마 초안을 제시한다. 상태 enum, unique 제약, reservation_code/qr_token 생성 정책 등 구현에 직접 연결되는 내용을 담는다. |
 | 7 | [section-07-api-and-actions.md](./section-07-api-and-actions.md) | API / Server Actions 설계 | **“어떤 서버 액션이 필요하고, 각 액션은 무엇을 처리하는가?”** | Organizer 인증, Event 생성/수정, Feed 작성, Reservation 생성/조회/취소, 입금 승인, 대기자 전환, QR 체크인, 통계 조회까지의 서버 액션 단위를 정리한다. 구현 작업 분해에 유용하다. |
 | 8 | [section-08-auth-and-security.md](./section-08-auth-and-security.md) | 인증 / 권한 / 보안 | **“누가 어떤 데이터에 접근할 수 있고, 어떤 검증이 필요한가?”** | Organizer 이메일 로그인, Audience 비회원 예매, 예약 조회 조건(이름+연락처+조회 패스워드), QR 체크인 보안, 데이터 접근 제어, rate limit 등 MVP 수준의 인증/보안 정책을 정의한다. |
-| 9 | [section-09-tech-stack-and-implementation.md](./section-09-tech-stack-and-implementation.md) | 기술 스택 / 구현 가이드 | **“이 PRD를 실제로 어떤 방식으로 구현할 것인가?”** | Next.js + Neon DB + `python-qrcode` + `@yudiel/react-qr-scanner` 조합을 전제로, 기능별 구현 우선순위, 도메인 단위 폴더 구조, Server Actions 중심 개발 방식, 7일 MVP에 맞는 좌석/체크인 구현 전략을 제안한다. |
-| 10 | [section-10-mvp-scope-and-roadmap.md](./section-10-mvp-scope-and-roadmap.md) | MVP 범위 / 일정 / 우선순위 | **“7일 안에 어디까지 만들고, 무엇을 버릴 것인가?”** | 핵심 기능 3개를 중심으로 MVP 포함 범위 / 제외 범위를 명확히 구분하고, Day 1~7 기준 개발 로드맵을 제시한다. 범위 통제와 일정 판단의 기준 문서다. |
+| 9 | [section-09-tech-stack-and-implementation.md](./section-09-tech-stack-and-implementation.md) | 기술 스택 / 구현 가이드 | **“이 PRD를 실제로 어떤 방식으로 구현할 것인가?”** | Next.js + Neon DB + `python-qrcode` + `@yudiel/react-qr-scanner` 조합을 전제로, 기능별 구현 우선순위, 도메인 단위 폴더 구조, Server Actions 중심 개발 방식, 4일 MVP에 맞는 좌석/체크인 구현 전략을 제안한다. |
+| 10 | [section-10-mvp-scope-and-roadmap.md](./section-10-mvp-scope-and-roadmap.md) | MVP 범위 / 일정 / 우선순위 | **“4일 안에 어디까지 만들고, 무엇을 버릴 것인가?”** | 핵심 기능 3개를 중심으로 MVP 포함 범위 / 제외 범위를 명확히 구분하고, Day 1~4 기준 개발 로드맵을 제시한다. 범위 통제와 일정 판단의 기준 문서다. |
 | 11 | [section-11-open-questions.md](./section-11-open-questions.md) | 미정 항목 / 추후 확장 | **“아직 확정되지 않은 정책과 추후 확장 포인트는 무엇인가?”** | 대기열 상세 UX, 취소 후 환불 안내, 피드 정렬 기준, 공연 상태 자동 전환 세부 기준 등 아직 확정되지 않은 항목을 정리한다. 구현 전 최종 의사결정이 필요한 지점을 모아둔 문서다. |
 
 ---
@@ -173,7 +173,7 @@ AI가 특정 질문에 대한 문서를 빠르게 찾을 수 있도록 키워드
 
 # 9. 최종 메모
 
-이 PRD 세트는 **“소규모 공연 운영자가 실제로 쓸 수 있는 MVP를 7일 안에 구현하기 위한 문서”** 다.  
+이 PRD 세트는 **“소규모 공연 운영자가 실제로 쓸 수 있는 MVP를 4일 안에 구현하기 위한 문서”** 다.  
 따라서 이 README는 단순 소개보다 **빠른 탐색성 / 문맥 복원성 / 구현 연결성**을 우선한다.
 
 즉, 새로운 대화창이나 새로운 AI 세션에서 이 폴더를 읽을 때는:
