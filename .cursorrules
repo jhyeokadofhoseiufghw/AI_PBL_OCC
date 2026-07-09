@@ -1,0 +1,75 @@
+# Project Guidelines & Rules for AI Coding Assistant
+
+This project is a **소규모 공연 피드형 예매 및 운영 관리 플랫폼 (OCC - One-click Check-in)** built using Next.js (App Router), TypeScript, Tailwind CSS, and Neon DB.
+
+Please follow these guidelines strictly when generating code, planning components, or modifying files.
+
+---
+
+## 1. Technology Stack
+- **Frontend Framework**: Next.js 15+ (App Router)
+- **Programming Language**: TypeScript
+- **Styling**: Tailwind CSS, Vanilla CSS
+- **Backend / Database**: Neon DB (serverless Postgres) with Next.js Server Actions
+- **Auth**: Custom Organizer email/password auth for MVP
+- **Storage**: External image URLs or a separate storage service if uploads are added
+- **QR Generation**: Clone and use `https://github.com/lincolnloop/python-qrcode` under `vendor/python-qrcode`; expose it only through server-side Python wrappers.
+- **QR Scanning**: Use `@yudiel/react-qr-scanner` with rear camera constraints for organizer check-in.
+
+---
+
+## 2. Directory Structure (Domain First)
+Organize codebase by feature domains inside `src/features/` instead of page-based structures. Keep components focused, reusable, and self-contained.
+- **`src/app/`**: Route definitions, layouts, and page entrypoints. Minimize business logic here.
+- **`src/features/`**: Domain specific business logic, components, Hooks, and Server Actions.
+  - `auth/`: Organizer authentication
+  - `events/`: Event management (creation, edit, ticket/seat setup)
+  - `feeds/`: Event promotional feed posts
+  - `reservations/`: Ticket bookings, approval list, deposit details
+  - `checkin/`: Ticket scanner & QR verification
+- **`src/lib/`**: Generic configurations, helper utilities, and clients.
+  - `db/`: Neon DB connection and query helpers
+  - `auth/`: session and password helpers
+  - `utils/`: styling helpers (`cn`), formatters, validators
+- **`scripts/qr/`**: Server-only Python wrappers that call the cloned python-qrcode code.
+- **`docs/`**: PRD and planning documents. Refer to these files for detailed business requirements.
+
+---
+
+## 3. Key Development Principles
+1. **Server Actions First**: All data mutations (e.g., event creation, reservation booking, check-in scans, status changes) must be performed via Next.js Server Actions.
+2. **Operations Flow over UI Polish**: Complete operational workflows before polishing visuals (e.g., 공연 생성 -> 예매 -> 입금 확인/승인 -> QR 발급 -> 체크인).
+3. **SEO Best Practices**: Maintain descriptive titles, semantic markup, meta descriptions, and unique element IDs for accessibility and testing.
+4. **Preserve Documentation**: Do not delete existing code comments, docstrings, or markdown instructions unless requested.
+
+---
+
+## 4. DB & State Conventions
+Use the following English enum codes in database/code and map them to friendly Korean text in UI:
+
+### Event Status (`event_status`)
+- `SCHEDULED` (예정)
+- `IN_PROGRESS` (진행 중)
+- `COMPLETED` (종료)
+- `HIDDEN` (비공개)
+- `CANCELLED` (취소)
+
+### Reservation Status (`reservation_status`)
+- `PENDING_PAYMENT` (입금 대기)
+- `CONFIRMED` (예매 확정)
+- `CANCELLED` (취소)
+- `CHECKED_IN` (입장 완료)
+- `WAITLISTED` (대기 신청)
+
+### Core Rules for Reservations
+- `reservation_code` and `qr_token` must **only** be generated and issued after deposit is confirmed (status = `CONFIRMED`).
+- Checked-in ticket validation: Checked-in tickets must not be reused. Check `status === "CHECKED_IN"`.
+- The scanner must pause while `checkInByQr` is running to prevent duplicate check-in requests.
+
+---
+
+## 5. Coding Standards
+- Use modern functional component declarations with TypeScript.
+- Define prop types explicitly.
+- Use path aliases: `@/*` resolves to `src/*`.
+- For database operations, use server-only Neon DB helpers under `src/lib/db/`. Never expose `DATABASE_URL` to browser code.

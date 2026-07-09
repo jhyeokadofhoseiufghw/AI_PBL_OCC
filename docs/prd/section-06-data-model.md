@@ -1,7 +1,13 @@
 # 06. 데이터 모델 / DB 설계
 
 ## 1. DB 선택
-- **Supabase Postgres**
+- **Neon DB (serverless Postgres)**
+
+### 선택 이유
+- MVP에서 필요한 데이터는 관계형 테이블과 트랜잭션 중심이다.
+- Neon은 PostgreSQL 호환 DB이므로 기존 테이블/enum/인덱스 설계를 그대로 활용할 수 있다.
+- Next.js Server Actions에서 서버 전용 `DATABASE_URL`로 직접 접근한다.
+- 인증, 파일 저장, 데이터 접근 제어는 Neon DB 외부의 애플리케이션 계층에서 처리한다.
 
 ## 2. 모델 목록
 - organizers
@@ -94,19 +100,20 @@
 | reserver_name | text | 예매자 이름 |
 | reserver_phone | text | 연락처 |
 | depositor_name | text | 입금자명 |
+| lookup_password_hash | text | 관객 승인 여부 확인/상세 조회/취소용 패스워드 해시 |
 | quantity | int | 예매 매수 |
 | request_note | text nullable | 요청사항 |
 | status | text | 입금 대기 / 예매 확정 / 취소 / 입장 완료 / 대기 신청 |
 | reservation_code | text nullable | 입금 승인 후 발급되는 예매번호 |
 | qr_token | text nullable | 입금 승인 후 발급되는 QR 식별값 |
-| checked_in_at | timestamptz nullable | 체크인 시각 |
 | created_at | timestamptz | 신청 시각 |
 | updated_at | timestamptz | 수정일 |
 
 ### 핵심 정책
+- `lookup_password_hash`는 예매 신청 시 생성하며 원문 패스워드는 저장하지 않음
 - `reservation_code`는 **입금 승인 후에만 생성**
 - `qr_token`도 **입금 승인 후에만 생성**
-- `checked_in_at`이 있으면 상태는 사실상 `입장 완료`
+- 체크인은 별도 시각 기록 없이 `status = 입장 완료` 상태로만 관리
 
 ---
 
@@ -143,10 +150,12 @@
 
 ---
 
-# 10. Supabase Storage 버킷 제안
-- `event-posters`
-- `feed-images`
-- `qr-assets` (선택)
+# 10. 파일 / 이미지 저장 정책
+- Neon DB에는 이미지 파일 자체를 저장하지 않는다.
+- 공연 포스터와 피드 이미지는 외부 이미지 저장소 또는 공개 이미지 URL을 사용한다.
+- DB에는 `poster_image_url`, `feed_posts.image_url`처럼 URL 문자열만 저장한다.
+- QR은 별도 이미지 파일로 DB에 저장하지 않는다.
+- QR 이미지는 `qr_token`을 기반으로 서버에서 `python-qrcode` 생성기를 통해 동적으로 생성하거나, 필요 시 외부 스토리지에 저장한 URL만 DB에 저장한다.
 
 ---
 

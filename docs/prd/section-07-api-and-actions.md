@@ -2,7 +2,7 @@
 
 ## 1. 구현 원칙
 - Next.js App Router + Server Actions 우선
-- 복잡한 외부 API 게이트웨이보다 **서버 액션 + Supabase 쿼리** 중심
+- 복잡한 외부 API 게이트웨이보다 **서버 액션 + Neon DB 쿼리** 중심
 - 클라이언트 상태는 최소화하고 서버를 기준으로 진실 소스를 유지
 
 ---
@@ -99,12 +99,14 @@
 - name
 - phone
 - depositorName
+- lookupPassword
 - quantity
 - requestNote
 
 ### 처리
 - 예매 가능 여부 검증
 - 좌석/수량 가능 여부 검증
+- 조회 패스워드 해시 저장
 - reservation 생성
 - 상태는 기본적으로 `입금 대기`
 - 매진 상태라면 `대기 신청` 생성 흐름 고려
@@ -113,8 +115,10 @@
 ### 입력
 - name
 - phone
+- lookupPassword
 
 ### 처리
+- 이름/연락처/조회 패스워드 검증
 - 해당 사용자의 예약 중 승인 여부 확인
 - 승인된 예약이 있으면 예매번호 노출
 
@@ -122,20 +126,22 @@
 ### 입력
 - name
 - phone
-- reservationCode
+- lookupPassword
 
 ### 처리
+- 이름/연락처/조회 패스워드 검증
 - 예약 상세 반환
-- QR 반환
+- `qr_token` 기반 QR 이미지 또는 QR 이미지 생성 URL 반환
 - 취소 가능 여부 계산
 
 ## `cancelReservation`
 ### 입력
 - name
 - phone
-- reservationCode
+- lookupPassword
 
 ### 처리
+- 이름/연락처/조회 패스워드 검증
 - 취소 가능 시간 검증
 - 예약 상태 변경
 - 좌석/수량 복구
@@ -152,6 +158,7 @@
 - 상태를 `예매 확정`으로 변경
 - reservation_code 생성
 - qr_token 생성
+- `python-qrcode` 기반 QR 생성 흐름에서 사용할 수 있도록 qr_token을 저장
 
 ## `convertWaitlistReservation`
 ### 입력
@@ -174,6 +181,12 @@
 
 # 7. Check-in 관련
 
+## 클라이언트 스캐너
+- `/dashboard/events/[id]/check-in` 화면에서 `@yudiel/react-qr-scanner` 사용
+- `constraints.facingMode = 'environment'`로 후면 카메라 우선
+- `allowMultiple = false` 또는 스캔 성공 직후 `paused = true` 처리
+- 감지한 `rawValue`를 qrToken으로 보고 `checkInByQr` Server Action 호출
+
 ## `checkInByQr`
 ### 입력
 - qrToken
@@ -182,7 +195,17 @@
 1. qrToken으로 예약 조회
 2. 상태가 예매 확정인지 확인
 3. 이미 입장 완료인지 확인
-4. 문제 없으면 `입장 완료` 처리 + checked_in_at 기록
+4. 문제 없으면 상태를 `입장 완료`로 변경
+
+## `generateReservationQrImage`
+### 입력
+- reservationId 또는 qrToken
+
+### 처리
+- 예매 확정 상태인지 검증
+- `qr_token`을 QR payload로 사용
+- 서버 내부에서 클론된 `lincolnloop/python-qrcode` 코드를 호출해 PNG 또는 SVG 생성
+- 생성된 이미지는 상세 조회 화면에 응답하거나, 외부 스토리지 사용 시 저장 후 URL 반환
 
 ---
 
