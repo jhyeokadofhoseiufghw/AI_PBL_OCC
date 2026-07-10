@@ -13,6 +13,7 @@
 - organizers
 - events
 - ticket_types
+- seat_grades
 - seats
 - reservations
 - feed_posts
@@ -65,31 +66,53 @@
 |---|---|---|
 | id | uuid | PK |
 | event_id | uuid | events FK |
-| name | text | 일반 / 학생 / VIP |
-| price | int | 가격 |
+| name | text | 일반 / 학생 등 |
+| price | int | 선착순 공연의 티켓 타입별 가격 |
 | created_at | timestamptz | 생성일 |
 
 ### 제약
 - 티켓 타입별 수량 필드는 두지 않는다.
+- 좌석 지정 공연의 가격은 티켓 타입이 아니라 좌석 등급에서 결정한다.
 
 ---
 
-# 6. seats
+# 6. seat_grades
 
 | 필드 | 타입 | 설명 |
 |---|---|---|
 | id | uuid | PK |
 | event_id | uuid | events FK |
+| name | text | 좌석 등급명 예: R석 / S석 / A석 |
+| price | int | 해당 등급의 좌석 단가 |
+| sort_order | int | 노출 순서 |
+| created_at | timestamptz | 생성일 |
+| updated_at | timestamptz | 수정일 |
+
+### 핵심 정책
+- 좌석 지정 공연에서 좌석 선택에 따른 가격은 `seat_grades.price`로 결정한다.
+- `(event_id, name)` 유니크 권장
+- 가격 변경은 이후 생성되는 예매에만 반영하고, 기존 예매의 저장 금액은 변경하지 않는다.
+
+---
+
+# 7. seats
+
+| 필드 | 타입 | 설명 |
+|---|---|---|
+| id | uuid | PK |
+| event_id | uuid | events FK |
+| seat_grade_id | uuid | seat_grades FK |
 | label | text | 좌석명 예: A1 |
 | is_active | boolean | 사용 여부 |
 | created_at | timestamptz | 생성일 |
 
 ### 제약
 - `(event_id, label)` 유니크 권장
+- 모든 좌석은 하나의 좌석 등급에 속해야 한다.
 
 ---
 
-# 7. reservations
+# 8. reservations
 
 | 필드 | 타입 | 설명 |
 |---|---|---|
@@ -102,22 +125,32 @@
 | depositor_name | text | 입금자명 |
 | lookup_password_hash | text | 관객 승인 여부 확인/상세 조회/취소용 패스워드 해시 |
 | quantity | int | 예매 매수 |
+| unit_price | int | 예매 생성 시점의 1매 단가 |
+| total_price | int | 예매 생성 시점의 총액 |
 | request_note | text nullable | 요청사항 |
 | status | text | 입금 대기 / 예매 확정 / 취소 / 입장 완료 / 대기 신청 |
 | reservation_code | text nullable | 입금 승인 후 발급되는 예매번호 |
 | qr_token | text nullable | 입금 승인 후 발급되는 QR 식별값 |
+| checked_in_at | timestamptz nullable | QR 체크인 완료 시각 |
 | created_at | timestamptz | 신청 시각 |
 | updated_at | timestamptz | 수정일 |
 
 ### 핵심 정책
 - `lookup_password_hash`는 예매 신청 시 생성하며 원문 패스워드는 저장하지 않음
+- 선착순 공연은 선택한 `ticket_types.price`를 `unit_price`로 저장
+- 좌석 지정 공연은 선택한 좌석의 `seat_grades.price`를 `unit_price`로 저장
+- `total_price = unit_price * quantity`로 저장
+- DB 제약으로 `total_price`는 `unit_price * quantity`와 일치해야 한다.
+- 예매 이후 가격 설정이 변경되어도 `unit_price`, `total_price`는 변경하지 않음
 - `reservation_code`는 **입금 승인 후에만 생성**
 - `qr_token`도 **입금 승인 후에만 생성**
-- 체크인은 별도 시각 기록 없이 `status = 입장 완료` 상태로만 관리
+- 체크인 성공 시 `status = 입장 완료`와 `checked_in_at = now()`를 같은 트랜잭션에서 기록
+- 중복 체크인 시 기존 `checked_in_at`을 덮어쓰지 않음
+- DB 제약으로 `status = CHECKED_IN`인 예약은 `checked_in_at`을 반드시 가져야 하며, 그 외 상태는 `checked_in_at`을 비워 둔다.
 
 ---
 
-# 8. feed_posts
+# 9. feed_posts
 
 | 필드 | 타입 | 설명 |
 |---|---|---|
@@ -130,7 +163,7 @@
 
 ---
 
-# 9. 상태값 Enum 제안
+# 10. 상태값 Enum 제안
 
 ## event_status
 - SCHEDULED
@@ -150,7 +183,7 @@
 
 ---
 
-# 10. 파일 / 이미지 저장 정책
+# 11. 파일 / 이미지 저장 정책
 - Neon DB에는 이미지 파일 자체를 저장하지 않는다.
 - 공연 포스터와 피드 이미지는 외부 이미지 저장소 또는 공개 이미지 URL을 사용한다.
 - DB에는 `poster_image_url`, `feed_posts.image_url`처럼 URL 문자열만 저장한다.
@@ -159,9 +192,15 @@
 
 ---
 
-# 11. 인덱스 / 제약 권장사항
+# 12. 인덱스 / 제약 권장사항
 - `events.slug` unique
+- `ticket_types(event_id, name)` unique
+- `seat_grades(event_id, name)` unique
+- `seats(event_id, label)` unique
+- `seats(seat_grade_id)`
 - `reservations.reservation_code` unique
 - `reservations.qr_token` unique
 - `reservations(event_id, reserver_phone)`
+- `reservations(event_id, status)`
+- `reservations(event_id, checked_in_at desc)`
 - `feed_posts(event_id, created_at desc)`

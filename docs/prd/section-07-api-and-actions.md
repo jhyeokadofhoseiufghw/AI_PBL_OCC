@@ -41,11 +41,13 @@
 - maxTicketsPerPerson
 - cancelDeadlineAt
 - ticketTypes[]
-- seats[] (좌석 지정 공연인 경우)
+- seatGrades[] (좌석 지정 공연인 경우)
+- seats[] (좌석 지정 공연인 경우, 각 좌석은 seatGradeId 포함)
 
 ### 처리
 - event 생성
 - ticket_types 생성
+- seat_grades 생성
 - seats 생성
 - slug 생성
 
@@ -106,6 +108,9 @@
 ### 처리
 - 예매 가능 여부 검증
 - 좌석/수량 가능 여부 검증
+- 선착순 공연이면 ticketTypeId의 가격으로 `unit_price`, `total_price` 계산
+- 좌석 지정 공연이면 seatId에 연결된 seatGrade 가격으로 `unit_price`, `total_price` 계산
+- 클라이언트가 보낸 금액은 신뢰하지 않고 서버에서 DB 기준으로 재계산
 - 조회 패스워드 해시 저장
 - reservation 생성
 - 상태는 기본적으로 `입금 대기`
@@ -113,34 +118,41 @@
 
 ## `getReservationApprovalStatus`
 ### 입력
+- eventSlug 또는 eventId
 - name
 - phone
 - lookupPassword
 
 ### 처리
+- 공연 컨텍스트 안에서 예약을 조회
 - 이름/연락처/조회 패스워드 검증
 - 해당 사용자의 예약 중 승인 여부 확인
 - 승인된 예약이 있으면 예매번호 노출
+- 같은 공연 안에서 동일 정보로 복수 예약이 발견되면 단일 상세 응답 대신 후보 목록 또는 추가 식별값 입력을 요구
 
 ## `getReservationDetail`
 ### 입력
+- eventSlug 또는 eventId
 - name
 - phone
 - lookupPassword
 
 ### 처리
+- 공연 컨텍스트 안에서 예약을 조회
 - 이름/연락처/조회 패스워드 검증
 - 예약 상세 반환
-- `qr_token` 기반 QR 이미지 또는 QR 이미지 생성 URL 반환
+- 예매 확정 또는 입장 완료 상태인 경우에만 `qr_token` 기반 QR 이미지 또는 QR 이미지 생성 URL 반환
 - 취소 가능 여부 계산
 
 ## `cancelReservation`
 ### 입력
+- eventSlug 또는 eventId
 - name
 - phone
 - lookupPassword
 
 ### 처리
+- 공연 컨텍스트 안에서 예약을 조회
 - 이름/연락처/조회 패스워드 검증
 - 취소 가능 시간 검증
 - 예약 상태 변경
@@ -189,13 +201,17 @@
 
 ## `checkInByQr`
 ### 입력
+- eventId
 - qrToken
 
 ### 처리
-1. qrToken으로 예약 조회
-2. 상태가 예매 확정인지 확인
-3. 이미 입장 완료인지 확인
-4. 문제 없으면 상태를 `입장 완료`로 변경
+1. 로그인한 Organizer가 해당 eventId의 공연을 관리할 권한이 있는지 확인
+2. eventId와 qrToken으로 예약 조회
+3. 상태가 예매 확정인지 확인
+4. 이미 입장 완료인지 확인
+5. 취소/대기/입금 대기 상태이면 체크인 거부
+6. 문제 없으면 같은 트랜잭션에서 상태를 `입장 완료`로 변경하고 `checked_in_at = now()` 기록
+7. 중복 체크인 요청은 기존 `checked_in_at`을 유지하고 중복 입장 차단 응답 반환
 
 ## `generateReservationQrImage`
 ### 입력

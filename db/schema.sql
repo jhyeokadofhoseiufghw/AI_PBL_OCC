@@ -36,22 +36,36 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS ticket_types (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    name TEXT NOT NULL, -- VIP, 일반, 학생 등
-    price INTEGER NOT NULL DEFAULT 0,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    name TEXT NOT NULL, -- 일반, 학생 등
+    price INTEGER NOT NULL DEFAULT 0 CHECK (price >= 0), -- 선착순 공연의 티켓 타입별 가격
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (event_id, name)
 );
 
--- 4. seats Table
+-- 4. seat_grades Table
+CREATE TABLE IF NOT EXISTS seat_grades (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    name TEXT NOT NULL, -- R석, S석, A석 등
+    price INTEGER NOT NULL DEFAULT 0 CHECK (price >= 0),
+    sort_order INTEGER NOT NULL DEFAULT 0,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (event_id, name)
+);
+
+-- 5. seats Table
 CREATE TABLE IF NOT EXISTS seats (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
+    seat_grade_id UUID NOT NULL REFERENCES seat_grades(id) ON DELETE RESTRICT,
     label TEXT NOT NULL, -- A1, B1 등
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (event_id, label)
 );
 
--- 5. reservations Table
+-- 6. reservations Table
 CREATE TABLE IF NOT EXISTS reservations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
@@ -62,15 +76,25 @@ CREATE TABLE IF NOT EXISTS reservations (
     depositor_name TEXT NOT NULL,
     lookup_password_hash TEXT NOT NULL,
     quantity INTEGER NOT NULL DEFAULT 1,
+    unit_price INTEGER NOT NULL DEFAULT 0 CHECK (unit_price >= 0),
+    total_price INTEGER NOT NULL DEFAULT 0 CHECK (total_price >= 0),
     request_note TEXT,
     status TEXT NOT NULL DEFAULT 'PENDING_PAYMENT' CHECK (status IN ('PENDING_PAYMENT', 'CONFIRMED', 'CANCELLED', 'CHECKED_IN', 'WAITLISTED')),
     reservation_code TEXT UNIQUE, -- 입금 승인 시 생성
     qr_token TEXT UNIQUE,        -- 입금 승인 시 생성
+    checked_in_at TIMESTAMPTZ,   -- QR 체크인 완료 시각
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT reservations_total_price_matches_quantity_check
+        CHECK (total_price = unit_price * quantity),
+    CONSTRAINT reservations_checked_in_at_status_check
+        CHECK (
+            (status = 'CHECKED_IN' AND checked_in_at IS NOT NULL)
+            OR (status <> 'CHECKED_IN' AND checked_in_at IS NULL)
+        )
 );
 
--- 6. feed_posts Table
+-- 7. feed_posts Table
 CREATE TABLE IF NOT EXISTS feed_posts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
@@ -84,11 +108,17 @@ CREATE TABLE IF NOT EXISTS feed_posts (
 CREATE INDEX IF NOT EXISTS idx_events_organizer ON events(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_events_slug ON events(slug);
 CREATE INDEX IF NOT EXISTS idx_ticket_types_event ON ticket_types(event_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_ticket_types_event_name ON ticket_types(event_id, name);
+CREATE INDEX IF NOT EXISTS idx_seat_grades_event ON seat_grades(event_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_seat_grades_event_name ON seat_grades(event_id, name);
 CREATE INDEX IF NOT EXISTS idx_seats_event ON seats(event_id);
+CREATE INDEX IF NOT EXISTS idx_seats_grade ON seats(seat_grade_id);
 CREATE INDEX IF NOT EXISTS idx_reservations_event ON reservations(event_id);
+CREATE INDEX IF NOT EXISTS idx_reservations_event_status ON reservations(event_id, status);
 CREATE INDEX IF NOT EXISTS idx_reservations_lookup ON reservations(event_id, reserver_phone);
 CREATE INDEX IF NOT EXISTS idx_reservations_code ON reservations(reservation_code);
 CREATE INDEX IF NOT EXISTS idx_reservations_qr_token ON reservations(qr_token);
+CREATE INDEX IF NOT EXISTS idx_reservations_checked_in_at ON reservations(event_id, checked_in_at DESC);
 CREATE INDEX IF NOT EXISTS idx_feed_posts_event ON feed_posts(event_id);
 CREATE INDEX IF NOT EXISTS idx_feed_posts_recent ON feed_posts(event_id, created_at DESC);
 
@@ -101,16 +131,25 @@ BEGIN
 END;
 $$ LANGUAGE plpgsql;
 
+DROP TRIGGER IF EXISTS update_events_modtime ON events;
 CREATE TRIGGER update_events_modtime
     BEFORE UPDATE ON events
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_reservations_modtime ON reservations;
 CREATE TRIGGER update_reservations_modtime
     BEFORE UPDATE ON reservations
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_seat_grades_modtime ON seat_grades;
+CREATE TRIGGER update_seat_grades_modtime
+    BEFORE UPDATE ON seat_grades
+    FOR EACH ROW
+    EXECUTE FUNCTION update_updated_at_column();
+
+DROP TRIGGER IF EXISTS update_feed_posts_modtime ON feed_posts;
 CREATE TRIGGER update_feed_posts_modtime
     BEFORE UPDATE ON feed_posts
     FOR EACH ROW
