@@ -71,11 +71,11 @@
 | No. | 파일명 | 주제 | 핵심 질문 | 요약 |
 |---|---|---|---|---|
 | 1 | [section-01-overview.md](./section-01-overview.md) | 프로젝트 개요 / 문제 정의 | **“왜 이 제품을 만드는가?”** | 소규모 공연 운영에서 발생하는 수동 예매 관리 문제, 좌석/입금/대기열 운영의 비효율, 홍보와 예매가 분리된 문제를 정의한다. 제품의 Primary Goal / Secondary Goal과 MVP 원칙을 설명한다. |
-| 2 | [section-02-users-and-roles.md](./section-02-users-and-roles.md) | 사용자 / 역할 / 상태값 / 용어 사전 | **“누가 무엇을 할 수 있고, 상태값은 어떻게 정의되는가?”** | Organizer / Audience / System 역할을 명확히 정의한다. 공연 상태(Event Status), 예매 상태(Reservation Status), 비회원 조회 구조, Ticket Type / Seat Grade / Seat / Reservation 같은 핵심 용어를 정리한다. |
+| 2 | [section-02-users-and-roles.md](./section-02-users-and-roles.md) | 사용자 / 역할 / 상태값 / 용어 사전 | **“누가 무엇을 할 수 있고, 상태값은 어떻게 정의되는가?”** | Organizer / Audience / System 역할을 명확히 정의한다. 공연 상태(Event Status), 예매 상태(Reservation Status), 비회원 조회 구조, Ticket Type / Seat / Reservation 같은 핵심 용어를 정리한다. |
 | 3 | [section-03-user-flows.md](./section-03-user-flows.md) | 핵심 사용자 플로우 | **“사용자는 실제로 어떤 순서로 이 서비스를 사용하는가?”** | 기획자 회원가입 → 공연 생성 → 피드 작성 → 입금 승인 → 체크인까지의 흐름과, 관객의 홈 피드 탐색 → 공연 상세 → 비회원 예매 → 승인 확인 → QR 조회 → 입장까지의 흐름을 단계별로 정리한다. |
 | 4 | [section-04-feature-requirements.md](./section-04-feature-requirements.md) | 기능 요구사항 본문 | **“MVP에서 어떤 기능을 반드시 구현해야 하는가?”** | 기획자 인증/대시보드, 공연 생성/관리, 피드형 홍보, 비회원 예매/조회/취소, 입금 승인/대기열, QR 체크인까지 MVP 핵심 기능을 기능 단위로 정의한다. PRD의 중심 문서다. |
 | 5 | [section-05-dashboard-and-pages.md](./section-05-dashboard-and-pages.md) | 화면 구조 / 라우팅 / 대시보드 | **“어떤 페이지가 필요하고, 화면은 어떻게 나뉘는가?”** | Next.js App Router 기준 라우트 구조를 제안하고, 홈 피드 / 공연 상세 / 예매 페이지 / 승인 확인 / 상세 조회 / 대시보드 / 공연 운영 탭 구조를 정리한다. 기획자 화면 우선순위도 설명한다. |
-| 6 | [section-06-data-model.md](./section-06-data-model.md) | 데이터 모델 / DB 설계 | **“데이터를 어떤 테이블과 필드로 저장하는가?”** | organizers / events / ticket_types / seat_grades / seats / reservations / feed_posts 중심의 DB 스키마 초안을 제시한다. 상태 enum, unique 제약, 좌석 등급별 가격, reservation_code/qr_token 생성 정책 등 구현에 직접 연결되는 내용을 담는다. |
+| 6 | [section-06-data-model.md](./section-06-data-model.md) | 데이터 모델 / DB 설계 | **“데이터를 어떤 테이블과 필드로 저장하는가?”** | organizers / events / ticket_types / seats / reservations / reservation_seats / feed_posts 중심의 DB 스키마 초안을 제시한다. 단일 티켓 가격, 복수 좌석 점유, 수용 인원, reservation_code/qr_token 정책 등 구현에 직접 연결되는 내용을 담는다. |
 | 7 | [section-07-api-and-actions.md](./section-07-api-and-actions.md) | API / Server Actions 설계 | **“어떤 서버 액션이 필요하고, 각 액션은 무엇을 처리하는가?”** | Organizer 인증, Event 생성/수정, Feed 작성, Reservation 생성/조회/취소, 입금 승인, 대기자 전환, QR 체크인, 통계 조회까지의 서버 액션 단위를 정리한다. 구현 작업 분해에 유용하다. |
 | 8 | [section-08-auth-and-security.md](./section-08-auth-and-security.md) | 인증 / 권한 / 보안 | **“누가 어떤 데이터에 접근할 수 있고, 어떤 검증이 필요한가?”** | Organizer 이메일 로그인, Audience 비회원 예매, 예약 조회 조건(공연 식별자+이름+연락처+조회 패스워드), QR 체크인 보안, 데이터 접근 제어, rate limit 등 MVP 수준의 인증/보안 정책을 정의한다. |
 | 9 | [section-09-tech-stack-and-implementation.md](./section-09-tech-stack-and-implementation.md) | 기술 스택 / 구현 가이드 | **“이 PRD를 실제로 어떤 방식으로 구현할 것인가?”** | Next.js + Neon DB + `python-qrcode` + `@yudiel/react-qr-scanner` 조합을 전제로, 기능별 구현 우선순위, 도메인 단위 폴더 구조, Server Actions 중심 개발 방식, 4일 MVP에 맞는 좌석/체크인 구현 전략을 제안한다. |
@@ -106,6 +106,7 @@
 1. `section-03-user-flows.md`
 2. `section-05-dashboard-and-pages.md`
 3. `section-04-feature-requirements.md`
+4. [`../design/README.md`](../design/README.md)
 
 ## 시나리오 D — “아직 결정 안 된 항목만 모아서 보고 싶다”
 읽을 문서:
@@ -130,7 +131,7 @@
 
 ## 운영 구조
 - 기획자는 여러 공연을 만들 수 있다.
-- 공연별로 좌석 등급/좌석/티켓 타입/예매/대기열/체크인을 관리한다.
+- 공연별로 단일 티켓 가격/좌석/티켓 타입/예매/대기열/체크인을 관리한다.
 - 공연 상세 운영 화면의 핵심은 **예매자 목록 테이블**이다.
 
 ## 상태 구조

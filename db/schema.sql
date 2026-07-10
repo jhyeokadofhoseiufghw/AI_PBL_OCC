@@ -21,15 +21,27 @@ CREATE TABLE IF NOT EXISTS events (
     venue TEXT NOT NULL,
     description TEXT,
     poster_image_url TEXT,
-    bank_account_info TEXT NOT NULL,
+    detail_image_url TEXT,
+    runtime_minutes INTEGER CHECK (runtime_minutes IS NULL OR runtime_minutes > 0),
+    genre TEXT,
+    ticket_price INTEGER NOT NULL DEFAULT 0 CHECK (ticket_price >= 0),
+    bank_name TEXT NOT NULL,
+    account_number TEXT NOT NULL,
+    account_holder TEXT NOT NULL,
     reservation_type TEXT NOT NULL CHECK (reservation_type IN ('FIRST_COME', 'SEAT_SELECTION')),
+    total_capacity INTEGER,
     max_tickets_per_person INTEGER NOT NULL DEFAULT 4,
     cancel_deadline_at TIMESTAMPTZ NOT NULL,
     event_start_at TIMESTAMPTZ NOT NULL,
     event_end_at TIMESTAMPTZ,
     status TEXT NOT NULL DEFAULT 'SCHEDULED' CHECK (status IN ('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'HIDDEN', 'CANCELLED')),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    CONSTRAINT events_capacity_matches_reservation_type_check
+        CHECK (
+            (reservation_type = 'FIRST_COME' AND total_capacity IS NOT NULL AND total_capacity > 0)
+            OR (reservation_type = 'SEAT_SELECTION' AND total_capacity IS NULL)
+        )
 );
 
 -- 3. ticket_types Table
@@ -37,40 +49,25 @@ CREATE TABLE IF NOT EXISTS ticket_types (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     name TEXT NOT NULL, -- 일반, 학생 등
-    price INTEGER NOT NULL DEFAULT 0 CHECK (price >= 0), -- 선착순 공연의 티켓 타입별 가격
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (event_id, name)
 );
 
--- 4. seat_grades Table
-CREATE TABLE IF NOT EXISTS seat_grades (
-    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-    event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    name TEXT NOT NULL, -- R석, S석, A석 등
-    price INTEGER NOT NULL DEFAULT 0 CHECK (price >= 0),
-    sort_order INTEGER NOT NULL DEFAULT 0,
-    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
-    UNIQUE (event_id, name)
-);
-
--- 5. seats Table
+-- 4. seats Table
 CREATE TABLE IF NOT EXISTS seats (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
-    seat_grade_id UUID NOT NULL REFERENCES seat_grades(id) ON DELETE RESTRICT,
     label TEXT NOT NULL, -- A1, B1 등
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (event_id, label)
 );
 
--- 6. reservations Table
+-- 5. reservations Table
 CREATE TABLE IF NOT EXISTS reservations (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     ticket_type_id UUID REFERENCES ticket_types(id) ON DELETE SET NULL,
-    seat_id UUID REFERENCES seats(id) ON DELETE SET NULL,
     reserver_name TEXT NOT NULL,
     reserver_phone TEXT NOT NULL,
     depositor_name TEXT NOT NULL,
@@ -94,6 +91,15 @@ CREATE TABLE IF NOT EXISTS reservations (
         )
 );
 
+-- 6. reservation_seats Table
+CREATE TABLE IF NOT EXISTS reservation_seats (
+    reservation_id UUID NOT NULL REFERENCES reservations(id) ON DELETE CASCADE,
+    seat_id UUID NOT NULL REFERENCES seats(id) ON DELETE RESTRICT,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    released_at TIMESTAMPTZ,
+    PRIMARY KEY (reservation_id, seat_id)
+);
+
 -- 7. feed_posts Table
 CREATE TABLE IF NOT EXISTS feed_posts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -107,18 +113,20 @@ CREATE TABLE IF NOT EXISTS feed_posts (
 -- Create Indexes for optimization
 CREATE INDEX IF NOT EXISTS idx_events_organizer ON events(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_events_slug ON events(slug);
+CREATE INDEX IF NOT EXISTS idx_events_genre_start ON events(genre, event_start_at);
 CREATE INDEX IF NOT EXISTS idx_ticket_types_event ON ticket_types(event_id);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_ticket_types_event_name ON ticket_types(event_id, name);
-CREATE INDEX IF NOT EXISTS idx_seat_grades_event ON seat_grades(event_id);
-CREATE UNIQUE INDEX IF NOT EXISTS idx_seat_grades_event_name ON seat_grades(event_id, name);
 CREATE INDEX IF NOT EXISTS idx_seats_event ON seats(event_id);
-CREATE INDEX IF NOT EXISTS idx_seats_grade ON seats(seat_grade_id);
 CREATE INDEX IF NOT EXISTS idx_reservations_event ON reservations(event_id);
 CREATE INDEX IF NOT EXISTS idx_reservations_event_status ON reservations(event_id, status);
 CREATE INDEX IF NOT EXISTS idx_reservations_lookup ON reservations(event_id, reserver_phone);
 CREATE INDEX IF NOT EXISTS idx_reservations_code ON reservations(reservation_code);
 CREATE INDEX IF NOT EXISTS idx_reservations_qr_token ON reservations(qr_token);
 CREATE INDEX IF NOT EXISTS idx_reservations_checked_in_at ON reservations(event_id, checked_in_at DESC);
+CREATE INDEX IF NOT EXISTS idx_reservation_seats_reservation ON reservation_seats(reservation_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_reservation_seats_active_seat
+    ON reservation_seats(seat_id)
+    WHERE released_at IS NULL;
 CREATE INDEX IF NOT EXISTS idx_feed_posts_event ON feed_posts(event_id);
 CREATE INDEX IF NOT EXISTS idx_feed_posts_recent ON feed_posts(event_id, created_at DESC);
 
@@ -140,12 +148,6 @@ CREATE TRIGGER update_events_modtime
 DROP TRIGGER IF EXISTS update_reservations_modtime ON reservations;
 CREATE TRIGGER update_reservations_modtime
     BEFORE UPDATE ON reservations
-    FOR EACH ROW
-    EXECUTE FUNCTION update_updated_at_column();
-
-DROP TRIGGER IF EXISTS update_seat_grades_modtime ON seat_grades;
-CREATE TRIGGER update_seat_grades_modtime
-    BEFORE UPDATE ON seat_grades
     FOR EACH ROW
     EXECUTE FUNCTION update_updated_at_column();
 

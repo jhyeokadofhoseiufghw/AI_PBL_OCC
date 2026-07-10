@@ -28,6 +28,7 @@
 10. **[구현 가이드](file:///Users/jjaek/Developer/AI_PBL_OCC/docs/prd/section-09-tech-stack-and-implementation.md)**: 폴더 컨벤션 및 Neon DB 가이드.
 11. **[MVP 범위 및 로드맵](file:///Users/jjaek/Developer/AI_PBL_OCC/docs/prd/section-10-mvp-scope-and-roadmap.md)**: 개발 일정 및 제외 대상.
 12. **[미정 항목](file:///Users/jjaek/Developer/AI_PBL_OCC/docs/prd/section-11-open-questions.md)**: 정책적 논의가 필요한 열린 질문들.
+13. **[디자인 명세](file:///Users/jjaek/Developer/AI_PBL_OCC/docs/design/README.md)**: 화면 ID, 라우트, 데이터, 컴포넌트, 액션, 상태 및 PRD 매핑을 정리한 디자인 단일 진실 소스.
 
 ---
 

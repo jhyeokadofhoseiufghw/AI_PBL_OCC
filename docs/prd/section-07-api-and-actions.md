@@ -37,17 +37,17 @@
 ## `createEvent`
 ### 입력
 - 공연 기본 정보
+- ticketPrice
 - reservationType
+- totalCapacity (선착순 공연 필수)
 - maxTicketsPerPerson
 - cancelDeadlineAt
 - ticketTypes[]
-- seatGrades[] (좌석 지정 공연인 경우)
-- seats[] (좌석 지정 공연인 경우, 각 좌석은 seatGradeId 포함)
+- seats[] (좌석 지정 공연인 경우)
 
 ### 처리
 - event 생성
 - ticket_types 생성
-- seat_grades 생성
 - seats 생성
 - slug 생성
 
@@ -55,6 +55,14 @@
 - 공연 기본 정보 수정
 - 상태 변경
 - 취소 마감 시간 수정
+
+## `previewEvent`
+- 저장 전 입력값 또는 비공개 공연 데이터를 관객용 상세 컴포넌트 형식으로 반환
+- 미리보기 데이터는 홈 피드와 공개 URL에 노출하지 않음
+
+## `publishEvent`
+- 필수 입력, 단일 가격, 선착순 수용 인원 또는 좌석 목록을 검증
+- 검증 성공 시 공연 상태를 `SCHEDULED`로 변경하고 공개 URL 활성화
 
 ## `listOrganizerEvents`
 - 기획자의 공연 목록 조회
@@ -96,8 +104,8 @@
 ## `createReservation`
 ### 입력
 - eventId
-- ticketTypeId
-- seatId(optional)
+- ticketTypeId(optional, 공연에 티켓 타입이 설정된 경우)
+- seatIds[] (좌석 지정 공연 필수, 선착순 공연에서는 빈 배열)
 - name
 - phone
 - depositorName
@@ -108,11 +116,13 @@
 ### 처리
 - 예매 가능 여부 검증
 - 좌석/수량 가능 여부 검증
-- 선착순 공연이면 ticketTypeId의 가격으로 `unit_price`, `total_price` 계산
-- 좌석 지정 공연이면 seatId에 연결된 seatGrade 가격으로 `unit_price`, `total_price` 계산
+- 선착순 공연은 `total_capacity`에서 활성 예매 수량을 차감해 잔여 수량 검증
+- 좌석 지정 공연은 `seatIds.length === quantity`를 검증하고 트랜잭션 안에서 좌석 중복 점유 방지
+- 예매 방식과 관계없이 event의 단일 `ticket_price`로 `unit_price`, `total_price` 계산
 - 클라이언트가 보낸 금액은 신뢰하지 않고 서버에서 DB 기준으로 재계산
 - 조회 패스워드 해시 저장
 - reservation 생성
+- 좌석 지정 공연이면 reservation_seats 연결 생성
 - 상태는 기본적으로 `입금 대기`
 - 매진 상태라면 `대기 신청` 생성 흐름 고려
 
@@ -156,7 +166,7 @@
 - 이름/연락처/조회 패스워드 검증
 - 취소 가능 시간 검증
 - 예약 상태 변경
-- 좌석/수량 복구
+- 좌석 지정 공연은 reservation_seats의 `released_at` 기록, 선착순 공연은 활성 예매 수량 합계에서 제외하여 좌석/수량 복구
 
 ---
 
@@ -188,6 +198,23 @@
 ### 처리
 - 공연 예매 목록 반환
 - 상태 필터 / 검색 지원
+
+## `bulkApproveReservationPayments`
+- 선택한 복수의 입금 대기 예매를 권한 검증 후 일괄 승인
+- 각 예매번호와 QR 토큰은 개별 유니크 값으로 생성
+
+## `exportEventReservations`
+- 현재 공연과 적용 중인 검색/상태 필터 범위의 예매 목록을 엑셀 파일로 반환
+- 연락처 등 개인정보가 포함되므로 공연 소유 Organizer만 실행 가능
+
+## `revokeReservationApproval`
+- 승인 완료 건을 입금 대기로 되돌릴 때 기존 QR을 즉시 무효화
+- 이미 입장 완료된 예매는 승인 취소 불가
+
+## `bulkCancelReservations`
+- 선택한 복수 예매를 영구 삭제하지 않고 취소 상태로 변경
+- 좌석/수량을 복구하고 처리 이력을 보존
+- 이미 입장 완료된 예매는 일괄 취소 대상에서 제외
 
 ---
 

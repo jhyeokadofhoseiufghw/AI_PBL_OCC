@@ -13,9 +13,9 @@
 - organizers
 - events
 - ticket_types
-- seat_grades
 - seats
 - reservations
+- reservation_seats
 - feed_posts
 
 > 참고: `waitlist`는 별도 테이블로 분리할 수도 있지만, 현재 PRD 기준으로는 `reservations.status = '대기 신청'`으로도 표현 가능하다.  
@@ -48,8 +48,15 @@
 | venue | text | 장소 |
 | description | text | 상세 설명 |
 | poster_image_url | text | 포스터 이미지 |
-| bank_account_info | text | 입금 계좌 |
+| detail_image_url | text nullable | 상세 설명 대표 이미지(포스터와 분리) |
+| runtime_minutes | int nullable | 러닝타임(분) |
+| genre | text nullable | 홈 장르 탐색용 분류 |
+| ticket_price | int | 공연에 적용되는 단일 티켓 가격 |
+| bank_name | text | 입금 은행명 |
+| account_number | text | 입금 계좌번호 |
+| account_holder | text | 예금주명 |
 | reservation_type | text | `FIRST_COME` / `SEAT_SELECTION` |
+| total_capacity | int nullable | 선착순 공연 총 수용 인원(좌석 지정 공연은 null) |
 | max_tickets_per_person | int | 1인 최대 예매 매수 |
 | cancel_deadline_at | timestamptz | 취소 마감 시간 |
 | event_start_at | timestamptz | 공연 시작 시간 |
@@ -67,59 +74,38 @@
 | id | uuid | PK |
 | event_id | uuid | events FK |
 | name | text | 일반 / 학생 등 |
-| price | int | 선착순 공연의 티켓 타입별 가격 |
 | created_at | timestamptz | 생성일 |
 
 ### 제약
 - 티켓 타입별 수량 필드는 두지 않는다.
-- 좌석 지정 공연의 가격은 티켓 타입이 아니라 좌석 등급에서 결정한다.
+- 티켓 타입은 분류 용도이며 가격 필드는 두지 않는다.
+- 공연에 티켓 타입을 설정하지 않을 수 있다. 이 경우 예매의 `ticket_type_id`는 null이다.
 
 ---
 
-# 6. seat_grades
+# 6. seats
 
 | 필드 | 타입 | 설명 |
 |---|---|---|
 | id | uuid | PK |
 | event_id | uuid | events FK |
-| name | text | 좌석 등급명 예: R석 / S석 / A석 |
-| price | int | 해당 등급의 좌석 단가 |
-| sort_order | int | 노출 순서 |
-| created_at | timestamptz | 생성일 |
-| updated_at | timestamptz | 수정일 |
-
-### 핵심 정책
-- 좌석 지정 공연에서 좌석 선택에 따른 가격은 `seat_grades.price`로 결정한다.
-- `(event_id, name)` 유니크 권장
-- 가격 변경은 이후 생성되는 예매에만 반영하고, 기존 예매의 저장 금액은 변경하지 않는다.
-
----
-
-# 7. seats
-
-| 필드 | 타입 | 설명 |
-|---|---|---|
-| id | uuid | PK |
-| event_id | uuid | events FK |
-| seat_grade_id | uuid | seat_grades FK |
 | label | text | 좌석명 예: A1 |
 | is_active | boolean | 사용 여부 |
 | created_at | timestamptz | 생성일 |
 
 ### 제약
 - `(event_id, label)` 유니크 권장
-- 모든 좌석은 하나의 좌석 등급에 속해야 한다.
+- 모든 좌석은 `events.ticket_price`의 동일한 단가를 사용한다.
 
 ---
 
-# 8. reservations
+# 7. reservations
 
 | 필드 | 타입 | 설명 |
 |---|---|---|
 | id | uuid | PK |
 | event_id | uuid | events FK |
 | ticket_type_id | uuid nullable | ticket_types FK |
-| seat_id | uuid nullable | seats FK (좌석 지정 공연일 때만) |
 | reserver_name | text | 예매자 이름 |
 | reserver_phone | text | 연락처 |
 | depositor_name | text | 입금자명 |
@@ -137,8 +123,9 @@
 
 ### 핵심 정책
 - `lookup_password_hash`는 예매 신청 시 생성하며 원문 패스워드는 저장하지 않음
-- 선착순 공연은 선택한 `ticket_types.price`를 `unit_price`로 저장
-- 좌석 지정 공연은 선택한 좌석의 `seat_grades.price`를 `unit_price`로 저장
+- 선착순 공연은 `quantity`로 수량을 저장하고 좌석 연결을 만들지 않음
+- 좌석 지정 공연은 `quantity`와 `reservation_seats` 연결 개수가 일치해야 함
+- 예매 방식과 관계없이 `events.ticket_price`를 `unit_price`로 저장
 - `total_price = unit_price * quantity`로 저장
 - DB 제약으로 `total_price`는 `unit_price * quantity`와 일치해야 한다.
 - 예매 이후 가격 설정이 변경되어도 `unit_price`, `total_price`는 변경하지 않음
@@ -147,6 +134,23 @@
 - 체크인 성공 시 `status = 입장 완료`와 `checked_in_at = now()`를 같은 트랜잭션에서 기록
 - 중복 체크인 시 기존 `checked_in_at`을 덮어쓰지 않음
 - DB 제약으로 `status = CHECKED_IN`인 예약은 `checked_in_at`을 반드시 가져야 하며, 그 외 상태는 `checked_in_at`을 비워 둔다.
+
+---
+
+# 8. reservation_seats
+
+| 필드 | 타입 | 설명 |
+|---|---|---|
+| reservation_id | uuid | reservations FK |
+| seat_id | uuid | seats FK |
+| created_at | timestamptz | 생성일 |
+| released_at | timestamptz nullable | 취소로 좌석 점유를 해제한 시각 |
+
+### 제약
+- `(reservation_id, seat_id)` 복합 PK
+- `released_at IS NULL`인 행에 대해 `seat_id` partial unique를 적용해 한 좌석의 동시 중복 점유를 막음
+- 예약 생성 트랜잭션에서 좌석을 잠가 동시 요청의 중복 점유 방지
+- 취소 시 `released_at`을 기록해 좌석을 복구하고 과거 선택 좌석 이력도 보존
 
 ---
 
@@ -194,10 +198,11 @@
 
 # 12. 인덱스 / 제약 권장사항
 - `events.slug` unique
+- `events(genre, event_start_at)`
 - `ticket_types(event_id, name)` unique
-- `seat_grades(event_id, name)` unique
 - `seats(event_id, label)` unique
-- `seats(seat_grade_id)`
+- `reservation_seats(reservation_id, seat_id)` primary key
+- `reservation_seats(seat_id) WHERE released_at IS NULL` unique
 - `reservations.reservation_code` unique
 - `reservations.qr_token` unique
 - `reservations(event_id, reserver_phone)`
