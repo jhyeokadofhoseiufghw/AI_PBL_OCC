@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",
+    "db:setup:js": "node scripts/db/apply-schema.mjs",
     "qr:test": "python3 scripts/qr/generate_qr.py --data test-token --output /tmp/occ-test-qr.png"
   },
   "dependencies": {

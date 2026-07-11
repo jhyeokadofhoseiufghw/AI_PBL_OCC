@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS events (
     account_holder TEXT NOT NULL,
     reservation_type TEXT NOT NULL CHECK (reservation_type IN ('FIRST_COME', 'SEAT_SELECTION')),
     total_capacity INTEGER,
-    max_tickets_per_person INTEGER NOT NULL DEFAULT 4,
+    max_tickets_per_person INTEGER NOT NULL DEFAULT 4 CHECK (max_tickets_per_person > 0),
     cancel_deadline_at TIMESTAMPTZ NOT NULL,
     event_start_at TIMESTAMPTZ NOT NULL,
     event_end_at TIMESTAMPTZ,
@@ -41,7 +41,9 @@ CREATE TABLE IF NOT EXISTS events (
         CHECK (
             (reservation_type = 'FIRST_COME' AND total_capacity IS NOT NULL AND total_capacity > 0)
             OR (reservation_type = 'SEAT_SELECTION' AND total_capacity IS NULL)
-        )
+        ),
+    CONSTRAINT events_time_order_check
+        CHECK (event_end_at IS NULL OR event_end_at > event_start_at)
 );
 
 -- 3. ticket_types Table
@@ -72,7 +74,7 @@ CREATE TABLE IF NOT EXISTS reservations (
     reserver_phone TEXT NOT NULL,
     depositor_name TEXT NOT NULL,
     lookup_password_hash TEXT NOT NULL,
-    quantity INTEGER NOT NULL DEFAULT 1,
+    quantity INTEGER NOT NULL DEFAULT 1 CHECK (quantity > 0),
     unit_price INTEGER NOT NULL DEFAULT 0 CHECK (unit_price >= 0),
     total_price INTEGER NOT NULL DEFAULT 0 CHECK (total_price >= 0),
     request_note TEXT,
@@ -94,7 +96,7 @@ CREATE TABLE IF NOT EXISTS reservations (
 -- 6. reservation_seats Table
 CREATE TABLE IF NOT EXISTS reservation_seats (
     reservation_id UUID NOT NULL REFERENCES reservations(id) ON DELETE CASCADE,
-    seat_id UUID NOT NULL REFERENCES seats(id) ON DELETE RESTRICT,
+    seat_id UUID NOT NULL REFERENCES seats(id) ON DELETE CASCADE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     released_at TIMESTAMPTZ,
     PRIMARY KEY (reservation_id, seat_id)

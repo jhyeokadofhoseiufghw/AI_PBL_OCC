@@ -4,7 +4,8 @@ const routes = [
   { href: "/feed", label: "홈 피드" },
   { href: "/reservation/status", label: "예매 승인 확인" },
   { href: "/reservation/detail", label: "예매 상세 조회" },
-  { href: "/dashboard", label: "기획자 대시보드" }
+  { href: "/dashboard", label: "기획자 대시보드" },
+  { href: "/login", label: "기획자 로그인" },
 ] as const;
 
 export default function HomePage() {

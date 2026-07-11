@@ -1,0 +1,71 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import { z } from "zod";
+
+import { getSql } from "@/lib/db/client";
+import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import { createOrganizerSession, deleteOrganizerSession } from "@/lib/auth/session";
+
+export type AuthActionState = { error?: string };
+
+const emailSchema = z.string().trim().email().transform((value) => value.toLowerCase());
+const passwordSchema = z.string().min(8, "비밀번호는 8자 이상이어야 합니다.").max(72);
+
+const signUpSchema = z.object({
+  email: emailSchema,
+  password: passwordSchema,
+  name: z.string().trim().min(1).max(80),
+  phone: z.string().trim().min(8).max(30),
+  organizationName: z.string().trim().min(1).max(120),
+});
+
+const signInSchema = z.object({ email: emailSchema, password: z.string().min(1).max(72) });
+
+function value(formData: FormData, key: string) {
+  return String(formData.get(key) ?? "");
+}
+
+export async function signUpOrganizer(_: AuthActionState, formData: FormData): Promise<AuthActionState> {
+  const result = signUpSchema.safeParse({
+    email: value(formData, "email"),
+    password: value(formData, "password"),
+    name: value(formData, "name"),
+    phone: value(formData, "phone"),
+    organizationName: value(formData, "organizationName"),
+  });
+  if (!result.success) return { error: result.error.issues[0]?.message ?? "입력값을 확인해주세요." };
+
+  const sql = getSql();
+  const existing = await sql`SELECT id FROM organizers WHERE email = ${result.data.email} LIMIT 1`;
+  if (existing.length > 0) return { error: "이미 가입된 이메일입니다." };
+
+  const passwordHash = await hashPassword(result.data.password);
+  const rows = await sql`
+    INSERT INTO organizers (email, password_hash, name, phone, organization_name)
+    VALUES (${result.data.email}, ${passwordHash}, ${result.data.name}, ${result.data.phone}, ${result.data.organizationName})
+    RETURNING id
+  `;
+  await createOrganizerSession(String(rows[0].id));
+  redirect("/dashboard");
+}
+
+export async function signInOrganizer(_: AuthActionState, formData: FormData): Promise<AuthActionState> {
+  const result = signInSchema.safeParse({ email: value(formData, "email"), password: value(formData, "password") });
+  if (!result.success) return { error: "이메일 또는 비밀번호를 확인해주세요." };
+
+  const sql = getSql();
+  const rows = await sql`SELECT id, password_hash FROM organizers WHERE email = ${result.data.email} LIMIT 1`;
+  const organizer = rows[0];
+  if (!organizer || !(await verifyPassword(result.data.password, String(organizer.password_hash)))) {
+    return { error: "이메일 또는 비밀번호를 확인해주세요." };
+  }
+
+  await createOrganizerSession(String(organizer.id));
+  redirect("/dashboard");
+}
+
+export async function signOutOrganizer() {
+  await deleteOrganizerSession();
+  redirect("/login");
+}

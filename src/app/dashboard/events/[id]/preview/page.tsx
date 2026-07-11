@@ -1,0 +1,11 @@
+import Link from "next/link";
+import { notFound } from "next/navigation";
+
+import { requireOrganizer } from "@/lib/auth/session";
+import { getSql } from "@/lib/db/client";
+
+export default async function EventPreviewPage({ params }: { params: Promise<{ id: string }> }) {
+  const [{ id }, session] = await Promise.all([params, requireOrganizer()]); const sql = getSql();
+  const rows = await sql`SELECT * FROM events WHERE id=${id} AND organizer_id=${session.organizerId} LIMIT 1`; const event = rows[0]; if (!event) notFound();
+  return <main className="mx-auto min-h-screen max-w-md bg-white px-5 py-8 shadow-sm"><Link className="text-sm text-emerald-700" href={`/dashboard/events/${id}/overview`}>← 개요로 돌아가기</Link><p className="mt-6 rounded-lg bg-amber-50 p-3 text-center text-sm text-amber-800">관객용 모바일 미리보기</p><div className="mt-5 aspect-[1/1.414] rounded-xl bg-zinc-200 bg-cover bg-center" style={event.poster_image_url ? { backgroundImage: `url(${String(event.poster_image_url)})` } : undefined} /><h1 className="mt-6 text-2xl font-semibold">{String(event.title)}</h1><p className="mt-2 text-sm text-zinc-600">{new Date(String(event.event_start_at)).toLocaleString("ko-KR")} · {String(event.venue)}</p><p className="mt-4 whitespace-pre-wrap leading-7">{String(event.description)}</p><button className="mt-8 w-full rounded-lg bg-emerald-700 px-5 py-3 font-medium text-white" disabled>예매하기 (미리보기)</button></main>;
+}
