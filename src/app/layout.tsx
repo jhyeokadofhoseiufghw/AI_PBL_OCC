@@ -3,11 +3,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: "OCC",
-  description: "소규모 공연 예매 및 QR 체크인 운영 플랫폼"
+  description: "소규모 공연 예매 및 QR 체크인 운영 플랫폼",
 };
 
 export default function RootLayout({
-  children
+  children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {

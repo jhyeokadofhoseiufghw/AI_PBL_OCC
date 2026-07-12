@@ -27,51 +27,51 @@
 
 각 ASCII 문서는 원문 전체를 `text` 코드 블록에 넣었다. `원본 SHA-256`은 코드 블록 본문만 추출해 계산한 값이며 변환 전 파일과 동일하다.
 
-| 기존 파일 | Markdown 원본 | 화면 | 보존 검사 |
-|---|---|---|---|
-| `design/1.txt` | [`01-home.ascii.md`](./source/01-home.ascii.md) | A-01 홈 피드 | SHA-256 일치 |
-| `design/2.txt` | [`02-event-detail.ascii.md`](./source/02-event-detail.ascii.md) | A-02 공연 상세 | SHA-256 일치 |
-| `design/3.txt` | [`03-reservation-drawer.ascii.md`](./source/03-reservation-drawer.ascii.md) | A-03 예매 | SHA-256 일치 |
-| `design/4.txt` | [`04-pending-ticket.ascii.md`](./source/04-pending-ticket.ascii.md) | A-05 입금 대기 | SHA-256 일치 |
-| `design/5.txt` | [`05-confirmed-ticket.ascii.md`](./source/05-confirmed-ticket.ascii.md) | A-05 예매 확정 | SHA-256 일치 |
-| `design/7.txt` | [`07-reservation-dashboard.ascii.md`](./source/07-reservation-dashboard.ascii.md) | O-10 예매 관리 | SHA-256 일치 |
-| `design/8.txt` | [`08-super-admin-excluded.ascii.md`](./source/08-super-admin-excluded.ascii.md) | MVP 제외 | SHA-256 일치 |
-| `design/9.txt` | [`09-event-create.ascii.md`](./source/09-event-create.ascii.md) | O-05 공연 생성 | SHA-256 일치 |
-| `gemini-code-1783664275343.md` | [`legacy-integrated-spec.md`](./source/legacy-integrated-spec.md) | 기존 통합 메모 | 파일 SHA-256 일치 |
+| 기존 파일                      | Markdown 원본                                                                     | 화면           | 보존 검사         |
+| ------------------------------ | --------------------------------------------------------------------------------- | -------------- | ----------------- |
+| `design/1.txt`                 | [`01-home.ascii.md`](./source/01-home.ascii.md)                                   | A-01 홈 피드   | SHA-256 일치      |
+| `design/2.txt`                 | [`02-event-detail.ascii.md`](./source/02-event-detail.ascii.md)                   | A-02 공연 상세 | SHA-256 일치      |
+| `design/3.txt`                 | [`03-reservation-drawer.ascii.md`](./source/03-reservation-drawer.ascii.md)       | A-03 예매      | SHA-256 일치      |
+| `design/4.txt`                 | [`04-pending-ticket.ascii.md`](./source/04-pending-ticket.ascii.md)               | A-05 입금 대기 | SHA-256 일치      |
+| `design/5.txt`                 | [`05-confirmed-ticket.ascii.md`](./source/05-confirmed-ticket.ascii.md)           | A-05 예매 확정 | SHA-256 일치      |
+| `design/7.txt`                 | [`07-reservation-dashboard.ascii.md`](./source/07-reservation-dashboard.ascii.md) | O-10 예매 관리 | SHA-256 일치      |
+| `design/8.txt`                 | [`08-super-admin-excluded.ascii.md`](./source/08-super-admin-excluded.ascii.md)   | MVP 제외       | SHA-256 일치      |
+| `design/9.txt`                 | [`09-event-create.ascii.md`](./source/09-event-create.ascii.md)                   | O-05 공연 생성 | SHA-256 일치      |
+| `gemini-code-1783664275343.md` | [`legacy-integrated-spec.md`](./source/legacy-integrated-spec.md)                 | 기존 통합 메모 | 파일 SHA-256 일치 |
 
 복원된 파일 세트에는 `6.txt`가 없다. 기존 통합 메모는 `6.txt`를 좌석 목록 화면으로 참조하지만 원문 유효성을 검사할 파일이 없으므로, O-06 명세는 PRD와 기존 통합 메모를 기준으로 정규화했다.
 
 ### 1.2 원본 유효성 평가
 
-| 검사 영역 | 결과 | 설명 |
-|---|---|---|
-| 원문 보존 | 통과 | 복원된 ASCII 8개와 기존 통합 MD의 해시가 변환 전후 동일하다. |
-| 단일 가격 | 통과 | 홈, 상세, 예매, 공연 생성 도면이 공연 단일 가격 정책과 일치한다. |
-| 상태명 | 통과 | 입금 대기와 예매 확정 도면이 PRD 상태와 일치한다. |
-| 비회원 조회 | 통과 | 공연 컨텍스트와 이름·연락처·조회 패스워드 흐름이 일치한다. |
-| 좌석 | 통과 | 복수 좌석 선택과 점유 상태가 PRD의 `reservation_seats` 흐름과 호환된다. |
-| 운영 대시보드 | 부분 상세 | 원본 도면은 핵심 컬럼과 액션을 보여주지만 PRD의 티켓 타입·금액·체크인 시각 등 전체 컬럼은 생략한다. 정규화 명세 O-10에 보완했다. |
-| 좌석 관리 원본 | 검증 불가 | `6.txt`가 복원되지 않아 ASCII 원문 보존 여부를 평가할 수 없다. |
-| MVP 제외 | 통과 | Super Admin과 자동 취소를 제공하지 않는다는 정책이 일치한다. |
+| 검사 영역      | 결과      | 설명                                                                                                                             |
+| -------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------- |
+| 원문 보존      | 통과      | 복원된 ASCII 8개와 기존 통합 MD의 해시가 변환 전후 동일하다.                                                                     |
+| 단일 가격      | 통과      | 홈, 상세, 예매, 공연 생성 도면이 공연 단일 가격 정책과 일치한다.                                                                 |
+| 상태명         | 통과      | 입금 대기와 예매 확정 도면이 PRD 상태와 일치한다.                                                                                |
+| 비회원 조회    | 통과      | 공연 컨텍스트와 이름·연락처·조회 패스워드 흐름이 일치한다.                                                                       |
+| 좌석           | 통과      | 복수 좌석 선택과 점유 상태가 PRD의 `reservation_seats` 흐름과 호환된다.                                                          |
+| 운영 대시보드  | 부분 상세 | 원본 도면은 핵심 컬럼과 액션을 보여주지만 PRD의 티켓 타입·금액·체크인 시각 등 전체 컬럼은 생략한다. 정규화 명세 O-10에 보완했다. |
+| 좌석 관리 원본 | 검증 불가 | `6.txt`가 복원되지 않아 ASCII 원문 보존 여부를 평가할 수 없다.                                                                   |
+| MVP 제외       | 통과      | Super Admin과 자동 취소를 제공하지 않는다는 정책이 일치한다.                                                                     |
 
 원본 도면은 시각적 레이아웃 자료이고, 이 문서의 화면별 섹션은 원본에서 생략된 PRD 요구사항을 보완한 구현 계약이다. 원본과 보완 명세 중 하나를 삭제하거나 서로 덮어쓰지 않는다.
 
 ## 2. 확정된 공통 정책
 
-| 항목 | 정책 |
-|---|---|
-| 사용자 | Organizer, Audience, System만 사용한다. Super Admin은 MVP에서 제외한다. |
-| 관객 인증 | 회원가입 없이 공연 컨텍스트 + 이름 + 연락처 + 숫자 4~6자리 조회 패스워드를 사용한다. |
-| 가격 | 공연마다 단일 `ticket_price`를 사용한다. 총액은 `ticket_price × quantity`다. |
-| 티켓 타입 | 일반·학생 등의 선택적 분류값이다. 별도 가격과 재고는 없다. |
-| 좌석 | A1, A2 같은 단순 라벨 목록을 사용한다. 좌석 등급, 통로 편집, 공연장 맵 편집은 제외한다. |
-| 좌석 점유 | 입금 대기부터 좌석을 점유한다. 취소 시 `released_at`을 기록해 점유를 해제한다. |
-| 결제 | 무통장 입금만 사용하며 자동 입금 확인과 결제 게이트웨이는 제외한다. |
-| 발급 | 입금 승인 후에만 예매번호와 정적 QR을 발급한다. |
-| 체크인 | QR 1개는 예매 1건을 나타낸다. 체크인 성공 시 예매 전체를 입장 완료 처리한다. |
-| 취소 | 공연별 취소 마감 전 직접 취소할 수 있다. 영구 삭제 대신 상태와 좌석 이력을 보존한다. |
-| 인기 공연 | 관객 평점 없이 예매 수를 기준으로 정렬한다. |
-| 자동화 | 장기 미입금 자동 취소와 자동 대기자 승계는 제외한다. |
+| 항목      | 정책                                                                                    |
+| --------- | --------------------------------------------------------------------------------------- |
+| 사용자    | Organizer, Audience, System만 사용한다. Super Admin은 MVP에서 제외한다.                 |
+| 관객 인증 | 회원가입 없이 공연 컨텍스트 + 이름 + 연락처 + 숫자 4~6자리 조회 패스워드를 사용한다.    |
+| 가격      | 공연마다 단일 `ticket_price`를 사용한다. 총액은 `ticket_price × quantity`다.            |
+| 티켓 타입 | 일반·학생 등의 선택적 분류값이다. 별도 가격과 재고는 없다.                              |
+| 좌석      | A1, A2 같은 단순 라벨 목록을 사용한다. 좌석 등급, 통로 편집, 공연장 맵 편집은 제외한다. |
+| 좌석 점유 | 입금 대기부터 좌석을 점유한다. 취소 시 `released_at`을 기록해 점유를 해제한다.          |
+| 결제      | 무통장 입금만 사용하며 자동 입금 확인과 결제 게이트웨이는 제외한다.                     |
+| 발급      | 입금 승인 후에만 예매번호와 정적 QR을 발급한다.                                         |
+| 체크인    | QR 1개는 예매 1건을 나타낸다. 체크인 성공 시 예매 전체를 입장 완료 처리한다.            |
+| 취소      | 공연별 취소 마감 전 직접 취소할 수 있다. 영구 삭제 대신 상태와 좌석 이력을 보존한다.    |
+| 인기 공연 | 관객 평점 없이 예매 수를 기준으로 정렬한다.                                             |
+| 자동화    | 장기 미입금 자동 취소와 자동 대기자 승계는 제외한다.                                    |
 
 ## 3. 디자인 시스템
 
@@ -85,48 +85,48 @@
 
 ### 3.2 상태 라벨
 
-| 도메인 | 코드 | UI 라벨 |
-|---|---|---|
-| 공연 | `SCHEDULED` | 예정 |
-| 공연 | `IN_PROGRESS` | 진행 중 |
-| 공연 | `COMPLETED` | 종료 |
-| 공연 | `HIDDEN` | 비공개 |
-| 공연 | `CANCELLED` | 취소 |
-| 예매 | `PENDING_PAYMENT` | 입금 대기 |
-| 예매 | `CONFIRMED` | 예매 확정 |
-| 예매 | `CANCELLED` | 취소 |
-| 예매 | `CHECKED_IN` | 입장 완료 |
-| 예매 | `WAITLISTED` | 대기 신청 |
+| 도메인 | 코드              | UI 라벨   |
+| ------ | ----------------- | --------- |
+| 공연   | `SCHEDULED`       | 예정      |
+| 공연   | `IN_PROGRESS`     | 진행 중   |
+| 공연   | `COMPLETED`       | 종료      |
+| 공연   | `HIDDEN`          | 비공개    |
+| 공연   | `CANCELLED`       | 취소      |
+| 예매   | `PENDING_PAYMENT` | 입금 대기 |
+| 예매   | `CONFIRMED`       | 예매 확정 |
+| 예매   | `CANCELLED`       | 취소      |
+| 예매   | `CHECKED_IN`      | 입장 완료 |
+| 예매   | `WAITLISTED`      | 대기 신청 |
 
 ### 3.3 좌석 상태
 
-| 표시 | 의미 | 선택 가능 여부 |
-|---|---|---|
-| 좌석 라벨, 예: `A1` | 예매 가능 | 가능 |
-| 선택 강조 | 현재 관객이 선택 | 가능 |
-| 점유됨 | 다른 입금 대기·예매 확정 건이 점유 | 불가 |
-| 비활성 | 기획자가 판매하지 않는 좌석 | 불가 |
+| 표시                | 의미                               | 선택 가능 여부 |
+| ------------------- | ---------------------------------- | -------------- |
+| 좌석 라벨, 예: `A1` | 예매 가능                          | 가능           |
+| 선택 강조           | 현재 관객이 선택                   | 가능           |
+| 점유됨              | 다른 입금 대기·예매 확정 건이 점유 | 불가           |
+| 비활성              | 기획자가 판매하지 않는 좌석        | 불가           |
 
 ## 4. 라우트와 화면 인덱스
 
-| ID | 사용자 | 라우트 | 화면 |
-|---|---|---|---|
-| A-01 | Audience | `/` 또는 `/feed` | 홈 피드 |
-| A-02 | Audience | `/events/[eventSlug]` | 공연 상세 |
-| A-03 | Audience | `/events/[eventSlug]/reserve` | 비회원 예매 드로어/페이지 |
-| A-04 | Audience | `/reservation/status?event=[eventSlug]` | 승인 여부 확인 |
-| A-05 | Audience | `/reservation/detail?event=[eventSlug]` | 예매 상세·QR·취소 |
-| O-01 | Organizer | `/signup` | 기획자 회원가입 |
-| O-02 | Organizer | `/login` | 기획자 로그인 |
-| O-03 | Organizer | `/dashboard` | 전체 통계 대시보드 |
-| O-04 | Organizer | `/dashboard/events` | 공연 목록 |
-| O-05 | Organizer | `/dashboard/events/new` | 공연 생성 Step 1 |
-| O-06 | Organizer | `/dashboard/events/[id]/seats` | 공연 생성 Step 2·좌석 목록 |
-| O-07 | Organizer | `/dashboard/events/[id]/overview` | 공연 개요·상태·공개 |
-| O-08 | Organizer | `/dashboard/events/[id]/ticket-types` | 티켓 타입 관리 |
-| O-09 | Organizer | `/dashboard/events/[id]/feed` | 공연 피드 관리 |
-| O-10 | Organizer | `/dashboard/events/[id]/reservations` | 예매·입금·대기열 관리 |
-| O-11 | Organizer | `/dashboard/events/[id]/check-in` | QR 체크인 |
+| ID   | 사용자    | 라우트                                  | 화면                       |
+| ---- | --------- | --------------------------------------- | -------------------------- |
+| A-01 | Audience  | `/` 또는 `/feed`                        | 홈 피드                    |
+| A-02 | Audience  | `/events/[eventSlug]`                   | 공연 상세                  |
+| A-03 | Audience  | `/events/[eventSlug]/reserve`           | 비회원 예매 드로어/페이지  |
+| A-04 | Audience  | `/reservation/status?event=[eventSlug]` | 승인 여부 확인             |
+| A-05 | Audience  | `/reservation/detail?event=[eventSlug]` | 예매 상세·QR·취소          |
+| O-01 | Organizer | `/signup`                               | 기획자 회원가입            |
+| O-02 | Organizer | `/login`                                | 기획자 로그인              |
+| O-03 | Organizer | `/dashboard`                            | 전체 통계 대시보드         |
+| O-04 | Organizer | `/dashboard/events`                     | 공연 목록                  |
+| O-05 | Organizer | `/dashboard/events/new`                 | 공연 생성 Step 1           |
+| O-06 | Organizer | `/dashboard/events/[id]/seats`          | 공연 생성 Step 2·좌석 목록 |
+| O-07 | Organizer | `/dashboard/events/[id]/overview`       | 공연 개요·상태·공개        |
+| O-08 | Organizer | `/dashboard/events/[id]/ticket-types`   | 티켓 타입 관리             |
+| O-09 | Organizer | `/dashboard/events/[id]/feed`           | 공연 피드 관리             |
+| O-10 | Organizer | `/dashboard/events/[id]/reservations`   | 예매·입금·대기열 관리      |
+| O-11 | Organizer | `/dashboard/events/[id]/check-in`       | QR 체크인                  |
 
 ## 5. 관객 화면
 
@@ -278,13 +278,13 @@ PRD: `section-02-users-and-roles.md` 4, `section-08-auth-and-security.md` 3.
 
 상태별 표시:
 
-| 상태 | 예매번호 | QR | 액션 |
-|---|---|---|---|
-| 입금 대기 | 발급 대기 | 안내 문구 | 취소 가능 시 취소 |
-| 예매 확정 | 표시 | 고유 정적 QR | 취소 가능 시 취소 |
-| 취소 | 기존 번호가 있으면 참조용 표시 | 무효 | 주최자 환불 문의 안내 |
-| 입장 완료 | 표시 | 사용 완료 표시 | 체크인 완료 시각 표시 |
-| 대기 신청 | 없음 | 없음 | 대기 취소 정책에 따른 액션 |
+| 상태      | 예매번호                       | QR             | 액션                       |
+| --------- | ------------------------------ | -------------- | -------------------------- |
+| 입금 대기 | 발급 대기                      | 안내 문구      | 취소 가능 시 취소          |
+| 예매 확정 | 표시                           | 고유 정적 QR   | 취소 가능 시 취소          |
+| 취소      | 기존 번호가 있으면 참조용 표시 | 무효           | 주최자 환불 문의 안내      |
+| 입장 완료 | 표시                           | 사용 완료 표시 | 체크인 완료 시각 표시      |
+| 대기 신청 | 없음                           | 없음           | 대기 취소 정책에 따른 액션 |
 
 QR 규칙:
 
@@ -333,6 +333,7 @@ KPI:
 - 선착순 선택 시 총 수용 인원
 - 1인 최대 예매 매수
 - 선택적 티켓 타입 목록
+- 좌석 지정 공연은 최초 생성 단계에서 행·열 수와 통로·빈 공간을 포함한 좌석 배치도
 - 취소 마감
 - 은행명, 계좌번호, 예금주
 
@@ -340,6 +341,7 @@ KPI:
 
 - 선착순: `total_capacity` 필수.
 - 좌석 지정: `total_capacity` 입력을 숨기고 활성 좌석 수를 사용.
+- 좌석 지정: 생성 화면의 배치도에서 활성 좌석을 선택하고 저장된 행·열 위치를 관객 좌석 선택 화면에 유지.
 - 티켓 타입과 좌석은 모두 같은 공연 단일 가격 사용.
 
 액션:
@@ -354,14 +356,18 @@ KPI:
 컴포넌트:
 
 - 좌석 라벨 입력과 추가 버튼
-- 좌석 목록: 순서, 라벨, 활성 여부, 수정·비활성화
+- 무대 기준 N×N 좌석 배치도
+- 각 좌석 셀에서 라벨, 활성 여부, 점유 상태 확인과 수정·비활성화
 - 미리보기, 임시 저장, 공개
 
 규칙:
 
 - `(event_id, label)`은 중복될 수 없다.
+- 최초 공개 전에는 좌석 배치도를 전체 교체할 수 있다.
+- 최초 공개 후에는 공연을 다시 비공개로 바꾸더라도 좌석 배치를 읽기 전용으로 표시한다.
 - 예매 이력이 있는 좌석은 영구 삭제하지 않고 비활성화한다.
-- 행×열 생성, 통로 토글, 좌석 등급은 제공하지 않는다.
+- 행×열 생성과 좌석 셀 활성/해제로 통로·빈 공간을 표현한다.
+- 좌석 등급과 좌석별 차등 가격은 제공하지 않는다.
 
 ### O-07. 공연 개요
 
@@ -461,15 +467,15 @@ KPI:
 
 ## 9. PRD 매핑
 
-| 디자인 영역 | 기준 PRD |
-|---|---|
-| 사용자·상태·비회원 조회 | `section-02-users-and-roles.md` |
-| 전체 사용자 흐름 | `section-03-user-flows.md` |
-| 기능과 예외 | `section-04-feature-requirements.md` |
-| 라우트와 화면 | `section-05-dashboard-and-pages.md` |
-| 데이터 필드와 제약 | `section-06-data-model.md` |
-| 서버 액션 | `section-07-api-and-actions.md` |
-| 인증·보안 | `section-08-auth-and-security.md` |
-| 구현·테스트 | `section-09-tech-stack-and-implementation.md` |
-| MVP 포함·제외 | `section-10-mvp-scope-and-roadmap.md` |
-| 미정 정책 | `section-11-open-questions.md` |
+| 디자인 영역             | 기준 PRD                                      |
+| ----------------------- | --------------------------------------------- |
+| 사용자·상태·비회원 조회 | `section-02-users-and-roles.md`               |
+| 전체 사용자 흐름        | `section-03-user-flows.md`                    |
+| 기능과 예외             | `section-04-feature-requirements.md`          |
+| 라우트와 화면           | `section-05-dashboard-and-pages.md`           |
+| 데이터 필드와 제약      | `section-06-data-model.md`                    |
+| 서버 액션               | `section-07-api-and-actions.md`               |
+| 인증·보안               | `section-08-auth-and-security.md`             |
+| 구현·테스트             | `section-09-tech-stack-and-implementation.md` |
+| MVP 포함·제외           | `section-10-mvp-scope-and-roadmap.md`         |
+| 미정 정책               | `section-11-open-questions.md`                |

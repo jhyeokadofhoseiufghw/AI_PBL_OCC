@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS events (
     event_start_at TIMESTAMPTZ NOT NULL,
     event_end_at TIMESTAMPTZ,
     status TEXT NOT NULL DEFAULT 'SCHEDULED' CHECK (status IN ('SCHEDULED', 'IN_PROGRESS', 'COMPLETED', 'HIDDEN', 'CANCELLED')),
+    published_at TIMESTAMPTZ,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     CONSTRAINT events_capacity_matches_reservation_type_check
@@ -60,6 +61,8 @@ CREATE TABLE IF NOT EXISTS seats (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     label TEXT NOT NULL, -- A1, B1 등
+    layout_row INTEGER CHECK (layout_row IS NULL OR layout_row > 0),
+    layout_column INTEGER CHECK (layout_column IS NULL OR layout_column > 0),
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (event_id, label)
@@ -81,6 +84,10 @@ CREATE TABLE IF NOT EXISTS reservations (
     status TEXT NOT NULL DEFAULT 'PENDING_PAYMENT' CHECK (status IN ('PENDING_PAYMENT', 'CONFIRMED', 'CANCELLED', 'CHECKED_IN', 'WAITLISTED')),
     reservation_code TEXT UNIQUE, -- 입금 승인 시 생성
     qr_token TEXT UNIQUE,        -- 입금 승인 시 생성
+    qr_image_data TEXT,          -- python-qrcode가 생성한 data URL
+    qr_generation_status TEXT NOT NULL DEFAULT 'NOT_REQUESTED'
+        CHECK (qr_generation_status IN ('NOT_REQUESTED', 'PENDING', 'READY', 'FAILED')),
+    qr_generation_error TEXT,
     checked_in_at TIMESTAMPTZ,   -- QR 체크인 완료 시각
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
@@ -110,6 +117,12 @@ CREATE TABLE IF NOT EXISTS feed_posts (
     content TEXT NOT NULL,
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
+CREATE TABLE IF NOT EXISTS request_rate_limits (
+    key TEXT PRIMARY KEY,
+    attempts INTEGER NOT NULL DEFAULT 1,
+    window_started_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
 -- Create Indexes for optimization

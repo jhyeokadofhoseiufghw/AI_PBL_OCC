@@ -1,25 +1,130 @@
 import Link from "next/link";
-
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
 
 export default async function DashboardPage() {
   const session = await requireOrganizer();
   const sql = getSql();
-  const rows = await sql`SELECT name, organization_name FROM organizers WHERE id = ${session.organizerId} LIMIT 1`;
-  const organizer = rows[0];
+  const [organizers, eventStats, reservationStats, recent, todayEvents] =
+    await Promise.all([
+      sql`SELECT name,organization_name FROM organizers WHERE id=${session.organizerId} LIMIT 1`,
+      sql`SELECT COUNT(*)::int total,COUNT(*) FILTER(WHERE status='SCHEDULED')::int scheduled,COUNT(*) FILTER(WHERE status='IN_PROGRESS')::int in_progress,COUNT(*) FILTER(WHERE status='COMPLETED')::int completed FROM events WHERE organizer_id=${session.organizerId}`,
+      sql`SELECT COUNT(*) FILTER(WHERE r.status NOT IN('CANCELLED','WAITLISTED'))::int total_reservations,COUNT(*) FILTER(WHERE r.status='PENDING_PAYMENT')::int pending,COUNT(*) FILTER(WHERE r.status='CONFIRMED')::int confirmed,COUNT(*) FILTER(WHERE r.status='WAITLISTED')::int waitlisted,COUNT(*) FILTER(WHERE r.status='CHECKED_IN' AND r.checked_in_at >= (date_trunc('day',NOW() AT TIME ZONE 'Asia/Seoul') AT TIME ZONE 'Asia/Seoul'))::int today_checkins FROM reservations r JOIN events e ON e.id=r.event_id WHERE e.organizer_id=${session.organizerId}`,
+      sql`SELECT e.id,e.title,e.event_start_at,e.status,COUNT(r.id)::int reservations,COUNT(r.id) FILTER(WHERE r.status='CHECKED_IN')::int checked_in FROM events e LEFT JOIN reservations r ON r.event_id=e.id WHERE e.organizer_id=${session.organizerId} GROUP BY e.id ORDER BY e.created_at DESC LIMIT 5`,
+      sql`SELECT id,title,event_start_at,venue FROM events WHERE organizer_id=${session.organizerId} AND (event_start_at AT TIME ZONE 'Asia/Seoul')::date=(NOW() AT TIME ZONE 'Asia/Seoul')::date ORDER BY event_start_at`,
+    ]);
+  const organizer = organizers[0],
+    e = eventStats[0],
+    r = reservationStats[0];
+  const cards = [
+    ["전체 공연", e.total],
+    ["예정 공연", e.scheduled],
+    ["진행 중", e.in_progress],
+    ["종료 공연", e.completed],
+    ["총 예매", r.total_reservations],
+    ["입금 대기", r.pending],
+    ["예매 확정", r.confirmed],
+    ["대기 신청", r.waitlisted],
+    ["오늘 체크인", r.today_checkins],
+  ];
   return (
     <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
-      <h1 className="text-2xl font-semibold text-zinc-950">기획자 대시보드</h1>
-      <p className="mt-2 text-zinc-600">{organizer ? `${String(organizer.organization_name)} · ${String(organizer.name)}` : "운영 현황"}</p>
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
-        <Link className="rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-900" href="/dashboard/events">
-          공연 목록
-        </Link>
-        <Link className="rounded-lg border border-zinc-200 bg-white px-4 py-3 text-sm font-medium text-zinc-900" href="/dashboard/events/new">
-          새 공연 생성
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-semibold">기획자 대시보드</h1>
+          <p className="mt-2 text-zinc-600">
+            {organizer
+              ? `${String(organizer.organization_name)} · ${String(organizer.name)}`
+              : "운영 현황"}
+          </p>
+        </div>
+        <Link
+          className="rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white"
+          href="/dashboard/events/new"
+        >
+          새 공연
         </Link>
       </div>
+      <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+        {cards.map(([label, value]) => (
+          <article
+            className="rounded-xl border bg-white p-5"
+            key={String(label)}
+          >
+            <p className="text-sm text-zinc-500">{label}</p>
+            <p className="mt-1 text-2xl font-semibold">{Number(value)}</p>
+          </article>
+        ))}
+      </section>
+      <section className="mt-10">
+        <h2 className="text-lg font-semibold">오늘 공연</h2>
+        <div className="mt-4 space-y-2">
+          {todayEvents.map((event) => (
+            <Link
+              className="block rounded-xl border bg-white p-4"
+              href={`/dashboard/events/${String(event.id)}/check-in`}
+              key={String(event.id)}
+            >
+              <b>{String(event.title)}</b>
+              <span className="ml-3 text-sm text-zinc-500">
+                {new Date(String(event.event_start_at)).toLocaleTimeString(
+                  "ko-KR",
+                )}{" "}
+                · {String(event.venue)}
+              </span>
+            </Link>
+          ))}
+          {!todayEvents.length ? (
+            <p className="rounded-xl border border-dashed p-6 text-sm text-zinc-500">
+              오늘 예정된 공연이 없습니다.
+            </p>
+          ) : null}
+        </div>
+      </section>
+      <section className="mt-10">
+        <div className="flex justify-between">
+          <h2 className="text-lg font-semibold">최근 공연</h2>
+          <Link className="text-sm text-emerald-700" href="/dashboard/events">
+            전체 보기
+          </Link>
+        </div>
+        <div className="mt-4 space-y-3">
+          {recent.map((row) => (
+            <article
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-white p-4"
+              key={String(row.id)}
+            >
+              <div>
+                <Link
+                  className="font-medium"
+                  href={`/dashboard/events/${String(row.id)}/overview`}
+                >
+                  {String(row.title)}
+                </Link>
+                <p className="mt-1 text-sm text-zinc-500">
+                  {new Date(String(row.event_start_at)).toLocaleString("ko-KR")}{" "}
+                  · 예매 {Number(row.reservations)}건 · 체크인{" "}
+                  {Number(row.checked_in)}건
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <Link
+                  className="rounded border px-3 py-2 text-sm"
+                  href={`/dashboard/events/${String(row.id)}/reservations`}
+                >
+                  예매자
+                </Link>
+                <Link
+                  className="rounded bg-zinc-900 px-3 py-2 text-sm text-white"
+                  href={`/dashboard/events/${String(row.id)}/check-in`}
+                >
+                  QR 체크인
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
     </main>
   );
 }

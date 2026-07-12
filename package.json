@@ -5,8 +5,10 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build",
+    "vercel-build": "node scripts/db/apply-schema.mjs db/migrations/006_day3_reservation_operations.sql && node scripts/db/apply-schema.mjs db/migrations/007_backfill_public_event_feed_cards.sql && node scripts/db/apply-schema.mjs db/migrations/008_add_rate_limits.sql && node scripts/db/apply-schema.mjs db/migrations/009_add_seat_layout.sql && node scripts/db/apply-schema.mjs db/migrations/010_add_event_published_at.sql && next build",
     "start": "next start",
     "lint": "eslint .",
+    "test": "node --no-warnings --test tests/*.test.mjs",
     "typecheck": "tsc --noEmit",
     "db:schema": "psql \"$DATABASE_URL\" -f db/schema.sql",
     "db:setup:js": "node scripts/db/apply-schema.mjs",
@@ -14,8 +16,10 @@
   },
   "dependencies": {
     "@neondatabase/serverless": "latest",
+    "@vercel/blob": "^2.6.1",
     "@yudiel/react-qr-scanner": "latest",
     "next": "latest",
+    "qrcode": "^1.5.4",
     "react": "latest",
     "react-dom": "latest",
     "zod": "latest"
@@ -23,10 +27,12 @@
   "devDependencies": {
     "@tailwindcss/postcss": "latest",
     "@types/node": "latest",
+    "@types/qrcode": "^1.5.6",
     "@types/react": "latest",
     "@types/react-dom": "latest",
     "eslint": "latest",
     "eslint-config-next": "latest",
+    "prettier": "^3.9.5",
     "tailwindcss": "latest",
     "typescript": "latest"
   }

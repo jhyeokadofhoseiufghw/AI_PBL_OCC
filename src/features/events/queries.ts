@@ -35,9 +35,9 @@ export async function getEventReservationOptions(eventId: string) {
   const [ticketTypes, seats] = await Promise.all([
     sql`SELECT id, name FROM ticket_types WHERE event_id = ${eventId} ORDER BY created_at`,
     sql`
-      SELECT s.id, s.label,
+      SELECT s.id, s.label, s.layout_row, s.layout_column,
         EXISTS (SELECT 1 FROM reservation_seats rs WHERE rs.seat_id = s.id AND rs.released_at IS NULL) AS occupied
-      FROM seats s WHERE s.event_id = ${eventId} AND s.is_active ORDER BY s.label
+      FROM seats s WHERE s.event_id = ${eventId} AND s.is_active ORDER BY s.layout_row NULLS LAST, s.layout_column NULLS LAST, s.label
     `,
   ]);
   return { ticketTypes, seats };

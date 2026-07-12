@@ -21,11 +21,15 @@ function getSecret() {
 }
 
 function sign(encodedPayload: string) {
-  return createHmac("sha256", getSecret()).update(encodedPayload).digest("base64url");
+  return createHmac("sha256", getSecret())
+    .update(encodedPayload)
+    .digest("base64url");
 }
 
 function encodeSession(payload: SessionPayload) {
-  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString("base64url");
+  const encodedPayload = Buffer.from(JSON.stringify(payload)).toString(
+    "base64url",
+  );
   return `${encodedPayload}.${sign(encodedPayload)}`;
 }
 
@@ -35,10 +39,13 @@ function decodeSession(value: string): SessionPayload | null {
 
   const expected = Buffer.from(sign(encodedPayload));
   const actual = Buffer.from(signature);
-  if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) return null;
+  if (expected.length !== actual.length || !timingSafeEqual(expected, actual))
+    return null;
 
   try {
-    const payload = JSON.parse(Buffer.from(encodedPayload, "base64url").toString()) as SessionPayload;
+    const payload = JSON.parse(
+      Buffer.from(encodedPayload, "base64url").toString(),
+    ) as SessionPayload;
     if (!payload.organizerId || payload.expiresAt <= Date.now()) return null;
     return payload;
   } catch {

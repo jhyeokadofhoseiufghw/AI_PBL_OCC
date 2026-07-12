@@ -63,7 +63,10 @@ function splitStatements(source) {
 if (!process.env.DATABASE_URL) throw new Error("DATABASE_URL is required to apply the schema.");
 
 const sql = neon(process.env.DATABASE_URL);
-const schema = await readFile(new URL("../../db/schema.sql", import.meta.url), "utf8");
+const input = process.argv[2]
+  ? new URL(`../../${process.argv[2]}`, import.meta.url)
+  : new URL("../../db/schema.sql", import.meta.url);
+const schema = await readFile(input, "utf8");
 const statements = splitStatements(schema);
 
 for (const statement of statements) {

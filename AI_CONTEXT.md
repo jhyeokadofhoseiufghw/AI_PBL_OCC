@@ -5,15 +5,17 @@
 ---
 
 ## 1. 프로젝트 개요 (Overview)
+
 - **명칭**: 소규모 공연을 위한 피드형 예매 및 운영 관리 플랫폼 (OCC)
 - **목적**: 동아리, 소규모 밴드 등의 공연 기획자가 겪는 수동 입금 확인, 좌석 매핑, QR 입장 관리 등의 번거로움을 자동화하여 운영 비용을 단축하고, 피드(Feed) 서비스를 통해 관객의 흥미 유발 및 예매 전환을 돕습니다.
-- **주요 대상**: 
+- **주요 대상**:
   - **기획자 (Organizer)**: 회원 가입 가능, 공연 생성, 티켓/좌석 배치, 입금 확인/승인, QR 체크인 스캔, 대시보드 통계 조회.
   - **관객 (Audience)**: 비회원 예매, 예약 확인(이름+연락처+조회 패스워드), QR 티켓 제시, 예매 취소.
 
 ---
 
 ## 2. 요구사항 및 기획 링크 (PRD Documents)
+
 기획에 관한 모든 마크다운 문서는 [docs/prd](file:///Users/jjaek/Developer/AI_PBL_OCC/docs/prd)에 있습니다. 특정 도메인을 수정하거나 기획 규칙을 확인할 때 아래 문서를 반드시 먼저 참고하십시오.
 
 1. **[전체 요약 및 인덱스](file:///Users/jjaek/Developer/AI_PBL_OCC/docs/prd/PRD_INDEX.md)**: 전체 요구사항의 색인 및 탐색 규칙.
@@ -33,8 +35,9 @@
 ---
 
 ## 3. 핵심 아키텍처 및 구현 방식
+
 - **Next.js Server Actions**: 데이터 수정 작업은 API 엔드포인트 대신 `use server` 액션을 호출하여 Neon DB에 반영합니다.
-- **QR 생성**: `vendor/python-qrcode`에 클론한 `https://github.com/lincolnloop/python-qrcode` 코드를 `scripts/qr/generate_qr.py` wrapper로 호출해 `qr_token` 기반 QR 이미지를 생성합니다.
+- **QR 생성**: Vercel Node 런타임에서는 `qrcode` 패키지로 `qr_token` 기반 PNG data URL을 생성합니다. `scripts/qr/generate_qr.py`는 로컬 Python 호환 테스트용으로 유지합니다.
 - **QR 체크인 스캐너**: 기획자 체크인 화면은 `@yudiel/react-qr-scanner`를 사용하며, 휴대폰 후면 카메라(`facingMode: 'environment'`)를 우선 사용합니다.
 - **도메인 중심 폴더 구조**:
   - 소스 코드는 `src/features/[domain]/` 하위에 위치시킵니다.
@@ -44,5 +47,6 @@
 ---
 
 ## 4. 로컬 실행 방법
+
 1. `.env.example` 파일을 복사하여 `.env.local`을 생성하고 Neon DB 연결 문자열을 입력합니다.
 2. `npm run dev`를 실행하여 `http://localhost:3000`에서 개발 서버를 구동합니다.

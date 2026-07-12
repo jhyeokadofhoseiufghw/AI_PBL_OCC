@@ -1,4 +1,7 @@
-export function calculateReservationTotal(ticketPrice: number, quantity: number) {
+export function calculateReservationTotal(
+  ticketPrice: number,
+  quantity: number,
+) {
   if (!Number.isInteger(ticketPrice) || ticketPrice < 0) {
     throw new RangeError("ticketPrice must be a non-negative integer");
   }
