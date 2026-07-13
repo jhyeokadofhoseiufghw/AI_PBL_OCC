@@ -3,6 +3,7 @@ import assert from "node:assert/strict";
 import QRCode from "qrcode";
 import { calculateReservationTotal } from "../src/features/events/pricing.ts";
 import { hashPassword, verifyPassword } from "../src/lib/auth/password.ts";
+import { normalizePhone } from "../src/features/reservations/phone.ts";
 
 test("reservation total uses the event unit price", () => {
   assert.equal(calculateReservationTotal(15000, 3), 45000);
@@ -20,4 +21,9 @@ test("QR payload is encoded as a PNG data URL", async () => {
   const token = "secure-test-token-1234567890";
   const data = await QRCode.toDataURL(token);
   assert.match(data, /^data:image\/png;base64,/);
+});
+test("reservation phone lookup ignores formatting", () => {
+  assert.equal(normalizePhone("010-1234-5678"), "01012345678");
+  assert.equal(normalizePhone("010 1234 5678"), "01012345678");
+  assert.equal(normalizePhone("01012345678"), "01012345678");
 });

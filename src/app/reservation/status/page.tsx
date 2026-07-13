@@ -35,7 +35,7 @@ export default async function ReservationStatusPage({
           대기 신청이 완료되었습니다.
         </p>
       ) : null}
-      <LookupForm initialEvent={query.event} mode="status" />
+      <LookupForm mode="status" />
     </main>
   );
 }

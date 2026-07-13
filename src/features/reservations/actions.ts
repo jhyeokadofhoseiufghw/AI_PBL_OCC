@@ -9,6 +9,7 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
+import { normalizePhone } from "./phone";
 import { generateQrDataUrl } from "./qr";
 
 export type ReservationActionState = { error?: string };
@@ -62,10 +63,6 @@ const schema = z.object({
 
 function text(formData: FormData, key: string) {
   return String(formData.get(key) ?? "");
-}
-
-function normalizePhone(value: string) {
-  return value.replace(/\D/g, "");
 }
 
 export async function createReservation(
@@ -391,27 +388,42 @@ export async function lookupReservation(
     return { error: "조회 패스워드는 예매할 때 입력한 숫자 4~6자리입니다." };
 
   const sql = getSql();
-  if (!text(formData, "reservationId")) {
+  const reservationId = text(formData, "reservationId");
+  if (!reservationId) {
     if (!(await consumeRateLimit("reservation-lookup", `${name}:${phone}`, 10)))
       return { error: "조회 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
-    const rows =
-      await sql`SELECT r.id,r.created_at,r.quantity,r.status,r.lookup_password_hash,e.title event_title,e.event_start_at FROM reservations r JOIN events e ON e.id=r.event_id WHERE r.reserver_name=${name} AND regexp_replace(r.reserver_phone,'[^0-9]','','g')=${phone} ORDER BY e.event_start_at DESC,r.created_at DESC LIMIT 50`;
-    const matched = [];
-    for (const row of rows)
-      if (await verifyPassword(password, String(row.lookup_password_hash)))
-        matched.push(row);
-    if (matched.length > 1)
-      return {
-        candidates: matched.map((row) => ({
-          id: String(row.id),
-          eventTitle: String(row.event_title),
-          eventStartAt: String(row.event_start_at),
-          createdAt: String(row.created_at),
-          quantity: Number(row.quantity),
-          status: String(row.status),
-        })),
-      };
   }
+  if (reservationId && !z.string().uuid().safeParse(reservationId).success)
+    return {
+      error:
+        "선택한 예매 정보가 올바르지 않습니다. 목록에서 다시 선택해주세요.",
+    };
+
+  const rows =
+    await sql`SELECT r.id,r.created_at,r.quantity,r.status,r.lookup_password_hash,e.title event_title,e.event_start_at FROM reservations r JOIN events e ON e.id=r.event_id WHERE r.reserver_name=${name} AND regexp_replace(r.reserver_phone,'[^0-9]','','g')=${phone} ORDER BY e.event_start_at DESC,r.created_at DESC LIMIT 50`;
+  const matched = [];
+  for (const candidate of rows)
+    if (await verifyPassword(password, String(candidate.lookup_password_hash)))
+      matched.push(candidate);
+  const candidates = matched.map((candidate) => ({
+    id: String(candidate.id),
+    eventTitle: String(candidate.event_title),
+    eventStartAt: String(candidate.event_start_at),
+    createdAt: String(candidate.created_at),
+    quantity: Number(candidate.quantity),
+    status: String(candidate.status),
+  }));
+  if (candidates.length > 1 && !reservationId) return { candidates };
+  if (
+    !candidates.length ||
+    (reservationId && !candidates.some((item) => item.id === reservationId))
+  )
+    return {
+      error:
+        "일치하는 예매를 찾지 못했습니다. 예매 당시 이름과 연락처 숫자, 조회 패스워드 숫자 4~6자리를 확인해주세요. 연락처 하이픈 유무는 조회에 영향을 주지 않습니다.",
+    };
+
+  if (!reservationId) formData.set("reservationId", candidates[0].id);
   const row = await findReservation(formData, false);
   if (row === "RATE_LIMITED")
     return { error: "조회 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
@@ -428,6 +440,7 @@ export async function lookupReservation(
     ORDER BY rt.ticket_number
   `;
   return {
+    candidates: candidates.length > 1 ? candidates : undefined,
     reservation: {
       id: String(row.id),
       eventSlug: String(row.event_slug),

@@ -2,7 +2,6 @@
 
 import { useActionState, useState } from "react";
 import Image from "next/image";
-import Link from "next/link";
 import { cancelReservation, lookupReservation } from "../actions";
 
 const input = "mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2";
@@ -15,10 +14,8 @@ const labels: Record<string, string> = {
 };
 
 export function LookupForm({
-  initialEvent = "",
   mode = "detail",
 }: {
-  initialEvent?: string;
   mode?: "status" | "detail";
 }) {
   const [lookup, lookupAction, lookupPending] = useActionState(
@@ -30,7 +27,6 @@ export function LookupForm({
     {},
   );
   const [values, setValues] = useState({
-    eventSlug: initialEvent,
     name: "",
     phone: "",
     lookupPassword: "",
@@ -48,24 +44,13 @@ export function LookupForm({
     <div className="mt-8 space-y-6">
       <form
         action={lookupAction}
+        autoComplete="on"
         className="grid gap-4 rounded-xl border bg-white p-5 sm:grid-cols-2"
       >
-        <label className="font-medium sm:col-span-2">
-          공연 주소 이름
-          <input
-            className={input}
-            name="eventSlug"
-            onChange={(e) =>
-              setValues({ ...values, eventSlug: e.target.value })
-            }
-            placeholder="예: spring-concert"
-            required
-            value={values.eventSlug}
-          />
-        </label>
         <label className="font-medium">
           이름
           <input
+            autoComplete="name"
             className={input}
             name="name"
             onChange={(e) => setValues({ ...values, name: e.target.value })}
@@ -76,10 +61,14 @@ export function LookupForm({
         <label className="font-medium">
           연락처
           <input
+            autoComplete="tel"
             className={input}
+            inputMode="tel"
             name="phone"
             onChange={(e) => setValues({ ...values, phone: e.target.value })}
             required
+            placeholder="010-1234-5678 또는 01012345678"
+            type="tel"
             value={values.phone}
           />
         </label>
@@ -115,13 +104,19 @@ export function LookupForm({
         </button>
       </form>
       {lookup.candidates ? (
-        <section className="rounded-xl border bg-white p-5">
+        <section
+          className="scroll-mt-6 rounded-xl border bg-white p-5"
+          id="reservation-list"
+        >
           <h2 className="font-semibold">조회할 예매를 선택해주세요</h2>
+          <p className="mt-1 text-sm text-zinc-500">
+            같은 정보로 예매한 공연이 여러 건 있습니다.
+          </p>
           <div className="mt-3 space-y-2">
             {lookup.candidates.map((candidate) => (
               <form
                 action={lookupAction}
-                className="flex items-center justify-between rounded-lg border p-3"
+                className="flex flex-wrap items-center justify-between gap-3 rounded-lg border p-4"
                 key={candidate.id}
               >
                 {fields}
@@ -131,8 +126,15 @@ export function LookupForm({
                   value={candidate.id}
                 />
                 <span className="text-sm">
-                  {new Date(candidate.createdAt).toLocaleString("ko-KR")} ·{" "}
-                  {candidate.quantity}매 · {labels[candidate.status]}
+                  <b className="block text-base">{candidate.eventTitle}</b>
+                  <span className="mt-1 block text-zinc-600">
+                    공연{" "}
+                    {new Date(candidate.eventStartAt).toLocaleString("ko-KR")} ·{" "}
+                    {candidate.quantity}매 · {labels[candidate.status]}
+                  </span>
+                  <span className="mt-1 block text-xs text-zinc-400">
+                    예매 {new Date(candidate.createdAt).toLocaleString("ko-KR")}
+                  </span>
                 </span>
                 <button className="rounded border px-3 py-2 text-sm">
                   선택
@@ -144,6 +146,14 @@ export function LookupForm({
       ) : null}
       {reservation ? (
         <section className="rounded-xl border bg-white p-6">
+          {lookup.candidates ? (
+            <a
+              className="mb-5 inline-flex rounded-lg border px-3 py-2 text-sm text-emerald-700"
+              href="#reservation-list"
+            >
+              ← 예매 목록으로 돌아가기
+            </a>
+          ) : null}
           <p className="text-sm text-emerald-700">
             {labels[reservation.status] ?? reservation.status}
           </p>
@@ -165,13 +175,13 @@ export function LookupForm({
               </div>
             ) : null}
           </dl>
-          {mode === "detail" && reservation.checkedInAt ? (
+          {reservation.checkedInAt ? (
             <p className="mt-5 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">
               입장 완료 ·{" "}
               {new Date(reservation.checkedInAt).toLocaleString("ko-KR")}
             </p>
           ) : null}
-          {mode === "detail" && reservation.tickets.length ? (
+          {reservation.tickets.length ? (
             <div className="mt-6 grid gap-4 sm:grid-cols-2">
               {reservation.tickets.map((ticket) => (
                 <article className="rounded-xl border p-4" key={ticket.number}>
@@ -201,14 +211,6 @@ export function LookupForm({
                 </article>
               ))}
             </div>
-          ) : null}
-          {mode === "status" && reservation.status === "CONFIRMED" ? (
-            <Link
-              className="mt-5 inline-flex rounded-lg bg-emerald-700 px-4 py-2 text-white"
-              href={`/reservation/detail?event=${encodeURIComponent(reservation.eventSlug)}`}
-            >
-              예매 상세·QR 확인
-            </Link>
           ) : null}
           {mode === "detail" &&
           ["PENDING_PAYMENT", "CONFIRMED"].includes(reservation.status) &&
