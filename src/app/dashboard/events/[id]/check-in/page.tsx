@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CheckInScanner } from "@/features/checkin/components/check-in-scanner";
+import { undoTicketCheckIn } from "@/features/checkin/actions";
+import { ConfirmSubmitButton } from "@/features/events/components/confirm-submit-button";
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
 
@@ -16,7 +18,7 @@ export default async function CheckInPage({
   if (!events[0]) notFound();
   const [stats, logs] = await Promise.all([
     sql`SELECT COUNT(*) FILTER(WHERE rt.checked_in_at IS NULL)::int remaining,COUNT(*) FILTER(WHERE rt.checked_in_at IS NOT NULL)::int checked_in FROM reservation_tickets rt JOIN reservations r ON r.id=rt.reservation_id WHERE r.event_id=${id} AND r.status IN('CONFIRMED','CHECKED_IN')`,
-    sql`SELECT r.reserver_name,rt.ticket_number,rt.checked_in_at,s.label seat_label FROM reservation_tickets rt JOIN reservations r ON r.id=rt.reservation_id LEFT JOIN seats s ON s.id=rt.seat_id WHERE r.event_id=${id} AND rt.checked_in_at IS NOT NULL ORDER BY rt.checked_in_at DESC LIMIT 10`,
+    sql`SELECT rt.id ticket_id,r.reserver_name,rt.ticket_number,rt.checked_in_at,s.label seat_label FROM reservation_tickets rt JOIN reservations r ON r.id=rt.reservation_id LEFT JOIN seats s ON s.id=rt.seat_id WHERE r.event_id=${id} AND rt.checked_in_at IS NOT NULL ORDER BY rt.checked_in_at DESC LIMIT 10`,
   ]);
   const summary = stats[0];
   return (
@@ -61,7 +63,7 @@ export default async function CheckInPage({
                 className="rounded-lg border bg-white p-3 text-sm"
                 key={`${String(row.checked_in_at)}-${index}`}
               >
-                <div className="flex justify-between">
+                <div className="flex flex-wrap items-center justify-between gap-2">
                   <span className="font-medium">
                     {String(row.reserver_name)} · 티켓{" "}
                     {Number(row.ticket_number)}
@@ -72,6 +74,23 @@ export default async function CheckInPage({
                       "ko-KR",
                     )}
                   </time>
+                  <form
+                    action={undoTicketCheckIn}
+                    className="w-full text-right"
+                  >
+                    <input name="eventId" type="hidden" value={id} />
+                    <input
+                      name="ticketId"
+                      type="hidden"
+                      value={String(row.ticket_id)}
+                    />
+                    <ConfirmSubmitButton
+                      className="rounded border border-red-200 px-2 py-1 text-xs text-red-700"
+                      confirmMessage="이 티켓의 입장 처리를 취소할까요? 취소 후 QR을 다시 사용할 수 있습니다."
+                    >
+                      입장 취소
+                    </ConfirmSubmitButton>
+                  </form>
                 </div>
               </div>
             ))}

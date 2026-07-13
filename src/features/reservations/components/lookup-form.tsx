@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useRef, useState } from "react";
 import Image from "next/image";
 import { cancelReservation, lookupReservation } from "../actions";
 
@@ -12,6 +12,100 @@ const labels: Record<string, string> = {
   CANCELLED: "취소",
   WAITLISTED: "대기 신청",
 };
+
+type TicketView = {
+  number: number;
+  seat: string | null;
+  qrImageData: string | null;
+  qrStatus: string;
+  checkedInAt: string | null;
+};
+
+function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
+  const [index, setIndex] = useState(0);
+  const touchStartX = useRef<number | null>(null);
+  const ticket = tickets[index];
+  const move = (next: number) =>
+    setIndex(Math.max(0, Math.min(tickets.length - 1, next)));
+
+  return (
+    <section className="mt-6 rounded-xl border bg-zinc-50 p-4">
+      <div className="flex items-center justify-between gap-3">
+        <button
+          aria-label="이전 티켓"
+          className="rounded-full border bg-white px-4 py-2 disabled:opacity-30"
+          disabled={index === 0}
+          onClick={() => move(index - 1)}
+          type="button"
+        >
+          ←
+        </button>
+        <p className="text-sm font-medium">
+          {index + 1} / {tickets.length}
+        </p>
+        <button
+          aria-label="다음 티켓"
+          className="rounded-full border bg-white px-4 py-2 disabled:opacity-30"
+          disabled={index === tickets.length - 1}
+          onClick={() => move(index + 1)}
+          type="button"
+        >
+          →
+        </button>
+      </div>
+      <article
+        className="mx-auto mt-4 max-w-sm rounded-xl bg-white p-5 shadow-sm"
+        onTouchEnd={(event) => {
+          if (touchStartX.current === null) return;
+          const distance =
+            event.changedTouches[0].clientX - touchStartX.current;
+          if (Math.abs(distance) > 45) move(index + (distance < 0 ? 1 : -1));
+          touchStartX.current = null;
+        }}
+        onTouchStart={(event) => {
+          touchStartX.current = event.touches[0].clientX;
+        }}
+      >
+        <p className="text-center font-semibold">
+          티켓 {ticket.number}
+          {ticket.seat ? ` · ${ticket.seat}` : ""}
+        </p>
+        {ticket.checkedInAt ? (
+          <p className="mt-3 rounded-lg bg-zinc-100 p-3 text-center text-sm text-zinc-600">
+            입장 완료 · {new Date(ticket.checkedInAt).toLocaleString("ko-KR")}
+          </p>
+        ) : ticket.qrImageData ? (
+          <Image
+            alt={`티켓 ${ticket.number} 입장 QR 코드`}
+            className="mx-auto mt-3 h-56 w-56"
+            height={224}
+            src={ticket.qrImageData}
+            unoptimized
+            width={224}
+          />
+        ) : (
+          <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+            QR 생성 중이거나 재시도가 필요합니다.
+          </p>
+        )}
+      </article>
+      <div className="mt-4 flex justify-center gap-2" aria-label="티켓 선택">
+        {tickets.map((item, itemIndex) => (
+          <button
+            aria-label={`티켓 ${item.number} 보기`}
+            className={`h-2.5 w-2.5 rounded-full ${itemIndex === index ? "bg-emerald-700" : "bg-zinc-300"}`}
+            key={item.number}
+            onClick={() => move(itemIndex)}
+            type="button"
+          />
+        ))}
+      </div>
+      <p className="mt-3 text-center text-xs text-zinc-500">
+        화면을 좌우로 밀거나 화살표를 눌러 티켓을 한 장씩 확인하세요.
+      </p>
+    </section>
+  );
+}
 
 export function LookupForm({
   mode = "detail",
@@ -182,35 +276,10 @@ export function LookupForm({
             </p>
           ) : null}
           {reservation.tickets.length ? (
-            <div className="mt-6 grid gap-4 sm:grid-cols-2">
-              {reservation.tickets.map((ticket) => (
-                <article className="rounded-xl border p-4" key={ticket.number}>
-                  <p className="text-center font-semibold">
-                    티켓 {ticket.number}
-                    {ticket.seat ? ` · ${ticket.seat}` : ""}
-                  </p>
-                  {ticket.checkedInAt ? (
-                    <p className="mt-3 rounded-lg bg-zinc-100 p-3 text-center text-sm text-zinc-600">
-                      입장 완료 ·{" "}
-                      {new Date(ticket.checkedInAt).toLocaleString("ko-KR")}
-                    </p>
-                  ) : ticket.qrImageData ? (
-                    <Image
-                      alt={`티켓 ${ticket.number} 입장 QR 코드`}
-                      className="mx-auto mt-3 h-48 w-48"
-                      height={192}
-                      src={ticket.qrImageData}
-                      unoptimized
-                      width={192}
-                    />
-                  ) : (
-                    <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
-                      QR 생성 중이거나 재시도가 필요합니다.
-                    </p>
-                  )}
-                </article>
-              ))}
-            </div>
+            <TicketQrCarousel
+              key={reservation.id}
+              tickets={reservation.tickets}
+            />
           ) : null}
           {mode === "detail" &&
           ["PENDING_PAYMENT", "CONFIRMED"].includes(reservation.status) &&

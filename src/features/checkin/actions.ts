@@ -17,6 +17,40 @@ const inputSchema = z.object({
   qrToken: z.string().min(20).max(200),
 });
 
+const undoSchema = z.object({
+  eventId: z.string().uuid(),
+  ticketId: z.string().uuid(),
+});
+
+export async function undoTicketCheckIn(formData: FormData) {
+  const parsed = undoSchema.safeParse({
+    eventId: String(formData.get("eventId") ?? ""),
+    ticketId: String(formData.get("ticketId") ?? ""),
+  });
+  if (!parsed.success) return;
+
+  const session = await requireOrganizer();
+  const sql = getSql();
+  const rows = await sql`
+    UPDATE reservation_tickets rt SET checked_in_at=NULL
+    FROM reservations r,events e
+    WHERE rt.id=${parsed.data.ticketId} AND rt.reservation_id=r.id
+      AND r.event_id=${parsed.data.eventId} AND e.id=r.event_id
+      AND e.organizer_id=${session.organizerId} AND rt.checked_in_at IS NOT NULL
+    RETURNING rt.reservation_id
+  `;
+  if (!rows[0]) return;
+
+  await sql`
+    UPDATE reservations
+    SET status='CONFIRMED',checked_in_at=NULL
+    WHERE id=${rows[0].reservation_id} AND status='CHECKED_IN'
+  `;
+  revalidatePath(`/dashboard/events/${parsed.data.eventId}/check-in`);
+  revalidatePath(`/dashboard/events/${parsed.data.eventId}/reservations`);
+  revalidatePath("/dashboard");
+}
+
 export async function checkInByQr(
   eventId: string,
   qrToken: string,

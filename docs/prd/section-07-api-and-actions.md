@@ -289,6 +289,21 @@
 6. 문제 없으면 같은 트랜잭션에서 상태를 `입장 완료`로 변경하고 `checked_in_at = now()` 기록
 7. 중복 체크인 요청은 기존 `checked_in_at`을 유지하고 중복 입장 차단 응답 반환
 
+## `undoTicketCheckIn`
+
+### 입력
+
+- eventId
+- ticketId
+
+### 처리
+
+1. 로그인한 Organizer의 공연 소유권 검증
+2. 해당 공연의 체크인 완료 티켓인지 확인
+3. 티켓의 `checked_in_at`을 null로 복구
+4. 예약이 `CHECKED_IN`이면 `CONFIRMED`로 되돌리고 예약의 체크인 시각 제거
+5. 통계·최근 체크인·예매자 관리 화면 갱신
+
 ## `generateReservationQrImage`
 
 ### 입력
