@@ -1,7 +1,5 @@
 import Link from "next/link";
 
-import { signOutOrganizer } from "@/features/auth/actions";
-
 export function PublicHeader({ signedIn = false }: { signedIn?: boolean }) {
   return (
     <header className="sticky top-0 z-50 border-b border-[#e5e7eb]/80 bg-white/85 backdrop-blur-xl">
@@ -28,16 +26,17 @@ export function PublicHeader({ signedIn = false }: { signedIn?: boolean }) {
           {signedIn ? (
             <>
               <Link
-                className="ha-button-secondary px-3.5 py-2"
+                className="hidden text-[#4a4453] hover:text-[#420093] sm:inline"
                 href="/dashboard"
               >
                 공연 관리
               </Link>
-              <form action={signOutOrganizer} className="hidden sm:block">
-                <button className="text-[#60687a]" type="submit">
-                  로그아웃
-                </button>
-              </form>
+              <Link
+                className="ha-button-primary px-3.5 py-2"
+                href="/dashboard/events/new"
+              >
+                공연 등록 신청
+              </Link>
             </>
           ) : (
             <>
@@ -48,7 +47,7 @@ export function PublicHeader({ signedIn = false }: { signedIn?: boolean }) {
                 로그인
               </Link>
               <Link className="ha-button-primary px-3.5 py-2" href="/signup">
-                공연 등록 신청
+                기획자이신가요?
               </Link>
             </>
           )}
