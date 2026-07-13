@@ -38,7 +38,7 @@ export default async function ReservePage({
         {String(event.title)} {remaining > 0 ? "예매" : "매진"}
       </h1>
       <p className="mt-2 text-zinc-600">
-        잔여 {remaining}석/매 · 1매{" "}
+        잔여 {remaining}석/매 · 기본 가격 1매{" "}
         {Number(event.ticket_price).toLocaleString("ko-KR")}원
       </p>
       {remaining > 0 ? (
@@ -48,6 +48,7 @@ export default async function ReservePage({
             ticketTypes={options.ticketTypes.map((row) => ({
               id: String(row.id),
               name: String(row.name),
+              price: Number(row.price),
             }))}
             seats={options.seats.map((row) => ({
               id: String(row.id),

@@ -11,6 +11,7 @@ type Option = {
   occupied?: boolean;
   layoutRow?: number | null;
   layoutColumn?: number | null;
+  price?: number;
 };
 type Props = {
   event: {
@@ -35,12 +36,15 @@ export function ReservationForm({ event, ticketTypes, seats }: Props) {
   const [state, action, pending] = useActionState(createReservation, {});
   const [quantity, setQuantity] = useState(1);
   const [selectedSeats, setSelectedSeats] = useState<string[]>([]);
-  const [accountConfirmed, setAccountConfirmed] = useState(false);
+  const [ticketTypeId, setTicketTypeId] = useState("");
   const isSeatSelection = event.reservationType === "SEAT_SELECTION";
   const actualQuantity = isSeatSelection ? selectedSeats.length : quantity;
+  const unitPrice =
+    ticketTypes.find((type) => type.id === ticketTypeId)?.price ??
+    event.ticketPrice;
   const total = useMemo(
-    () => event.ticketPrice * actualQuantity,
-    [actualQuantity, event.ticketPrice],
+    () => unitPrice * actualQuantity,
+    [actualQuantity, unitPrice],
   );
 
   return (
@@ -125,11 +129,17 @@ export function ReservationForm({ event, ticketTypes, seats }: Props) {
       {ticketTypes.length ? (
         <label className="block font-medium">
           티켓 타입
-          <select className={input} name="ticketTypeId" required>
+          <select
+            className={input}
+            name="ticketTypeId"
+            onChange={(event) => setTicketTypeId(event.target.value)}
+            required
+            value={ticketTypeId}
+          >
             <option value="">선택해주세요</option>
             {ticketTypes.map((type) => (
               <option key={type.id} value={type.id}>
-                {type.name}
+                {type.name} · {Number(type.price).toLocaleString("ko-KR")}원
               </option>
             ))}
           </select>
@@ -168,49 +178,39 @@ export function ReservationForm({ event, ticketTypes, seats }: Props) {
       </section>
       <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-5">
         <p className="text-sm text-emerald-900">최종 입금 금액</p>
+        <p className="mt-1 text-xs text-emerald-800">
+          1매 {unitPrice.toLocaleString("ko-KR")}원 × {actualQuantity}매
+        </p>
         <p className="mt-1 text-2xl font-semibold text-emerald-950">
           {total.toLocaleString("ko-KR")}원
         </p>
-        {accountConfirmed ? (
-          <dl className="mt-4 grid gap-1 text-sm">
-            <div>
-              <dt className="inline text-zinc-500">은행 </dt>
-              <dd className="inline">{event.bankName}</dd>
-            </div>
-            <div>
-              <dt className="inline text-zinc-500">계좌 </dt>
-              <dd className="inline">{event.accountNumber}</dd>
-            </div>
-            <div>
-              <dt className="inline text-zinc-500">예금주 </dt>
-              <dd className="inline">{event.accountHolder}</dd>
-            </div>
-          </dl>
-        ) : null}
+        <dl className="mt-4 grid gap-1 border-t border-emerald-200 pt-4 text-sm">
+          <div>
+            <dt className="inline text-zinc-500">은행 </dt>
+            <dd className="inline font-medium">{event.bankName}</dd>
+          </div>
+          <div>
+            <dt className="inline text-zinc-500">계좌 </dt>
+            <dd className="inline font-medium">{event.accountNumber}</dd>
+          </div>
+          <div>
+            <dt className="inline text-zinc-500">예금주 </dt>
+            <dd className="inline font-medium">{event.accountHolder}</dd>
+          </div>
+        </dl>
       </section>
       {state.error ? (
         <p className="text-sm text-red-700" role="alert">
           {state.error}
         </p>
       ) : null}
-      {!accountConfirmed ? (
-        <button
-          className="w-full rounded-lg border border-emerald-700 px-5 py-3 font-medium text-emerald-800"
-          disabled={actualQuantity < 1}
-          onClick={() => setAccountConfirmed(true)}
-          type="button"
-        >
-          계좌 정보 확인
-        </button>
-      ) : (
-        <button
-          className="w-full rounded-lg bg-emerald-700 px-5 py-3 font-medium text-white disabled:opacity-50"
-          disabled={pending || actualQuantity < 1}
-          type="submit"
-        >
-          {pending ? "신청 중..." : "최종 예매 신청"}
-        </button>
-      )}
+      <button
+        className="w-full rounded-lg bg-emerald-700 px-5 py-3 font-medium text-white disabled:opacity-50"
+        disabled={pending || actualQuantity < 1}
+        type="submit"
+      >
+        {pending ? "예매 중..." : "예매하기"}
+      </button>
     </form>
   );
 }

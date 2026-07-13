@@ -52,6 +52,7 @@ CREATE TABLE IF NOT EXISTS ticket_types (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     event_id UUID NOT NULL REFERENCES events(id) ON DELETE CASCADE,
     name TEXT NOT NULL, -- 일반, 학생 등
+    price INTEGER NOT NULL DEFAULT 0 CHECK (price >= 0),
     created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
     UNIQUE (event_id, name)
 );
@@ -109,6 +110,23 @@ CREATE TABLE IF NOT EXISTS reservation_seats (
     PRIMARY KEY (reservation_id, seat_id)
 );
 
+-- 6-1. reservation_tickets Table (one admission QR per reserved seat/ticket)
+CREATE TABLE IF NOT EXISTS reservation_tickets (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    reservation_id UUID NOT NULL REFERENCES reservations(id) ON DELETE CASCADE,
+    seat_id UUID REFERENCES seats(id) ON DELETE SET NULL,
+    ticket_number INTEGER NOT NULL CHECK (ticket_number > 0),
+    qr_token TEXT NOT NULL UNIQUE,
+    qr_image_data TEXT,
+    qr_generation_status TEXT NOT NULL DEFAULT 'PENDING'
+        CHECK (qr_generation_status IN ('PENDING', 'READY', 'FAILED')),
+    qr_generation_error TEXT,
+    checked_in_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    UNIQUE (reservation_id, ticket_number),
+    UNIQUE (reservation_id, seat_id)
+);
+
 -- 7. feed_posts Table
 CREATE TABLE IF NOT EXISTS feed_posts (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
@@ -139,6 +157,8 @@ CREATE INDEX IF NOT EXISTS idx_reservations_code ON reservations(reservation_cod
 CREATE INDEX IF NOT EXISTS idx_reservations_qr_token ON reservations(qr_token);
 CREATE INDEX IF NOT EXISTS idx_reservations_checked_in_at ON reservations(event_id, checked_in_at DESC);
 CREATE INDEX IF NOT EXISTS idx_reservation_seats_reservation ON reservation_seats(reservation_id);
+CREATE INDEX IF NOT EXISTS idx_reservation_tickets_reservation ON reservation_tickets(reservation_id);
+CREATE INDEX IF NOT EXISTS idx_reservation_tickets_checked_in ON reservation_tickets(checked_in_at DESC);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_reservation_seats_active_seat
     ON reservation_seats(seat_id)
     WHERE released_at IS NULL;

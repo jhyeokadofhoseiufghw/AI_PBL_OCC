@@ -116,7 +116,9 @@ export function NewEventForm() {
         ) : null}
 
         <label>
-          <span className="text-sm font-medium text-zinc-800">티켓 가격</span>
+          <span className="text-sm font-medium text-zinc-800">
+            기본 티켓 가격
+          </span>
           <div className="relative">
             <input
               className={`${inputClassName} pr-12`}
@@ -145,7 +147,7 @@ export function NewEventForm() {
             </span>
           </div>
           <span className="mt-2 block text-xs leading-5 text-zinc-500">
-            모든 티켓 타입과 좌석에 동일하게 적용됩니다.
+            티켓 타입을 만들지 않거나 타입 가격을 생략했을 때 적용됩니다.
           </span>
         </label>
 
@@ -257,11 +259,13 @@ export function NewEventForm() {
         </label>
 
         <label className="sm:col-span-2">
-          <span className="text-sm font-medium text-zinc-800">티켓 타입</span>
+          <span className="text-sm font-medium text-zinc-800">
+            티켓 등급별 가격
+          </span>
           <textarea
             className={inputClassName}
             name="ticketTypes"
-            placeholder="일반, 학생 (쉼표 또는 줄바꿈으로 구분)"
+            placeholder={"일반: 30000\n학생: 20000"}
             rows={2}
           />
         </label>
@@ -300,8 +304,8 @@ export function NewEventForm() {
       </section>
 
       <p className="text-sm text-zinc-500">
-        티켓 타입은 일반·학생 등의 분류로만 사용하고, 좌석 등급별 가격은
-        사용하지 않습니다.
+        티켓 등급은 `등급명: 가격` 형식으로 입력합니다. 가격을 생략하면 공연
+        기본 가격이 적용됩니다.
       </p>
 
       {state.error ? (

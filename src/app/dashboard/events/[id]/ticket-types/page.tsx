@@ -18,7 +18,7 @@ export default async function Page({
     await sql`SELECT title FROM events WHERE id=${id} AND organizer_id=${session.organizerId}`;
   if (!events[0]) notFound();
   const types =
-    await sql`SELECT id,name FROM ticket_types WHERE event_id=${id} ORDER BY created_at`;
+    await sql`SELECT id,name,price FROM ticket_types WHERE event_id=${id} ORDER BY created_at`;
   return (
     <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
       <h1 className="text-2xl font-semibold">{String(events[0].title)}</h1>
@@ -33,6 +33,15 @@ export default async function Page({
           name="name"
           placeholder="일반, 학생 등"
           required
+        />
+        <input
+          className="w-36 rounded-lg border px-3 py-2"
+          min={0}
+          name="price"
+          placeholder="가격(원)"
+          required
+          step={100}
+          type="number"
         />
         <button className="rounded-lg bg-emerald-700 px-4 py-2 text-white">
           추가
@@ -50,6 +59,15 @@ export default async function Page({
                 name="ticketTypeId"
                 type="hidden"
                 value={String(type.id)}
+              />
+              <input
+                className="w-36 rounded border px-3 py-2"
+                defaultValue={Number(type.price)}
+                min={0}
+                name="price"
+                required
+                step={100}
+                type="number"
               />
               <input
                 className="flex-1 rounded border px-3 py-2"

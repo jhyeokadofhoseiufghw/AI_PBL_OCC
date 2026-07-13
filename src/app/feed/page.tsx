@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { signOutOrganizer } from "@/features/auth/actions";
+import { getOrganizerSession } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
 export const dynamic = "force-dynamic";
 export default async function FeedPage({
@@ -6,7 +8,10 @@ export default async function FeedPage({
 }: {
   searchParams: Promise<{ genre?: string }>;
 }) {
-  const { genre = "" } = await searchParams;
+  const [{ genre = "" }, session] = await Promise.all([
+    searchParams,
+    getOrganizerSession(),
+  ]);
   const sql = getSql();
   const [featured, popular, genres, posts] = await Promise.all([
     sql`SELECT e.*,o.organization_name FROM events e JOIN organizers o ON o.id=e.organizer_id WHERE e.status IN('SCHEDULED','IN_PROGRESS') ORDER BY CASE WHEN e.event_start_at>=NOW() THEN 0 ELSE 1 END,e.event_start_at LIMIT 1`,
@@ -23,8 +28,19 @@ export default async function FeedPage({
         </Link>
         <nav className="flex gap-4 text-sm">
           <Link href="/reservation/status">예매 조회</Link>
-          <Link href="/signup">기획자 가입</Link>
-          <Link href="/login">로그인</Link>
+          {session ? (
+            <>
+              <Link href="/dashboard">기획자 대시보드</Link>
+              <form action={signOutOrganizer}>
+                <button type="submit">로그아웃</button>
+              </form>
+            </>
+          ) : (
+            <>
+              <Link href="/signup">기획자 가입</Link>
+              <Link href="/login">로그인</Link>
+            </>
+          )}
         </nav>
       </header>
       {hero ? (
@@ -59,8 +75,11 @@ export default async function FeedPage({
       ) : (
         <section className="mt-8 rounded-2xl border border-dashed p-10 text-center text-zinc-500">
           현재 공개된 공연이 없습니다.{" "}
-          <Link className="text-emerald-700" href="/signup">
-            첫 공연 만들기
+          <Link
+            className="text-emerald-700"
+            href={session ? "/dashboard/events/new" : "/signup"}
+          >
+            {session ? "첫 공연 만들기" : "기획자로 시작하기"}
           </Link>
         </section>
       )}

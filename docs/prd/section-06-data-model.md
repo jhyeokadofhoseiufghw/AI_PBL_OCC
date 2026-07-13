@@ -54,7 +54,7 @@
 | detail_image_url       | text nullable        | 상세 설명 대표 이미지(포스터와 분리)            |
 | runtime_minutes        | int nullable         | 러닝타임(분)                                    |
 | genre                  | text nullable        | 홈 장르 탐색용 분류                             |
-| ticket_price           | int                  | 공연에 적용되는 단일 티켓 가격                  |
+| ticket_price           | int                  | 티켓 타입이 없을 때 적용되는 공연 기본 가격     |
 | bank_name              | text                 | 입금 은행명                                     |
 | account_number         | text                 | 입금 계좌번호                                   |
 | account_holder         | text                 | 예금주명                                        |
@@ -73,17 +73,18 @@
 
 # 5. ticket_types
 
-| 필드       | 타입        | 설명           |
-| ---------- | ----------- | -------------- |
-| id         | uuid        | PK             |
-| event_id   | uuid        | events FK      |
-| name       | text        | 일반 / 학생 등 |
-| created_at | timestamptz | 생성일         |
+| 필드       | 타입        | 설명             |
+| ---------- | ----------- | ---------------- |
+| id         | uuid        | PK               |
+| event_id   | uuid        | events FK        |
+| name       | text        | 일반 / 학생 등   |
+| price      | int         | 티켓 타입별 가격 |
+| created_at | timestamptz | 생성일           |
 
 ### 제약
 
 - 티켓 타입별 수량 필드는 두지 않는다.
-- 티켓 타입은 분류 용도이며 가격 필드는 두지 않는다.
+- 가격은 0 이상의 정수이며 예매 생성 시점에 `reservations.unit_price`로 복사한다.
 - 공연에 티켓 타입을 설정하지 않을 수 있다. 이 경우 예매의 `ticket_type_id`는 null이다.
 
 ---
@@ -135,7 +136,7 @@
 - `lookup_password_hash`는 예매 신청 시 생성하며 원문 패스워드는 저장하지 않음
 - 선착순 공연은 `quantity`로 수량을 저장하고 좌석 연결을 만들지 않음
 - 좌석 지정 공연은 `quantity`와 `reservation_seats` 연결 개수가 일치해야 함
-- 예매 방식과 관계없이 `events.ticket_price`를 `unit_price`로 저장
+- 티켓 타입이 있으면 `ticket_types.price`, 없으면 `events.ticket_price`를 `unit_price`로 저장
 - `total_price = unit_price * quantity`로 저장
 - DB 제약으로 `total_price`는 `unit_price * quantity`와 일치해야 한다.
 - 예매 이후 가격 설정이 변경되어도 `unit_price`, `total_price`는 변경하지 않음
@@ -165,7 +166,29 @@
 
 ---
 
-# 9. feed_posts
+# 9. reservation_tickets
+
+| 필드                 | 타입                 | 설명                         |
+| -------------------- | -------------------- | ---------------------------- |
+| id                   | uuid                 | PK                           |
+| reservation_id       | uuid                 | reservations FK              |
+| seat_id              | uuid nullable        | 좌석 지정 예매의 seats FK    |
+| ticket_number        | int                  | 예매 내 티켓 순번            |
+| qr_token             | text unique          | 티켓별 추측 불가능한 QR 토큰 |
+| qr_image_data        | text nullable        | 생성된 QR 이미지 데이터      |
+| qr_generation_status | text                 | PENDING / READY / FAILED     |
+| checked_in_at        | timestamptz nullable | 해당 티켓 입장 시각          |
+
+### 핵심 정책
+
+- 확정된 예약은 `quantity`와 동일한 수의 티켓을 가진다.
+- 좌석 지정 예약은 예약 좌석과 티켓을 1:1로 연결한다.
+- 티켓별 QR과 체크인 상태는 독립적이며, 모든 티켓이 체크인되면 예약 전체를 입장 완료로 변경한다.
+- 일부 티켓이 입장한 예약은 승인 취소할 수 없다.
+
+---
+
+# 10. feed_posts
 
 | 필드       | 타입        | 설명      |
 | ---------- | ----------- | --------- |

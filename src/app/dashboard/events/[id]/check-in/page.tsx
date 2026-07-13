@@ -15,8 +15,8 @@ export default async function CheckInPage({
     await sql`SELECT title,event_start_at FROM events WHERE id=${id} AND organizer_id=${session.organizerId} LIMIT 1`;
   if (!events[0]) notFound();
   const [stats, logs] = await Promise.all([
-    sql`SELECT COUNT(*) FILTER(WHERE status='CONFIRMED')::int remaining,COUNT(*) FILTER(WHERE status='CHECKED_IN')::int checked_in,COALESCE(SUM(quantity) FILTER(WHERE status='CHECKED_IN'),0)::int attendees FROM reservations WHERE event_id=${id}`,
-    sql`SELECT reserver_name,quantity,checked_in_at FROM reservations WHERE event_id=${id} AND status='CHECKED_IN' ORDER BY checked_in_at DESC LIMIT 10`,
+    sql`SELECT COUNT(*) FILTER(WHERE rt.checked_in_at IS NULL)::int remaining,COUNT(*) FILTER(WHERE rt.checked_in_at IS NOT NULL)::int checked_in FROM reservation_tickets rt JOIN reservations r ON r.id=rt.reservation_id WHERE r.event_id=${id} AND r.status IN('CONFIRMED','CHECKED_IN')`,
+    sql`SELECT r.reserver_name,rt.ticket_number,rt.checked_in_at,s.label seat_label FROM reservation_tickets rt JOIN reservations r ON r.id=rt.reservation_id LEFT JOIN seats s ON s.id=rt.seat_id WHERE r.event_id=${id} AND rt.checked_in_at IS NOT NULL ORDER BY rt.checked_in_at DESC LIMIT 10`,
   ]);
   const summary = stats[0];
   return (
@@ -43,7 +43,7 @@ export default async function CheckInPage({
           <p className="text-xs text-zinc-500">체크인 건</p>
         </div>
         <div className="rounded-xl bg-white p-4">
-          <p className="text-2xl font-semibold">{Number(summary.attendees)}</p>
+          <p className="text-2xl font-semibold">{Number(summary.checked_in)}</p>
           <p className="text-xs text-zinc-500">입장 인원</p>
         </div>
         <div className="rounded-xl bg-white p-4">
@@ -63,7 +63,9 @@ export default async function CheckInPage({
               >
                 <div className="flex justify-between">
                   <span className="font-medium">
-                    {String(row.reserver_name)} · {Number(row.quantity)}명
+                    {String(row.reserver_name)} · 티켓{" "}
+                    {Number(row.ticket_number)}
+                    {row.seat_label ? ` · ${String(row.seat_label)}` : ""}
                   </span>
                   <time className="text-zinc-500">
                     {new Date(String(row.checked_in_at)).toLocaleTimeString(

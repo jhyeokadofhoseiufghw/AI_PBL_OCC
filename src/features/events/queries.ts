@@ -33,7 +33,7 @@ export async function getPublicEvent(slug: string) {
 export async function getEventReservationOptions(eventId: string) {
   const sql = getSql();
   const [ticketTypes, seats] = await Promise.all([
-    sql`SELECT id, name FROM ticket_types WHERE event_id = ${eventId} ORDER BY created_at`,
+    sql`SELECT id, name, price FROM ticket_types WHERE event_id = ${eventId} ORDER BY created_at`,
     sql`
       SELECT s.id, s.label, s.layout_row, s.layout_column,
         EXISTS (SELECT 1 FROM reservation_seats rs WHERE rs.seat_id = s.id AND rs.released_at IS NULL) AS occupied

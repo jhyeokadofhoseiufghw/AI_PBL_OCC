@@ -13,7 +13,12 @@ export function OrganizerReservationDetail({
     status: string;
     code: string | null;
     note: string | null;
-    qr: string | null;
+    tickets: {
+      number: number;
+      seat: string | null;
+      qr: string | null;
+      checkedInAt: string | null;
+    }[];
   };
 }) {
   const ref = useRef<HTMLDialogElement>(null);
@@ -54,16 +59,33 @@ export function OrganizerReservationDetail({
               </div>
             ) : null}
           </dl>
-          {reservation.qr ? (
-            <Image
-              alt="예매 QR"
-              className="mx-auto mt-5"
-              height={200}
-              src={reservation.qr}
-              unoptimized
-              width={200}
-            />
-          ) : null}
+          <div className="mt-5 grid grid-cols-2 gap-3">
+            {reservation.tickets.map((ticket) => (
+              <div
+                className="rounded-lg border p-2 text-center"
+                key={ticket.number}
+              >
+                <p className="text-sm font-medium">
+                  티켓 {ticket.number}
+                  {ticket.seat ? ` · ${ticket.seat}` : ""}
+                </p>
+                {ticket.checkedInAt ? (
+                  <p className="mt-2 text-xs text-emerald-700">입장 완료</p>
+                ) : ticket.qr ? (
+                  <Image
+                    alt={`티켓 ${ticket.number} QR`}
+                    className="mx-auto mt-2"
+                    height={160}
+                    src={ticket.qr}
+                    unoptimized
+                    width={160}
+                  />
+                ) : (
+                  <p className="mt-2 text-xs text-amber-700">QR 생성 대기</p>
+                )}
+              </div>
+            ))}
+          </div>
         </div>
       </dialog>
     </>

@@ -99,7 +99,13 @@ export function LookupForm({
           />
         </label>
         {lookup.error ? (
-          <p className="text-sm text-red-700 sm:col-span-2">{lookup.error}</p>
+          <div
+            className="rounded-lg bg-red-50 p-4 text-sm leading-6 text-red-700 sm:col-span-2"
+            role="alert"
+          >
+            <p className="font-medium">예매 정보를 확인하지 못했습니다.</p>
+            <p className="mt-1">{lookup.error}</p>
+          </div>
         ) : null}
         <button
           className="rounded-lg bg-emerald-700 px-5 py-3 font-medium text-white sm:col-span-2"
@@ -165,24 +171,37 @@ export function LookupForm({
               {new Date(reservation.checkedInAt).toLocaleString("ko-KR")}
             </p>
           ) : null}
-          {mode === "detail" &&
-            (reservation.status === "CONFIRMED" ||
-            reservation.status === "CHECKED_IN" ? (
-              reservation.qrImageData ? (
-                <Image
-                  alt="입장 QR 코드"
-                  className="mx-auto mt-6 h-56 w-56"
-                  height={224}
-                  src={reservation.qrImageData}
-                  unoptimized
-                  width={224}
-                />
-              ) : (
-                <p className="mt-5 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
-                  QR 생성 중이거나 재시도가 필요합니다.
-                </p>
-              )
-            ) : null)}
+          {mode === "detail" && reservation.tickets.length ? (
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {reservation.tickets.map((ticket) => (
+                <article className="rounded-xl border p-4" key={ticket.number}>
+                  <p className="text-center font-semibold">
+                    티켓 {ticket.number}
+                    {ticket.seat ? ` · ${ticket.seat}` : ""}
+                  </p>
+                  {ticket.checkedInAt ? (
+                    <p className="mt-3 rounded-lg bg-zinc-100 p-3 text-center text-sm text-zinc-600">
+                      입장 완료 ·{" "}
+                      {new Date(ticket.checkedInAt).toLocaleString("ko-KR")}
+                    </p>
+                  ) : ticket.qrImageData ? (
+                    <Image
+                      alt={`티켓 ${ticket.number} 입장 QR 코드`}
+                      className="mx-auto mt-3 h-48 w-48"
+                      height={192}
+                      src={ticket.qrImageData}
+                      unoptimized
+                      width={192}
+                    />
+                  ) : (
+                    <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+                      QR 생성 중이거나 재시도가 필요합니다.
+                    </p>
+                  )}
+                </article>
+              ))}
+            </div>
+          ) : null}
           {mode === "status" && reservation.status === "CONFIRMED" ? (
             <Link
               className="mt-5 inline-flex rounded-lg bg-emerald-700 px-4 py-2 text-white"

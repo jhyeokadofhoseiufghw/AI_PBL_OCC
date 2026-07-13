@@ -49,7 +49,7 @@ export default async function Page({
     page = Math.max(1, Number(query.page) || 1),
     offset = (page - 1) * size;
   const [rows, countRows, summary, allEvents] = await Promise.all([
-    sql`SELECT r.*,tt.name ticket_type,COALESCE(array_agg(s.label ORDER BY s.label) FILTER(WHERE rs.released_at IS NULL),'{}') seats FROM reservations r LEFT JOIN ticket_types tt ON tt.id=r.ticket_type_id LEFT JOIN reservation_seats rs ON rs.reservation_id=r.id LEFT JOIN seats s ON s.id=rs.seat_id WHERE r.event_id=${id} AND (${q}='' OR r.depositor_name ILIKE ${`%${q}%`} OR r.reserver_phone ILIKE ${`%${q}%`} OR r.reserver_name ILIKE ${`%${q}%`}) AND (${status}='' OR r.status=${status}) GROUP BY r.id,tt.name ORDER BY r.created_at DESC LIMIT ${size} OFFSET ${offset}`,
+    sql`SELECT r.*,tt.name ticket_type,COALESCE(array_agg(s.label ORDER BY s.label) FILTER(WHERE rs.released_at IS NULL),'{}') seats,(SELECT COUNT(*)::int FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.checked_in_at IS NOT NULL) checked_ticket_count,(SELECT COUNT(*)::int FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.qr_generation_status<>'READY') pending_qr_count,COALESCE((SELECT jsonb_agg(jsonb_build_object('number',rt.ticket_number,'seat',seat.label,'qr',rt.qr_image_data,'checkedInAt',rt.checked_in_at) ORDER BY rt.ticket_number) FROM reservation_tickets rt LEFT JOIN seats seat ON seat.id=rt.seat_id WHERE rt.reservation_id=r.id),'[]'::jsonb) qr_tickets FROM reservations r LEFT JOIN ticket_types tt ON tt.id=r.ticket_type_id LEFT JOIN reservation_seats rs ON rs.reservation_id=r.id LEFT JOIN seats s ON s.id=rs.seat_id WHERE r.event_id=${id} AND (${q}='' OR r.depositor_name ILIKE ${`%${q}%`} OR r.reserver_phone ILIKE ${`%${q}%`} OR r.reserver_name ILIKE ${`%${q}%`}) AND (${status}='' OR r.status=${status}) GROUP BY r.id,tt.name ORDER BY r.created_at DESC LIMIT ${size} OFFSET ${offset}`,
     sql`SELECT COUNT(*)::int count FROM reservations r WHERE r.event_id=${id} AND (${q}='' OR r.depositor_name ILIKE ${`%${q}%`} OR r.reserver_phone ILIKE ${`%${q}%`} OR r.reserver_name ILIKE ${`%${q}%`}) AND (${status}='' OR r.status=${status})`,
     sql`SELECT COALESCE(SUM(quantity) FILTER(WHERE status IN('PENDING_PAYMENT','CONFIRMED','CHECKED_IN')),0)::int tickets,COALESCE(SUM(total_price) FILTER(WHERE status IN('CONFIRMED','CHECKED_IN')),0)::int revenue,COUNT(*) FILTER(WHERE status='PENDING_PAYMENT')::int pending,COUNT(*) FILTER(WHERE status='CONFIRMED')::int confirmed,COUNT(*) FILTER(WHERE status='WAITLISTED')::int waitlisted FROM reservations WHERE event_id=${id}`,
     sql`SELECT id,title FROM events WHERE organizer_id=${session.organizerId} ORDER BY event_start_at DESC`,
@@ -217,20 +217,17 @@ export default async function Page({
                 </td>
                 <td className="p-3">
                   {labels[String(row.status)]}
-                  {row.qr_generation_status === "FAILED" ? (
-                    <span className="block text-red-700">QR 실패</span>
+                  {Number(row.pending_qr_count) > 0 ? (
+                    <span className="block text-amber-700">QR 생성 필요</span>
                   ) : null}
                 </td>
                 <td className="whitespace-nowrap p-3">
-                  {row.checked_in_at ? (
+                  {Number(row.checked_ticket_count) > 0 ? (
                     <>
-                      <b className="text-emerald-700">참석</b>
-                      <br />
-                      <time className="text-xs text-zinc-500">
-                        {new Date(String(row.checked_in_at)).toLocaleString(
-                          "ko-KR",
-                        )}
-                      </time>
+                      <b className="text-emerald-700">
+                        {Number(row.checked_ticket_count)}/
+                        {Number(row.quantity)}명 입장
+                      </b>
                     </>
                   ) : (
                     <span className="text-zinc-400">미체크인</span>
@@ -253,12 +250,21 @@ export default async function Page({
                         note: row.request_note
                           ? String(row.request_note)
                           : null,
-                        qr:
-                          (row.status === "CONFIRMED" ||
-                            row.status === "CHECKED_IN") &&
-                          row.qr_image_data
-                            ? String(row.qr_image_data)
+                        tickets: (
+                          row.qr_tickets as Array<{
+                            number: number;
+                            seat: string | null;
+                            qr: string | null;
+                            checkedInAt: string | null;
+                          }>
+                        ).map((ticket) => ({
+                          number: Number(ticket.number),
+                          seat: ticket.seat ? String(ticket.seat) : null,
+                          qr: ticket.qr ? String(ticket.qr) : null,
+                          checkedInAt: ticket.checkedInAt
+                            ? String(ticket.checkedInAt)
                             : null,
+                        })),
                       }}
                     />
                     {row.status === "PENDING_PAYMENT" ? (
@@ -302,7 +308,7 @@ export default async function Page({
                       </form>
                     ) : null}
                     {row.status === "CONFIRMED" &&
-                    row.qr_generation_status === "FAILED" ? (
+                    Number(row.pending_qr_count) > 0 ? (
                       <form action={retryQrGeneration}>
                         {hidden(String(row.id))}
                         <button className="rounded border px-2 py-1">

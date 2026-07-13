@@ -73,6 +73,16 @@ function lines(value: string) {
   ];
 }
 
+function ticketTypeLines(value: string, fallbackPrice: number) {
+  return lines(value).map((item) => {
+    const match = item.match(/^(.*?)(?:\s*[:：]\s*)(\d+)$/);
+    return {
+      name: (match?.[1] ?? item).trim(),
+      price: match ? Number(match[2]) : fallbackPrice,
+    };
+  });
+}
+
 function makeSlug(title: string) {
   const base =
     title
@@ -143,7 +153,9 @@ export async function createEvent(
       error: parsed.error.issues[0]?.message ?? "입력값을 확인해주세요.",
     };
   const data = parsed.data;
-  const ticketTypes = lines(data.ticketTypes);
+  const ticketTypes = ticketTypeLines(data.ticketTypes, data.ticketPrice);
+  if (new Set(ticketTypes.map((type) => type.name)).size !== ticketTypes.length)
+    return { error: "티켓 등급 이름은 중복될 수 없습니다." };
   const seats = lines(data.seats);
   let seatLayout: { label: string; row: number; column: number }[] = [];
   try {
@@ -190,8 +202,8 @@ export async function createEvent(
       )
     `,
     ...ticketTypes.map(
-      (name) =>
-        tx`INSERT INTO ticket_types (event_id, name) VALUES (${eventId}, ${name})`,
+      (type) =>
+        tx`INSERT INTO ticket_types (event_id, name, price) VALUES (${eventId}, ${type.name}, ${type.price})`,
     ),
     ...seats.map((label) => {
       const position = seatLayout.find((seat) => seat.label === label);
@@ -443,18 +455,28 @@ export async function replaceSeatLayout(formData: FormData) {
 
 export async function addTicketType(formData: FormData) {
   const eventId = text(formData, "eventId"),
-    name = z.string().trim().min(1).max(50).parse(text(formData, "name"));
+    name = z.string().trim().min(1).max(50).parse(text(formData, "name")),
+    price = z.coerce
+      .number()
+      .int()
+      .nonnegative()
+      .parse(text(formData, "price"));
   const { sql } = await requireOwnedEvent(eventId);
-  await sql`INSERT INTO ticket_types(event_id,name) VALUES(${eventId},${name}) ON CONFLICT(event_id,name) DO NOTHING`;
+  await sql`INSERT INTO ticket_types(event_id,name,price) VALUES(${eventId},${name},${price}) ON CONFLICT(event_id,name) DO UPDATE SET price=EXCLUDED.price`;
   revalidatePath(`/dashboard/events/${eventId}/ticket-types`);
 }
 
 export async function updateTicketType(formData: FormData) {
   const eventId = text(formData, "eventId"),
     typeId = text(formData, "ticketTypeId"),
-    name = z.string().trim().min(1).max(50).parse(text(formData, "name"));
+    name = z.string().trim().min(1).max(50).parse(text(formData, "name")),
+    price = z.coerce
+      .number()
+      .int()
+      .nonnegative()
+      .parse(text(formData, "price"));
   const { sql } = await requireOwnedEvent(eventId);
-  await sql`UPDATE ticket_types SET name=${name} WHERE id=${typeId} AND event_id=${eventId}`;
+  await sql`UPDATE ticket_types SET name=${name},price=${price} WHERE id=${typeId} AND event_id=${eventId}`;
   revalidatePath(`/dashboard/events/${eventId}/ticket-types`);
 }
 
