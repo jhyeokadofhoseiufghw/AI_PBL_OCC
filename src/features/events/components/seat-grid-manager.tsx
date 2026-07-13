@@ -31,9 +31,9 @@ export function SeatGridManager({
     column: seat.layoutColumn ?? (index % size) + 1,
   }));
   return (
-    <section className="mt-6 overflow-x-auto rounded-xl border bg-white p-5">
+    <section className="ha-card mt-6 overflow-x-auto p-5 sm:p-7">
       <div className="mx-auto min-w-[36rem] max-w-5xl">
-        <div className="mb-6 rounded-lg bg-zinc-800 py-3 text-center text-sm font-medium text-white">
+        <div className="mb-8 border-t-4 border-[#d3bbff] pt-3 text-center text-xs font-black tracking-[0.35em] text-[#7b7485]">
           STAGE
         </div>
         <div
@@ -44,7 +44,7 @@ export function SeatGridManager({
         >
           {layout.map((seat) => (
             <article
-              className={`rounded-lg border p-2 ${seat.isActive ? "border-emerald-300 bg-emerald-50" : "border-dashed bg-zinc-100"} ${seat.occupied ? "ring-2 ring-amber-300" : ""}`}
+              className={`rounded-xl border p-2 ${seat.isActive ? "border-[#d3bbff] bg-[#f7f5ff]" : "border-dashed bg-[#eff3ff]"} ${seat.occupied ? "ring-2 ring-[#f59e0b]" : ""}`}
               key={seat.id}
               style={{ gridColumn: seat.column, gridRow: seat.row }}
             >
@@ -78,7 +78,7 @@ export function SeatGridManager({
                       value={seat.isActive ? "0" : "1"}
                     />
                     <button
-                      className={`w-full rounded px-2 py-1 text-xs ${seat.isActive ? "text-red-700" : "bg-emerald-700 text-white"}`}
+                      className={`w-full rounded px-2 py-1 text-xs ${seat.isActive ? "text-red-700" : "bg-[#420093] text-white"}`}
                     >
                       {seat.isActive ? "비활성화" : "활성화"}
                     </button>

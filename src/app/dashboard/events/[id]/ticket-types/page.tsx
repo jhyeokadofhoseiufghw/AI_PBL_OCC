@@ -20,22 +20,23 @@ export default async function Page({
   const types =
     await sql`SELECT id,name,price FROM ticket_types WHERE event_id=${id} ORDER BY created_at`;
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-6 py-10">
-      <h1 className="text-2xl font-semibold">{String(events[0].title)}</h1>
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+      <p className="ha-kicker">Ticket types</p>
+      <h1 className="ha-title mt-1 text-3xl">{String(events[0].title)}</h1>
       <EventTabs current="ticket-types" eventId={id} />
       <form
         action={addTicketType}
-        className="mt-8 flex gap-2 rounded-xl border bg-white p-5"
+        className="ha-card mt-8 flex flex-wrap gap-2 p-5"
       >
         <input name="eventId" type="hidden" value={id} />
         <input
-          className="flex-1 rounded-lg border px-3 py-2"
+          className="ha-input min-w-48 flex-1"
           name="name"
           placeholder="일반, 학생 등"
           required
         />
         <input
-          className="w-36 rounded-lg border px-3 py-2"
+          className="ha-input w-36"
           min={0}
           name="price"
           placeholder="가격(원)"
@@ -43,14 +44,12 @@ export default async function Page({
           step={100}
           type="number"
         />
-        <button className="rounded-lg bg-emerald-700 px-4 py-2 text-white">
-          추가
-        </button>
+        <button className="ha-button-primary px-4 py-2">추가</button>
       </form>
       <div className="mt-5 space-y-2">
         {types.map((type) => (
           <div
-            className="flex gap-2 rounded-lg border bg-white p-3"
+            className="ha-card flex flex-wrap gap-2 p-3"
             key={String(type.id)}
           >
             <form action={updateTicketType} className="flex flex-1 gap-2">

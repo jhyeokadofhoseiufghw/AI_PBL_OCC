@@ -24,8 +24,9 @@ export default async function Page({
   const seats =
     await sql`SELECT s.*,EXISTS(SELECT 1 FROM reservation_seats rs WHERE rs.seat_id=s.id AND rs.released_at IS NULL) occupied FROM seats s WHERE event_id=${id} ORDER BY label`;
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
-      <h1 className="text-2xl font-semibold">{String(events[0].title)}</h1>
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+      <p className="ha-kicker">Seat builder</p>
+      <h1 className="ha-title mt-1 text-3xl">{String(events[0].title)}</h1>
       <EventTabs current="seats" eventId={id} />
       {events[0].reservation_type !== "SEAT_SELECTION" ? (
         <p className="mt-8 rounded-xl bg-zinc-100 p-6">
@@ -37,7 +38,7 @@ export default async function Page({
             <form action={replaceSeatLayout} className="mt-8">
               <input name="eventId" type="hidden" value={id} />
               <SeatLayoutBuilder />
-              <button className="mt-4 w-full rounded-lg bg-emerald-700 px-4 py-3 font-medium text-white">
+              <button className="ha-button-primary mt-4 w-full px-4 py-3">
                 이 배치로 좌석 전체 다시 만들기
               </button>
               <p className="mt-2 text-xs text-zinc-500">

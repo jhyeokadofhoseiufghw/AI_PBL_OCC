@@ -22,16 +22,16 @@ export default async function CheckInPage({
   ]);
   const summary = stats[0];
   return (
-    <main className="mx-auto min-h-screen max-w-4xl px-5 py-8">
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <Link
-            className="text-sm text-emerald-700"
+            className="text-sm font-bold text-[#420093]"
             href={`/dashboard/events/${id}/reservations`}
           >
             ← 예매자 관리
           </Link>
-          <h1 className="mt-4 text-2xl font-semibold">
+          <h1 className="ha-title mt-4 text-3xl">
             {String(events[0].title)} QR 체크인
           </h1>
         </div>
@@ -40,15 +40,15 @@ export default async function CheckInPage({
         </p>
       </div>
       <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-        <div className="rounded-xl bg-white p-4">
+        <div className="ha-card p-4">
           <p className="text-2xl font-semibold">{Number(summary.checked_in)}</p>
           <p className="text-xs text-zinc-500">체크인 건</p>
         </div>
-        <div className="rounded-xl bg-white p-4">
+        <div className="ha-card p-4">
           <p className="text-2xl font-semibold">{Number(summary.checked_in)}</p>
           <p className="text-xs text-zinc-500">입장 인원</p>
         </div>
-        <div className="rounded-xl bg-white p-4">
+        <div className="ha-card p-4">
           <p className="text-2xl font-semibold">{Number(summary.remaining)}</p>
           <p className="text-xs text-zinc-500">입장 대기</p>
         </div>
@@ -60,7 +60,7 @@ export default async function CheckInPage({
           <div className="mt-3 space-y-2">
             {logs.map((row, index) => (
               <div
-                className="rounded-lg border bg-white p-3 text-sm"
+                className="ha-card p-3 text-sm"
                 key={`${String(row.checked_in_at)}-${index}`}
               >
                 <div className="flex flex-wrap items-center justify-between gap-2">

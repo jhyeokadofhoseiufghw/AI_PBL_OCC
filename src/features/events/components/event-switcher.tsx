@@ -11,7 +11,7 @@ export function EventSwitcher({
   return (
     <select
       aria-label="관리 공연 선택"
-      className="rounded-lg border px-3 py-2"
+      className="ha-input max-w-sm"
       value={current}
       onChange={(event) =>
         router.push(`/dashboard/events/${event.target.value}/reservations`)

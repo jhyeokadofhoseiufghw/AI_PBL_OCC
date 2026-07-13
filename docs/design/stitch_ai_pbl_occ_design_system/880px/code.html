@@ -1,0 +1,120 @@
+<html lang="ko"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">tailwind.config = { darkMode: "class", theme: { extend: { "colors": { "on-surface-variant": "#4a4453", "secondary-fixed-dim": "#d2bbff", "tertiary-container": "#533a8b", "secondary-container": "#8a4cfc", "on-secondary-fixed-variant": "#5a00c6", "surface-bright": "#f8f9ff", "background-public": "#f8f9fa", "primary": "#420093", "surface-tint": "#713dcc", "surface-container-low": "#eff4ff", "primary-container": "#5b21b6", "on-error": "#ffffff", "on-tertiary-fixed": "#24005b", "secondary-fixed": "#eaddff", "surface-container-highest": "#d9e3f6", "surface-white": "#ffffff", "error-container": "#ffdad6", "outline": "#7b7485", "status-active": "#10b981", "on-secondary": "#ffffff", "inverse-primary": "#d3bbff", "status-error": "#ef4444", "inverse-on-surface": "#eaf1ff", "on-primary-fixed-variant": "#581db3", "on-secondary-fixed": "#25005a", "on-primary-container": "#c7aaff", "primary-fixed-dim": "#d3bbff", "on-primary-fixed": "#250059", "surface-dim": "#d0dbed", "surface": "#f8f9ff", "on-surface": "#121c2a", "admin-sidebar": "#2e1065", "surface-container-lowest": "#ffffff", "on-error-container": "#93000a", "grid-border-dark": "#d1d5db", "outline-variant": "#ccc3d6", "surface-container-high": "#dee9fc", "on-tertiary-fixed-variant": "#503788", "background": "#f8f9ff", "grid-border": "#e5e7eb", "status-warning": "#f59e0b", "primary-fixed": "#ebddff", "on-background": "#121c2a", "error": "#ba1a1a", "tertiary-fixed-dim": "#d1bcff", "tertiary-fixed": "#eaddff", "on-tertiary": "#ffffff", "inverse-surface": "#27313f", "on-tertiary-container": "#c5acff", "on-secondary-container": "#fffbff", "surface-container": "#e6eeff", "secondary": "#712ae2", "surface-variant": "#d9e3f6", "on-primary": "#ffffff", "tertiary": "#3c2173" }, "borderRadius": { "DEFAULT": "0.125rem", "lg": "0.25rem", "xl": "0.5rem", "full": "0.75rem" }, "spacing": { "xl": "32px", "margin-mobile": "16px", "sm": "8px", "lg": "24px", "md": "16px", "max-width-public": "390px", "xs": "4px", "base-unit": "4px" }, "fontFamily": { "body-base": ["Inter"], "headline-md": ["Inter"] }, "fontSize": { "body-base": ["16px", {"lineHeight": "24px", "fontWeight": "400"}], "headline-md": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.01em", "fontWeight": "600"}] } } } }</script><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/><style>@layer base { .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } } .main-container { max-width: 390px; margin: 0 auto; }</style><style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+</head><body class="bg-background-public text-on-surface font-body-base"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="main-container h-16 flex items-center px-4 gap-2" style="max-width: 880px; width: 100%; margin: 0 auto;"><button class="w-10 h-10 flex items-center justify-center text-on-surface" onclick="history.back()"><span class="material-symbols-outlined">arrow_back</span></button><h1 class="text-body-bold flex-1 font-bold">Ticket Status</h1><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLtzEiLh0EHbb2rs6pyyNzWrfJ7-sNq5ivilm513laheO6msYTYcLnYqDSerP61Uw6L3SZ6M74UJVtk1TH9NopgVDGYu4ZiH4ZbMtmJcbfx4BVW7TYjiIarKfmhibjdmhs1Nk7EQ3NZKw4JoiHBPTk93aXaP57oInf8O6cUfzHXjD8qWEoNtRt1mqFxiyKs3fooS1qZi_4PxGI5Ws7X9I-LILmv9Z4DtblRzQsfq14kVbrvl8tWf5zdw7CAZJ-if9Blx0srtOWkysA"/></div></header><main class="main-container min-h-screen pt-16 flex flex-col bg-surface" style="max-width: 880px; width: 100%; margin: 0 auto; padding: 2.5rem;"><div class="flex flex-col w-full pb-safe">
+<div class="px-margin-mobile pt-lg flex flex-col gap-lg pb-xl">
+<!-- Status & Header Section -->
+<div class="flex flex-col items-center text-center gap-sm">
+<div class="inline-flex items-center justify-center px-3 py-1 rounded-full bg-status-warning/10 border border-status-warning/20">
+<span class="text-label-caps text-status-warning">예매 대기중</span>
+</div>
+<h2 class="text-headline-md text-on-background font-headline-md">결제 대기 상태입니다</h2>
+<p class="text-body-base text-on-surface-variant font-body-base mt-2">
+        무통장 입금 기한 내 미입금 시 자동 취소됩니다.
+      </p>
+</div>
+<!-- Ticket Card (Box Grid System) -->
+<div class="border border-grid-border bg-surface-white flex flex-col relative overflow-hidden w-full">
+<!-- Decor: Top ticket cutouts -->
+<div class="absolute top-0 left-0 right-0 h-4 flex justify-between px-4 -mt-2">
+<div class="w-4 h-4 rounded-full bg-background-public border-b border-grid-border"></div>
+<div class="w-4 h-4 rounded-full bg-background-public border-b border-grid-border"></div>
+</div>
+<!-- Ticket Header Info -->
+<div class="p-lg border-b border-grid-border pt-xl">
+<div class="flex justify-between items-start mb-6 w-full">
+<div class="flex flex-col gap-1">
+<span class="text-label-caps text-outline font-label-caps">예매번호</span>
+<span class="text-body-bold text-on-surface font-body-bold">TKT-2023-0892</span>
+</div>
+<div class="flex flex-col gap-1 text-right">
+<span class="text-label-caps text-outline font-label-caps">예매일시</span>
+<span class="text-table-cell text-on-surface font-table-cell">2023.10.24 14:30</span>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-20 h-28 bg-cover bg-center border border-grid-border shrink-0" data-alt="A minimalist theater poster for 'The Seagull' by Anton Chekhov. Deep blues and stark white typography, moody, dramatic lighting, high quality print style, adhering to a 1:1.414 aspect ratio." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBBVJP9bgUJuvzcVOESWKaxSK6RZ1BJyV1FEOvwhwzzWXlRO5wi0n6bUHbGaAMpM0aaJjvwSxg557zL25YjW5VNkSVz5GP82blArUAWFAHJFUwStXUeCcqx6aKAZxBEDNavpKTsOjLH8msXvLqLKn-o1LV0rTMmiFs_WQNqaOaqFRJcvFzStpifq13p97gmPVR1Bvmcm4vgGdyBCXPPIdr2pUNzI7T2iDSprroli0c_pIe6zZrRK8DETwVLD35_5CCXFllw1JDisjY')"></div>
+<div class="flex flex-col justify-center">
+<h3 class="text-body-bold text-on-surface font-body-bold mb-1">갈매기 (The Seagull)</h3>
+<p class="text-table-cell text-on-surface-variant font-table-cell mb-1">2023.11.15 (수) 19:30</p>
+<p class="text-table-cell text-on-surface-variant font-table-cell">아르코예술극장 대극장</p>
+</div>
+</div>
+</div>
+<!-- Seat Info -->
+<div class="p-lg border-b border-grid-border border-dashed">
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-center">
+<span class="text-table-cell text-outline font-table-cell">선택 좌석</span>
+<span class="text-body-bold text-on-surface font-body-bold">1층 B구역 12열 14번, 15번</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-table-cell text-outline font-table-cell">티켓 매수</span>
+<span class="text-body-bold text-on-surface font-body-bold">일반 2매</span>
+</div>
+</div>
+</div>
+<!-- QR Section (Pending State) -->
+<div class="p-lg flex flex-col items-center justify-center relative min-h-[240px]">
+<!-- Blurred QR Image Container -->
+<div class="w-40 h-40 border border-grid-border p-2 relative">
+<img alt="QR Code Pending" class="w-full h-full object-cover opacity-20 blur-sm" data-alt="A crisp, high-contrast, black and white standard QR code on a stark white background. Square format." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAc9IEhEl93aFQzi2oPOyv7lsVC0sxBWuN1bw-sq4-3Z_IeNcENBVwvwBLs-jWTZvI9lJHv35phftj6xedubas0B1lsKeSargCNqgRItd2jcNB8GoKw5kvTNreEQwJ83fDbGZ8xLsithaVHhuCQHoY-E4vNb_KuEUUdG5VZrTD_NGqkpFp1O_gEFe79NtI-FLq6mZRJnHkUIi43jy4WGXAnyloC9lgXWAjV732QfjZnwprPQzlySmm10ef_vBGs-nOv1aBBWkekEkU"/>
+<!-- Overlay Text for Pending -->
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="bg-surface/90 px-3 py-2 border border-grid-border backdrop-blur-sm text-center">
+<span class="material-symbols-outlined text-outline block mb-1 text-[28px]">lock</span>
+<span class="text-label-caps text-on-surface font-label-caps block">결제 확인 후 활성화</span>
+</div>
+</div>
+</div>
+<p class="text-table-cell text-on-surface-variant font-table-cell mt-4 text-center max-w-[240px]">
+          입장 시 이 화면을 준비해주시면 빠른 입장이 가능합니다.
+        </p>
+</div>
+<!-- Decor: Bottom ticket cutouts -->
+<div class="absolute bottom-0 left-0 right-0 h-4 flex justify-between px-4 -mb-2">
+<div class="w-4 h-4 rounded-full bg-background-public border-t border-grid-border"></div>
+<div class="w-4 h-4 rounded-full bg-background-public border-t border-grid-border"></div>
+</div>
+</div>
+<!-- Payment Info Card -->
+<div class="border border-grid-border bg-surface-white p-lg flex flex-col gap-4 w-full">
+<h3 class="text-body-bold text-on-surface font-body-bold border-b border-grid-border pb-3">결제 정보</h3>
+<div class="flex justify-between items-center">
+<span class="text-table-cell text-outline font-table-cell">총 결제금액</span>
+<span class="text-headline-md text-primary font-headline-md">60,000원</span>
+</div>
+<div class="bg-surface-container-low p-4 border border-grid-border flex flex-col gap-2">
+<div class="flex justify-between items-center">
+<span class="text-table-cell text-on-surface-variant font-table-cell">입금은행</span>
+<span class="text-body-base text-on-surface font-body-base">신한은행</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-table-cell text-on-surface-variant font-table-cell">계좌번호</span>
+<span class="text-body-base text-on-surface font-body-base">110-123-456789</span>
+</div>
+<div class="flex justify-between items-center">
+<span class="text-table-cell text-on-surface-variant font-table-cell">예금주</span>
+<span class="text-body-base text-on-surface font-body-base">극단 소로</span>
+</div>
+<div class="flex justify-between items-center mt-2 pt-2 border-t border-grid-border">
+<span class="text-table-cell text-error font-table-cell">입금 기한</span>
+<span class="text-body-bold text-error font-body-bold">2023.10.25 23:59 까지</span>
+</div>
+</div>
+</div>
+<!-- Action Buttons -->
+<div class="flex gap-2 mt-4">
+<button class="flex-1 h-12 border border-grid-border bg-surface-white text-on-surface font-body-bold text-body-bold hover:bg-surface-container-low transition-colors flex items-center justify-center">
+        예매 취소
+      </button>
+<button class="flex-1 h-12 border border-primary bg-primary text-on-primary font-body-bold text-body-bold hover:bg-primary-container transition-colors flex items-center justify-center">
+        목록으로
+      </button>
+</div>
+</div>
+</div></main></body></html>

@@ -1,0 +1,421 @@
+<!DOCTYPE html><html lang="ko"><head><meta charset="utf-8"><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"><script src="https://cdn.tailwindcss.com"></script><script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "surface": "#f8f9ff",
+                "on-primary-container": "#c7aaff",
+                "on-secondary-fixed-variant": "#5a00c6",
+                "status-warning": "#f59e0b",
+                "surface-container-low": "#eff3ff",
+                "primary-fixed-dim": "#d3bbff",
+                "on-error": "#ffffff",
+                "surface-container": "#e6eeff",
+                "background": "#f8f9ff",
+                "inverse-surface": "#273140",
+                "surface-container-lowest": "#ffffff",
+                "outline-variant": "#ccc3d6",
+                "tertiary-fixed": "#eaddff",
+                "surface-dim": "#d0daee",
+                "tertiary-container": "#533a8b",
+                "secondary-fixed-dim": "#d2bbff",
+                "on-secondary": "#ffffff",
+                "grid-border": "#e5e7eb",
+                "on-tertiary-container": "#c5abff",
+                "tertiary-fixed-dim": "#d1bcff",
+                "on-error-container": "#93000a",
+                "tertiary": "#3c2173",
+                "secondary": "#712ae2",
+                "primary": "#5b21b6",
+                "on-primary-fixed-variant": "#5726a7",
+                "primary-container": "#592aaa",
+                "status-error": "#ef4444",
+                "inverse-on-surface": "#ebf1ff",
+                "surface-bright": "#f8f9ff",
+                "primary-fixed": "#ebddff",
+                "surface-variant": "#d9e3f7",
+                "on-primary-fixed": "#250059",
+                "on-surface-variant": "#4a4453",
+                "on-secondary-fixed": "#25005a",
+                "secondary-fixed": "#eaddff",
+                "surface-container-high": "#dfe9fc",
+                "surface-tint": "#6f43c1",
+                "on-background": "#121c2a",
+                "inverse-primary": "#d3bbff",
+                "on-secondary-container": "#fffbff",
+                "on-surface": "#121c2a",
+                "secondary-container": "#8b4bfc",
+                "on-tertiary-fixed": "#24005b",
+                "error": "#ba1a1a",
+                "surface-container-highest": "#d9e3f7",
+                "status-active": "#10b981",
+                "on-tertiary-fixed-variant": "#503788",
+                "error-container": "#ffdad6",
+                "on-primary": "#ffffff",
+                "on-tertiary": "#ffffff",
+                "outline": "#7b7485"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.5rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "md": "16px",
+                "sm": "8px",
+                "margin-mobile": "16px",
+                "max-width": "1280px",
+                "xl": "32px",
+                "lg": "24px",
+                "xs": "4px"
+        },
+        "fontFamily": {
+                "table-cell": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Inter"
+                ],
+                "body-bold": [
+                        "Inter"
+                ],
+                "body-base": [
+                        "Inter"
+                ],
+                "display-hero-mobile": [
+                        "Inter"
+                ],
+                "display-hero": [
+                        "Inter"
+                ]
+        },
+        "fontSize": {
+                "table-cell": [
+                        "14px",
+                        {
+                                "lineHeight": "20px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "label-caps": [
+                        "12px",
+                        {
+                                "lineHeight": "16px",
+                                "letterSpacing": "0.05em",
+                                "fontWeight": "700"
+                        }
+                ],
+                "headline-md": [
+                        "24px",
+                        {
+                                "lineHeight": "32px",
+                                "letterSpacing": "-0.01em",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-bold": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "600"
+                        }
+                ],
+                "body-base": [
+                        "16px",
+                        {
+                                "lineHeight": "24px",
+                                "fontWeight": "400"
+                        }
+                ],
+                "display-hero-mobile": [
+                        "48px",
+                        {
+                                "lineHeight": "56px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "900"
+                        }
+                ],
+                "display-hero": [
+                        "132px",
+                        {
+                                "lineHeight": "140px",
+                                "letterSpacing": "0.02em",
+                                "fontWeight": "900"
+                        }
+                ]
+        }
+},
+    },
+  }
+</script><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"><style>@layer base { .pb-safe { padding-bottom: env(safe-area-inset-bottom, 0px); } .pt-safe { padding-top: env(safe-area-inset-top, 0px); } } .main-container { max-width: 960px !important; margin: 0 auto; padding: 0 1.5rem; }</style></head><body class="bg-background text-on-surface font-body-base"><header class="fixed top-0 left-0 right-0 z-50 bg-surface/80 backdrop-blur-xl pt-safe shadow-[0_1px_8px_rgba(0,0,0,0.04)]"><div class="main-container h-16 flex items-center gap-2"><button class="w-10 h-10 flex items-center justify-center text-on-surface" onclick="history.back()"><span class="material-symbols-outlined">arrow_back</span></button><h1 class="text-body-bold flex-1 font-bold">Ticket Status</h1><img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida/AP1WRLtzEiLh0EHbb2rs6pyyNzWrfJ7-sNq5ivilm513laheO6msYTYcLnYqDSerP61Uw6L3SZ6M74UJVtk1TH9NopgVDGYu4ZiH4ZbMtmJcbfx4BVW7TYjiIarKfmhibjdmhs1Nk7EQ3NZKw4JoiHBPTk93aXaP57oInf8O6cUfzHXjD8qWEoNtRt1mqFxiyKs3fooS1qZi_4PxGI5Ws7X9I-LILmv9Z4DtblRzQsfq14kVbrvl8tWf5zdw7CAZJ-if9Blx0srtOWkysA"></div></header><main class="min-h-screen pt-16 flex flex-col bg-surface max-w-[960px] mx-auto px-6 py-12"><div class="flex flex-col w-full relative min-h-screen pb-safe">
+<!-- Background Texture Layer (Layer 0) -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] mix-blend-multiply z-0">
+<svg height="100%" width="100%">
+<filter id="noise">
+<feTurbulence baseFrequency="0.8" numOctaves="4" stitchTiles="stitch" type="fractalNoise"></feTurbulence>
+<feColorMatrix type="matrix" values="1 0 0 0 0, 0 1 0 0 0, 0 0 1 0 0, 0 0 0 0.2 0"></feColorMatrix>
+</filter>
+<rect fill="#000" filter="url(#noise)" height="100%" width="100%"></rect>
+</svg>
+</div>
+<!-- Atmospheric Effect (Layer 10) -->
+<div class="fixed top-0 left-0 w-full h-[512px] bg-gradient-to-b from-primary/5 via-primary/[0.02] to-transparent pointer-events-none z-0"></div>
+<!-- Main Content Grid -->
+<div class="w-full z-20 flex flex-col gap-12"><!-- Top Section: Seat Map -->
+<div class="flex flex-col items-center w-full">
+<!-- Right Column: Seat Selection -->
+<div class="w-full flex flex-col items-center gap-8">
+<div class="flex flex-col items-center text-center gap-2">
+<div class="text-label-caps text-primary tracking-widest uppercase">Youth Rhapsody</div>
+<h2 class="text-headline-md text-on-surface font-display-hero-mobile">청춘 랩소디</h2>
+<p class="text-body-base text-on-surface-variant">2회차 • 19:30</p>
+</div>
+<!-- Stage Indicator -->
+<div class="w-full flex flex-col items-center justify-center">
+<div class="h-1 bg-gradient-to-r from-transparent via-primary/30 to-transparent mb-2 w-full max-w-3xl"></div>
+<span class="text-label-caps text-outline tracking-[0.2em] uppercase">STAGE</span>
+</div>
+<!-- Seat Map Container -->
+<div class="flex flex-col items-center justify-center gap-6 overflow-x-auto no-scrollbar w-full" id="seat-map">
+<!-- Injected by JS -->
+<div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">A</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="A-1" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-1"><label for="A-1" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">1</label></div><div class="relative"><input type="checkbox" id="A-2" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-2"><label for="A-2" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">2</label></div><div class="relative"><input type="checkbox" id="A-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-3"><label for="A-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="A-4" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="A-4"><label for="A-4" class="seat-label bg-surface border border-outline-variant text-label-caps">4</label></div><div class="relative"><input type="checkbox" id="A-5" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="A-5"><label for="A-5" class="seat-label bg-surface border border-outline-variant text-label-caps">5</label></div><div class="relative"><input type="checkbox" id="A-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-6"><label for="A-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="A-7" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-7"><label for="A-7" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">7</label></div><div class="relative"><input type="checkbox" id="A-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-8"><label for="A-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="A-9" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-9"><label for="A-9" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">9</label></div><div class="relative"><input type="checkbox" id="A-10" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-10"><label for="A-10" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">10</label></div><div class="relative"><input type="checkbox" id="A-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-11"><label for="A-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="A-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-12"><label for="A-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div><div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out 0.1s both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">B</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="B-1" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-1"><label for="B-1" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">1</label></div><div class="relative"><input type="checkbox" id="B-2" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-2"><label for="B-2" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">2</label></div><div class="relative"><input type="checkbox" id="B-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-3"><label for="B-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="B-4" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-4"><label for="B-4" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">4</label></div><div class="relative"><input type="checkbox" id="B-5" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-5"><label for="B-5" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">5</label></div><div class="relative"><input type="checkbox" id="B-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-6"><label for="B-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="B-7" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="B-7"><label for="B-7" class="seat-label bg-surface border border-outline-variant text-label-caps">7</label></div><div class="relative"><input type="checkbox" id="B-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-8"><label for="B-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="B-9" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-9"><label for="B-9" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">9</label></div><div class="relative"><input type="checkbox" id="B-10" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-10"><label for="B-10" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">10</label></div><div class="relative"><input type="checkbox" id="B-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-11"><label for="B-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="B-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-12"><label for="B-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div><div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out 0.2s both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">C</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="C-1" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="C-1"><label for="C-1" class="seat-label bg-surface border border-outline-variant text-label-caps">1</label></div><div class="relative"><input type="checkbox" id="C-2" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="C-2"><label for="C-2" class="seat-label bg-surface border border-outline-variant text-label-caps">2</label></div><div class="relative"><input type="checkbox" id="C-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-3"><label for="C-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="C-4" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-4"><label for="C-4" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">4</label></div><div class="relative"><input type="checkbox" id="C-5" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-5"><label for="C-5" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">5</label></div><div class="relative"><input type="checkbox" id="C-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-6"><label for="C-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="C-7" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-7"><label for="C-7" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">7</label></div><div class="relative"><input type="checkbox" id="C-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-8"><label for="C-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="C-9" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-9"><label for="C-9" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">9</label></div><div class="relative"><input type="checkbox" id="C-10" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-10"><label for="C-10" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">10</label></div><div class="relative"><input type="checkbox" id="C-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-11"><label for="C-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="C-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-12"><label for="C-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div><div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out 0.3s both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">D</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="D-1" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-1"><label for="D-1" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">1</label></div><div class="relative"><input type="checkbox" id="D-2" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-2"><label for="D-2" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">2</label></div><div class="relative"><input type="checkbox" id="D-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-3"><label for="D-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="D-4" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-4"><label for="D-4" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">4</label></div><div class="relative"><input type="checkbox" id="D-5" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-5"><label for="D-5" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">5</label></div><div class="relative"><input type="checkbox" id="D-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-6"><label for="D-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="D-7" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-7"><label for="D-7" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">7</label></div><div class="relative"><input type="checkbox" id="D-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-8"><label for="D-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="D-9" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="D-9"><label for="D-9" class="seat-label bg-surface border border-outline-variant text-label-caps">9</label></div><div class="relative"><input type="checkbox" id="D-10" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="D-10"><label for="D-10" class="seat-label bg-surface border border-outline-variant text-label-caps">10</label></div><div class="relative"><input type="checkbox" id="D-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-11"><label for="D-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="D-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-12"><label for="D-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div><div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">A</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="A-1" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-1"><label for="A-1" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">1</label></div><div class="relative"><input type="checkbox" id="A-2" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-2"><label for="A-2" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">2</label></div><div class="relative"><input type="checkbox" id="A-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-3"><label for="A-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="A-4" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="A-4"><label for="A-4" class="seat-label bg-surface border border-outline-variant text-label-caps">4</label></div><div class="relative"><input type="checkbox" id="A-5" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="A-5"><label for="A-5" class="seat-label bg-surface border border-outline-variant text-label-caps">5</label></div><div class="relative"><input type="checkbox" id="A-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-6"><label for="A-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="A-7" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-7"><label for="A-7" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">7</label></div><div class="relative"><input type="checkbox" id="A-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-8"><label for="A-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="A-9" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-9"><label for="A-9" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">9</label></div><div class="relative"><input type="checkbox" id="A-10" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-10"><label for="A-10" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">10</label></div><div class="relative"><input type="checkbox" id="A-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-11"><label for="A-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="A-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="A-12"><label for="A-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div><div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out 0.1s both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">B</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="B-1" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-1"><label for="B-1" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">1</label></div><div class="relative"><input type="checkbox" id="B-2" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-2"><label for="B-2" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">2</label></div><div class="relative"><input type="checkbox" id="B-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-3"><label for="B-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="B-4" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-4"><label for="B-4" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">4</label></div><div class="relative"><input type="checkbox" id="B-5" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-5"><label for="B-5" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">5</label></div><div class="relative"><input type="checkbox" id="B-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-6"><label for="B-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="B-7" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="B-7"><label for="B-7" class="seat-label bg-surface border border-outline-variant text-label-caps">7</label></div><div class="relative"><input type="checkbox" id="B-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-8"><label for="B-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="B-9" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-9"><label for="B-9" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">9</label></div><div class="relative"><input type="checkbox" id="B-10" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-10"><label for="B-10" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">10</label></div><div class="relative"><input type="checkbox" id="B-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-11"><label for="B-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="B-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="B-12"><label for="B-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div><div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out 0.2s both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">C</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="C-1" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="C-1"><label for="C-1" class="seat-label bg-surface border border-outline-variant text-label-caps">1</label></div><div class="relative"><input type="checkbox" id="C-2" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="C-2"><label for="C-2" class="seat-label bg-surface border border-outline-variant text-label-caps">2</label></div><div class="relative"><input type="checkbox" id="C-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-3"><label for="C-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="C-4" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-4"><label for="C-4" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">4</label></div><div class="relative"><input type="checkbox" id="C-5" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-5"><label for="C-5" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">5</label></div><div class="relative"><input type="checkbox" id="C-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-6"><label for="C-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="C-7" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-7"><label for="C-7" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">7</label></div><div class="relative"><input type="checkbox" id="C-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-8"><label for="C-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="C-9" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-9"><label for="C-9" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">9</label></div><div class="relative"><input type="checkbox" id="C-10" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-10"><label for="C-10" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">10</label></div><div class="relative"><input type="checkbox" id="C-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-11"><label for="C-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="C-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="C-12"><label for="C-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div><div class="flex items-center gap-6 snap-center" style="animation: 0.4s ease-out 0.3s both fadeIn;"><div class="w-6 text-label-caps text-on-surface-variant font-body-bold text-center">D</div><div class="flex gap-3"><div class="relative"><input type="checkbox" id="D-1" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-1"><label for="D-1" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">1</label></div><div class="relative"><input type="checkbox" id="D-2" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-2"><label for="D-2" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">2</label></div><div class="relative"><input type="checkbox" id="D-3" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-3"><label for="D-3" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">3</label></div><div class="relative"><input type="checkbox" id="D-4" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-4"><label for="D-4" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">4</label></div><div class="relative"><input type="checkbox" id="D-5" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-5"><label for="D-5" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">5</label></div><div class="relative"><input type="checkbox" id="D-6" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-6"><label for="D-6" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">6</label></div><div class="ml-8 relative"><input type="checkbox" id="D-7" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-7"><label for="D-7" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">7</label></div><div class="relative"><input type="checkbox" id="D-8" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-8"><label for="D-8" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">8</label></div><div class="relative"><input type="checkbox" id="D-9" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="D-9"><label for="D-9" class="seat-label bg-surface border border-outline-variant text-label-caps">9</label></div><div class="relative"><input type="checkbox" id="D-10" class="seat-checkbox absolute opacity-0 w-0 h-0" disabled="" value="D-10"><label for="D-10" class="seat-label bg-surface border border-outline-variant text-label-caps">10</label></div><div class="relative"><input type="checkbox" id="D-11" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-11"><label for="D-11" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">11</label></div><div class="relative"><input type="checkbox" id="D-12" class="seat-checkbox absolute opacity-0 w-0 h-0" value="D-12"><label for="D-12" class="seat-label bg-surface border border-outline-variant text-label-caps text-primary">12</label></div></div></div></div>
+<!-- Legend -->
+<div class="flex items-center justify-center gap-6 text-label-caps text-on-surface-variant">
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm bg-surface border border-outline-variant"></div><span class="">Available</span></div>
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm bg-primary"></div><span class="">Selected</span></div>
+<div class="flex items-center gap-2"><div class="w-3 h-3 rounded-sm bg-surface-dim opacity-50"></div><span class="">Booked</span></div>
+</div>
+</div>
+</div>
+<!-- Bottom Section: Form & Payment -->
+<div class="w-full border-t border-grid-border pt-12 flex justify-between gap-12">
+<!-- Form -->
+<div class="flex flex-col gap-8 w-[55%]">
+<h3 class="text-body-bold text-on-surface">예매자 정보 입력</h3>
+<form class="flex flex-col gap-6"><div class="flex flex-col gap-2"><label class="text-label-caps text-on-surface-variant font-body-bold" for="name">이름</label><input class="w-full bg-surface border border-outline-variant px-4 py-3 text-body-base rounded-lg focus:outline-none focus:border-primary transition-all" id="name" placeholder="실명 입력" type="text"></div><div class="flex flex-col gap-2"><label class="text-label-caps text-on-surface-variant font-body-bold" for="phone">연락처</label><input class="w-full bg-surface border border-outline-variant px-4 py-3 text-body-base rounded-lg focus:outline-none focus:border-primary transition-all" id="phone" placeholder="- 기호 포함" type="tel"></div><div class="flex flex-col gap-2"><label class="text-label-caps text-on-surface-variant font-body-bold" for="ticket-count">예매매수</label><input class="w-full bg-surface-dim border border-outline-variant px-4 py-3 text-body-base rounded-lg focus:outline-none cursor-not-allowed opacity-80" id="ticket-count" readonly="" type="text" value="0 매"></div><div class="flex flex-col gap-2"><label class="text-label-caps text-on-surface-variant font-body-bold" for="depositor">입금자명</label><input class="w-full bg-surface border border-outline-variant px-4 py-3 text-body-base rounded-lg focus:outline-none focus:border-primary transition-all" id="depositor" placeholder="통장 표시 명의와 일치 필수" type="text"></div><div class="flex flex-col gap-2"><label class="text-label-caps text-on-surface-variant font-body-bold" for="password">비밀번호</label><input class="w-full bg-surface border border-outline-variant px-4 py-3 text-body-base rounded-lg focus:outline-none focus:border-primary transition-all" id="password" placeholder="조회용 숫자 4~6자리 설정" type="password"></div></form>
+</div>
+<!-- Summary & Payment -->
+<div class="flex flex-col gap-8 w-[40%]">
+<div class="flex flex-col gap-4">
+<label class="text-label-caps text-outline tracking-wider">Selected Seats</label>
+<div class="flex flex-wrap gap-2" id="selected-seats-container">
+<span class="inline-flex items-center justify-center px-4 py-2 bg-primary/10 text-primary rounded-full text-table-cell font-body-bold" id="empty-state">Select seats</span>
+</div>
+</div>
+<div class="mt-auto pt-8 border-t border-dashed border-grid-border">
+<div class="flex justify-between items-end mb-6">
+<span class="text-body-base text-on-surface-variant">Total Payment</span>
+<span class="text-headline-md text-primary font-display-hero-mobile" id="total-amount">₩100,000</span>
+</div>
+<button class="w-full py-4 rounded-lg bg-primary text-on-primary text-body-bold shadow-lg shadow-primary/20 hover:shadow-xl transition-all flex items-center justify-center gap-2"><span class="">결제하기 및 예매 완료</span><span class="material-symbols-outlined">arrow_forward</span></button>
+</div>
+</div>
+</div>
+</div></div>
+<!-- Decorative Bottom Element -->
+<div class="absolute bottom-0 right-0 w-96 h-96 bg-secondary-container/5 rounded-full blur-[100px] pointer-events-none"></div>
+<style>
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+    @keyframes slideUp {
+        from { opacity: 0; transform: translateY(20px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    /* Seat Checkbox Magic */
+    .seat-checkbox {
+        appearance: none;
+        margin: 0;
+    }
+    .seat-label {
+        width: 2.5rem;
+        height: 2.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .seat-label::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: currentColor;
+        opacity: 0;
+        transition: opacity 0.2s;
+    }
+    
+    .seat-checkbox:not(:checked):not(:disabled) + .seat-label:hover {
+        transform: translateY(-4px) scale(1.05);
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        z-index: 10;
+    }
+
+    .seat-checkbox:not(:checked):not(:disabled) + .seat-label:hover::before {
+        opacity: 0.05;
+    }
+
+    .seat-checkbox:checked + .seat-label {
+        background-color: var(--color-primary);
+        color: var(--color-on-primary);
+        border-color: transparent;
+        transform: scale(1.1) translateY(-2px);
+        box-shadow: 0 10px 25px -5px rgba(91, 33, 182, 0.4);
+        z-index: 20;
+    }
+    
+    .seat-checkbox:checked + .seat-label::after {
+        content: '';
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+        opacity: 0;
+        animation: ping-once 0.5s cubic-bezier(0, 0, 0.2, 1);
+    }
+    
+    .seat-checkbox:disabled + .seat-label {
+        background-color: var(--color-surface-dim);
+        border-color: transparent;
+        color: var(--color-on-surface-variant);
+        opacity: 0.4;
+        cursor: not-allowed;
+    }
+
+    @keyframes ping-once {
+        0% { transform: scale(0.5); opacity: 1; }
+        100% { transform: scale(2); opacity: 0; }
+    }
+    
+    /* Utilities */
+    .no-scrollbar::-webkit-scrollbar {
+        display: none;
+    }
+    .no-scrollbar {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+</style>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const rows = ['A', 'B', 'C', 'D'];
+        const cols = 12;
+        const seatMap = document.getElementById('seat-map');
+        const pricePerSeat = 35000; // ₩35,000
+        
+        // Mock booked seats
+        const bookedSeats = ['A-4', 'A-5', 'B-7', 'C-1', 'C-2', 'D-9', 'D-10'];
+
+        // Generate Grid
+        rows.forEach((row, rIndex) => {
+            const rowDiv = document.createElement('div');
+            rowDiv.className = 'flex items-center gap-6 snap-center';
+            rowDiv.style.animation = `fadeIn 0.4s ease-out ${rIndex * 0.1}s both`;
+            
+            // Row Label
+            const label = document.createElement('div');
+            label.className = 'w-6 text-label-caps text-on-surface-variant font-body-bold text-center';
+            label.textContent = row;
+            rowDiv.appendChild(label);
+
+            // Seats
+            const seatsContainer = document.createElement('div');
+            seatsContainer.className = 'flex gap-3';
+            
+            // create gap in middle (aisle)
+            for (let c = 1; c <= cols; c++) {
+                const seatId = `${row}-${c}`;
+                const isBooked = bookedSeats.includes(seatId);
+                
+                const seatWrapper = document.createElement('div');
+                if (c === 7) {
+                    seatWrapper.className = 'ml-8 relative'; // Aisle
+                } else {
+                    seatWrapper.className = 'relative';
+                }
+
+                const input = document.createElement('input');
+                input.type = 'checkbox';
+                input.id = seatId;
+                input.className = 'seat-checkbox absolute opacity-0 w-0 h-0';
+                input.disabled = isBooked;
+                input.value = seatId;
+                
+                const seatLabel = document.createElement('label');
+                seatLabel.htmlFor = seatId;
+                seatLabel.className = `seat-label bg-surface border border-outline-variant text-label-caps ${isBooked ? '' : 'text-primary'}`;
+                seatLabel.textContent = c;
+
+                seatWrapper.appendChild(input);
+                seatWrapper.appendChild(seatLabel);
+                seatsContainer.appendChild(seatWrapper);
+                
+                // Event listener for selection
+                input.addEventListener('change', updateSelection);
+            }
+            
+            rowDiv.appendChild(seatsContainer);
+            seatMap.appendChild(rowDiv);
+        });
+
+        // Handle Selection Logic
+        const selectedSeatsContainer = document.getElementById('selected-seats-container');
+        const emptyState = document.getElementById('empty-state');
+        const totalAmountEl = document.getElementById('total-amount');
+
+        function updateSelection() {
+            const selectedInputs = document.querySelectorAll('.seat-checkbox:checked');
+            const selectedIds = Array.from(selectedInputs).map(input => input.value);
+            
+            // Update Badges
+            selectedSeatsContainer.innerHTML = '';
+            
+            if (selectedIds.length === 0) {
+                selectedSeatsContainer.appendChild(emptyState);
+                emptyState.textContent = 'Select seats';
+                emptyState.className = 'inline-flex items-center justify-center px-4 py-2 bg-primary/10 text-primary rounded-full text-table-cell font-body-bold animate-pulse';
+                totalAmountEl.textContent = `₩100,000`;
+            } else {
+                selectedIds.forEach((id, index) => {
+                    const badge = document.createElement('span');
+                    // Format id from A-1 to A열 1번
+                    const [row, num] = id.split('-');
+                    const formatted = `${row}열 ${num}번`;
+                    
+                    badge.className = 'inline-flex items-center justify-center px-4 py-2 bg-primary text-on-primary rounded-full text-table-cell font-body-bold shadow-sm shadow-primary/30';
+                    badge.style.animation = `slideUp 0.3s ease-out ${index * 0.05}s both`;
+                    badge.textContent = formatted;
+                    selectedSeatsContainer.appendChild(badge);
+                });
+                // Update Total
+                const total = selectedIds.length * pricePerSeat;
+                
+                // Animate number change (simple version)
+                totalAmountEl.style.transform = 'scale(1.1)';
+                totalAmountEl.style.color = 'var(--color-primary-container)';
+                setTimeout(() => {
+                    totalAmountEl.textContent = `₩${total.toLocaleString()}`;
+                    totalAmountEl.style.transform = 'scale(1)';
+                    totalAmountEl.style.color = 'var(--color-primary)';
+                }, 150);
+            }
+        }
+    });
+</script></main>
+
+
+
+</body></html>

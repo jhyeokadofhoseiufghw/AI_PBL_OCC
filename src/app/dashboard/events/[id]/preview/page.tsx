@@ -16,9 +16,9 @@ export default async function EventPreviewPage({
   const event = rows[0];
   if (!event) notFound();
   return (
-    <main className="mx-auto min-h-screen max-w-md bg-white px-5 py-8 shadow-sm">
+    <main className="mx-auto min-h-screen max-w-md bg-white px-5 py-8 shadow-xl">
       <Link
-        className="text-sm text-emerald-700"
+        className="text-sm font-bold text-[#420093]"
         href={`/dashboard/events/${id}/overview`}
       >
         ← 개요로 돌아가기
@@ -27,14 +27,14 @@ export default async function EventPreviewPage({
         관객용 모바일 미리보기
       </p>
       <div
-        className="mt-5 aspect-[1/1.414] rounded-xl bg-zinc-200 bg-cover bg-center"
+        className={`mt-5 aspect-[1/1.414] rounded-xl bg-cover bg-center shadow-lg ${event.poster_image_url ? "" : "poster-fallback"}`}
         style={
           event.poster_image_url
             ? { backgroundImage: `url(${String(event.poster_image_url)})` }
             : undefined
         }
       />
-      <h1 className="mt-6 text-2xl font-semibold">{String(event.title)}</h1>
+      <h1 className="ha-title mt-6 text-3xl">{String(event.title)}</h1>
       <p className="mt-2 text-sm text-zinc-600">
         {new Date(String(event.event_start_at)).toLocaleString("ko-KR")} ·{" "}
         {String(event.venue)}
@@ -42,10 +42,7 @@ export default async function EventPreviewPage({
       <p className="mt-4 whitespace-pre-wrap leading-7">
         {String(event.description)}
       </p>
-      <button
-        className="mt-8 w-full rounded-lg bg-emerald-700 px-5 py-3 font-medium text-white"
-        disabled
-      >
+      <button className="ha-button-primary mt-8 w-full px-5 py-3" disabled>
         예매하기 (미리보기)
       </button>
     </main>

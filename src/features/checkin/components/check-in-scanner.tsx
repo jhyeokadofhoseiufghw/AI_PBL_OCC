@@ -27,7 +27,7 @@ export function CheckInScanner({ eventId }: { eventId: string }) {
 
   return (
     <section className="space-y-4">
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-black">
+      <div className="overflow-hidden rounded-2xl border-4 border-[#420093] bg-black shadow-xl">
         <Scanner
           paused={paused || isPending}
           allowMultiple={false}
@@ -67,7 +67,7 @@ export function CheckInScanner({ eventId }: { eventId: string }) {
         <label className="block text-sm font-medium">
           카메라 선택
           <select
-            className="mt-1 w-full rounded-lg border px-3 py-2"
+            className="ha-input mt-2"
             value={deviceId}
             onChange={(event) => {
               setDeviceId(event.target.value);
@@ -94,7 +94,7 @@ export function CheckInScanner({ eventId }: { eventId: string }) {
         ) : null}
         <button
           type="button"
-          className="mt-4 rounded-md bg-zinc-900 px-4 py-2 text-sm font-medium text-white disabled:bg-zinc-400"
+          className="ha-button-primary mt-4 px-4 py-2 text-sm disabled:opacity-50"
           disabled={isPending}
           onClick={() => {
             setPaused(false);

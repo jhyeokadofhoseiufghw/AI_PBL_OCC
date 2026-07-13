@@ -82,8 +82,12 @@ export default async function Page({
     </>
   );
   return (
-    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p className="ha-kicker">Reservations</p>
+          <h1 className="ha-title mt-1 text-3xl">예매/입금 관리</h1>
+        </div>
         <EventSwitcher
           current={id}
           events={allEvents.map((event) => ({
@@ -91,9 +95,6 @@ export default async function Page({
             title: String(event.title),
           }))}
         />
-        <h1 className="text-2xl font-semibold">
-          {String(events[0].title)} 운영
-        </h1>
       </div>
       <EventTabs current="reservations" eventId={id} />
       <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
@@ -105,24 +106,23 @@ export default async function Page({
           ["대기 신청", s.waitlisted],
           ["잔여 좌석/수량", remaining],
         ].map(([l, v]) => (
-          <div className="rounded-xl border bg-white p-4" key={String(l)}>
-            <p className="text-xs text-zinc-500">{l}</p>
-            <p className="mt-1 text-xl font-semibold">{String(v)}</p>
+          <div
+            className="ha-panel border-l-4 border-l-[#712ae2] p-4"
+            key={String(l)}
+          >
+            <p className="text-xs font-semibold text-[#60687a]">{l}</p>
+            <p className="mt-2 text-2xl font-black">{String(v)}</p>
           </div>
         ))}
       </section>
-      <form className="mt-6 flex flex-wrap gap-2">
+      <form className="ha-panel mt-6 flex flex-wrap gap-2 p-3">
         <input
-          className="min-w-60 rounded-lg border px-3 py-2"
+          className="ha-input min-w-60 flex-1"
           defaultValue={q}
           name="q"
           placeholder="이름, 입금자명 또는 연락처"
         />
-        <select
-          className="rounded-lg border px-3 py-2"
-          defaultValue={status}
-          name="status"
-        >
+        <select className="ha-input w-auto" defaultValue={status} name="status">
           <option value="">전체 상태</option>
           {Object.entries(labels).map(([v, l]) => (
             <option key={v} value={v}>
@@ -130,20 +130,14 @@ export default async function Page({
             </option>
           ))}
         </select>
-        <select
-          className="rounded-lg border px-3 py-2"
-          defaultValue={size}
-          name="size"
-        >
+        <select className="ha-input w-auto" defaultValue={size} name="size">
           <option value="10">10개</option>
           <option value="25">25개</option>
           <option value="50">50개</option>
         </select>
-        <button className="rounded-lg bg-zinc-800 px-4 py-2 text-white">
-          검색
-        </button>
+        <button className="ha-button-primary px-5 py-2">검색</button>
         <Link
-          className="rounded-lg border px-4 py-2"
+          className="ha-button-secondary px-4 py-2"
           href={`/dashboard/events/${id}/reservations/export?q=${encodeURIComponent(q)}&status=${encodeURIComponent(status)}`}
         >
           CSV 다운로드
@@ -151,27 +145,27 @@ export default async function Page({
       </form>
       <form
         action={bulkCancelReservations}
-        className="mt-4 flex gap-2"
+        className="mt-4 flex flex-wrap gap-2"
         id="bulk-operations"
       >
         <input name="eventId" type="hidden" value={id} />
         <button
-          className="rounded border px-3 py-2 text-sm"
+          className="ha-button-primary px-4 py-2 text-sm"
           formAction={bulkApproveReservations}
         >
           선택 일괄 승인
         </button>
         <ConfirmSubmitButton
-          className="rounded border border-red-200 px-3 py-2 text-sm text-red-700"
+          className="ha-button-secondary border-red-200 px-4 py-2 text-sm text-red-700"
           confirmMessage="선택한 예매를 취소하고 좌석을 복구할까요?"
         >
           선택 일괄 취소
         </ConfirmSubmitButton>
       </form>
-      <div className="mt-4 overflow-x-auto">
+      <div className="ha-panel mt-4 overflow-x-auto">
         <table className="min-w-full text-left text-sm">
           <thead>
-            <tr className="border-b">
+            <tr className="border-b border-[#dfe3ec] bg-[#eff3ff] text-xs uppercase tracking-wider text-[#60687a]">
               <th className="p-3">선택</th>
               <th className="p-3">신청일</th>
               <th className="p-3">예매자</th>
@@ -184,7 +178,10 @@ export default async function Page({
           </thead>
           <tbody>
             {rows.map((row) => (
-              <tr className="border-b align-top" key={String(row.id)}>
+              <tr
+                className="border-b border-[#e5e7eb] align-top transition hover:bg-[#f8f9ff]"
+                key={String(row.id)}
+              >
                 <td className="p-3">
                   <input
                     form="bulk-operations"
@@ -216,7 +213,9 @@ export default async function Page({
                   {Number(row.total_price).toLocaleString("ko-KR")}원
                 </td>
                 <td className="p-3">
-                  {labels[String(row.status)]}
+                  <span className="inline-flex rounded-full bg-[#e6eeff] px-2.5 py-1 text-xs font-bold text-[#420093]">
+                    {labels[String(row.status)]}
+                  </span>
                   {Number(row.pending_qr_count) > 0 ? (
                     <span className="block text-amber-700">QR 생성 필요</span>
                   ) : null}
@@ -224,7 +223,7 @@ export default async function Page({
                 <td className="whitespace-nowrap p-3">
                   {Number(row.checked_ticket_count) > 0 ? (
                     <>
-                      <b className="text-emerald-700">
+                      <b className="text-[#00865f]">
                         {Number(row.checked_ticket_count)}/
                         {Number(row.quantity)}명 입장
                       </b>
@@ -270,7 +269,7 @@ export default async function Page({
                     {row.status === "PENDING_PAYMENT" ? (
                       <form action={confirmReservation}>
                         {hidden(String(row.id))}
-                        <button className="rounded border px-2 py-1 text-emerald-700">
+                        <button className="rounded border border-[#420093] bg-[#420093] px-2 py-1 text-white">
                           승인
                         </button>
                       </form>
@@ -278,7 +277,7 @@ export default async function Page({
                     {row.status === "WAITLISTED" ? (
                       <form action={convertWaitlistReservation}>
                         {hidden(String(row.id))}
-                        <button className="rounded border px-2 py-1 text-emerald-700">
+                        <button className="rounded border border-[#420093] bg-[#420093] px-2 py-1 text-white">
                           예매 전환
                         </button>
                       </form>

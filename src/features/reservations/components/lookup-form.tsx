@@ -4,7 +4,7 @@ import { useActionState, useRef, useState } from "react";
 import Image from "next/image";
 import { cancelReservation, lookupReservation } from "../actions";
 
-const input = "mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2";
+const input = "ha-input mt-2";
 const labels: Record<string, string> = {
   PENDING_PAYMENT: "입금 확인 대기",
   CONFIRMED: "예매 확정",
@@ -29,11 +29,11 @@ function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
     setIndex(Math.max(0, Math.min(tickets.length - 1, next)));
 
   return (
-    <section className="mt-6 rounded-xl border bg-zinc-50 p-4">
+    <section className="mt-6 rounded-2xl border border-[#e5e7eb] bg-[#f8f9ff] p-4 sm:p-6">
       <div className="flex items-center justify-between gap-3">
         <button
           aria-label="이전 티켓"
-          className="rounded-full border bg-white px-4 py-2 disabled:opacity-30"
+          className="ha-button-secondary px-4 py-2 disabled:opacity-30"
           disabled={index === 0}
           onClick={() => move(index - 1)}
           type="button"
@@ -45,7 +45,7 @@ function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
         </p>
         <button
           aria-label="다음 티켓"
-          className="rounded-full border bg-white px-4 py-2 disabled:opacity-30"
+          className="ha-button-secondary px-4 py-2 disabled:opacity-30"
           disabled={index === tickets.length - 1}
           onClick={() => move(index + 1)}
           type="button"
@@ -54,7 +54,7 @@ function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
         </button>
       </div>
       <article
-        className="mx-auto mt-4 max-w-sm rounded-xl bg-white p-5 shadow-sm"
+        className="relative mx-auto mt-4 max-w-sm overflow-hidden rounded-2xl border border-[#e5e7eb] bg-white p-6 shadow-xl before:absolute before:-left-2 before:top-8 before:h-4 before:w-4 before:rounded-full before:bg-[#f8f9ff] after:absolute after:-right-2 after:top-8 after:h-4 after:w-4 after:rounded-full after:bg-[#f8f9ff]"
         onTouchEnd={(event) => {
           if (touchStartX.current === null) return;
           const distance =
@@ -71,7 +71,7 @@ function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
           {ticket.seat ? ` · ${ticket.seat}` : ""}
         </p>
         {ticket.checkedInAt ? (
-          <p className="mt-3 rounded-lg bg-zinc-100 p-3 text-center text-sm text-zinc-600">
+          <p className="mt-3 rounded-lg bg-[#eff3ff] p-3 text-center text-sm text-[#60687a]">
             입장 완료 · {new Date(ticket.checkedInAt).toLocaleString("ko-KR")}
           </p>
         ) : ticket.qrImageData ? (
@@ -84,7 +84,7 @@ function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
             width={224}
           />
         ) : (
-          <p className="mt-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">
+          <p className="mt-3 rounded-lg bg-[#fff4d7] p-3 text-sm text-[#7a4f00]">
             QR 생성 중이거나 재시도가 필요합니다.
           </p>
         )}
@@ -93,7 +93,7 @@ function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
         {tickets.map((item, itemIndex) => (
           <button
             aria-label={`티켓 ${item.number} 보기`}
-            className={`h-2.5 w-2.5 rounded-full ${itemIndex === index ? "bg-emerald-700" : "bg-zinc-300"}`}
+            className={`h-2.5 w-2.5 rounded-full ${itemIndex === index ? "bg-[#712ae2]" : "bg-[#d9e3f7]"}`}
             key={item.number}
             onClick={() => move(itemIndex)}
             type="button"
@@ -139,9 +139,9 @@ export function LookupForm({
       <form
         action={lookupAction}
         autoComplete="on"
-        className="grid gap-4 rounded-xl border bg-white p-5 sm:grid-cols-2"
+        className="ha-card grid gap-5 p-5 sm:grid-cols-2 sm:p-7"
       >
-        <label className="font-medium">
+        <label className="font-semibold">
           이름
           <input
             autoComplete="name"
@@ -152,7 +152,7 @@ export function LookupForm({
             value={values.name}
           />
         </label>
-        <label className="font-medium">
+        <label className="font-semibold">
           연락처
           <input
             autoComplete="tel"
@@ -166,7 +166,7 @@ export function LookupForm({
             value={values.phone}
           />
         </label>
-        <label className="font-medium sm:col-span-2">
+        <label className="font-semibold sm:col-span-2">
           조회 패스워드
           <input
             className={input}
@@ -191,17 +191,14 @@ export function LookupForm({
           </div>
         ) : null}
         <button
-          className="rounded-lg bg-emerald-700 px-5 py-3 font-medium text-white sm:col-span-2"
+          className="ha-button-primary px-5 py-3 sm:col-span-2"
           disabled={lookupPending}
         >
           {lookupPending ? "조회 중..." : "예매 조회"}
         </button>
       </form>
       {lookup.candidates ? (
-        <section
-          className="scroll-mt-6 rounded-xl border bg-white p-5"
-          id="reservation-list"
-        >
+        <section className="ha-card scroll-mt-6 p-5" id="reservation-list">
           <h2 className="font-semibold">조회할 예매를 선택해주세요</h2>
           <p className="mt-1 text-sm text-zinc-500">
             같은 정보로 예매한 공연이 여러 건 있습니다.
@@ -239,7 +236,7 @@ export function LookupForm({
         </section>
       ) : null}
       {reservation ? (
-        <section className="rounded-xl border bg-white p-6">
+        <section className="ha-card overflow-hidden p-6 sm:p-8">
           {lookup.candidates ? (
             <a
               className="mb-5 inline-flex rounded-lg border px-3 py-2 text-sm text-emerald-700"
@@ -248,13 +245,11 @@ export function LookupForm({
               ← 예매 목록으로 돌아가기
             </a>
           ) : null}
-          <p className="text-sm text-emerald-700">
+          <span className="ha-status">
             {labels[reservation.status] ?? reservation.status}
-          </p>
-          <h2 className="mt-1 text-xl font-semibold">
-            {reservation.eventTitle}
-          </h2>
-          <dl className="mt-4 space-y-2 text-sm">
+          </span>
+          <h2 className="ha-title mt-3 text-2xl">{reservation.eventTitle}</h2>
+          <dl className="mt-5 space-y-2 border-y border-dashed border-[#ccc3d6] py-5 text-sm">
             <div>예매자 {reservation.name}</div>
             <div>
               {reservation.quantity}매 ·{" "}
@@ -270,7 +265,7 @@ export function LookupForm({
             ) : null}
           </dl>
           {reservation.checkedInAt ? (
-            <p className="mt-5 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">
+            <p className="mt-5 rounded-lg bg-[#e8fff5] p-3 text-sm text-[#006c4c]">
               입장 완료 ·{" "}
               {new Date(reservation.checkedInAt).toLocaleString("ko-KR")}
             </p>

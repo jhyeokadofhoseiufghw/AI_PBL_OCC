@@ -28,40 +28,42 @@ export default async function DashboardPage() {
     ["오늘 체크인", r.today_checkins],
   ];
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-semibold">기획자 대시보드</h1>
-          <p className="mt-2 text-zinc-600">
+          <p className="ha-kicker">Overview</p>
+          <h1 className="ha-title mt-1 text-3xl">기획자 대시보드</h1>
+          <p className="mt-2 text-[#60687a]">
             {organizer
               ? `${String(organizer.organization_name)} · ${String(organizer.name)}`
               : "운영 현황"}
           </p>
         </div>
         <Link
-          className="rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white"
+          className="ha-button-primary px-5 py-3 text-sm"
           href="/dashboard/events/new"
         >
           새 공연
         </Link>
       </div>
-      <section className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3">
+      <section className="mt-8 grid grid-cols-2 gap-3 md:grid-cols-3 xl:grid-cols-5">
         {cards.map(([label, value]) => (
           <article
-            className="rounded-xl border bg-white p-5"
+            className="ha-card border-l-4 border-l-[#712ae2] p-5"
             key={String(label)}
           >
-            <p className="text-sm text-zinc-500">{label}</p>
-            <p className="mt-1 text-2xl font-semibold">{Number(value)}</p>
+            <p className="text-sm font-semibold text-[#60687a]">{label}</p>
+            <p className="mt-2 text-3xl font-black">{Number(value)}</p>
           </article>
         ))}
       </section>
       <section className="mt-10">
-        <h2 className="text-lg font-semibold">오늘 공연</h2>
+        <p className="ha-kicker">Today</p>
+        <h2 className="ha-title mt-1 text-xl">오늘 공연</h2>
         <div className="mt-4 space-y-2">
           {todayEvents.map((event) => (
             <Link
-              className="block rounded-xl border bg-white p-4"
+              className="ha-card block p-5 transition hover:-translate-y-0.5 hover:border-[#712ae2]"
               href={`/dashboard/events/${String(event.id)}/check-in`}
               key={String(event.id)}
             >
@@ -75,7 +77,7 @@ export default async function DashboardPage() {
             </Link>
           ))}
           {!todayEvents.length ? (
-            <p className="rounded-xl border border-dashed p-6 text-sm text-zinc-500">
+            <p className="rounded-xl border border-dashed border-[#ccc3d6] p-6 text-sm text-[#60687a]">
               오늘 예정된 공연이 없습니다.
             </p>
           ) : null}
@@ -83,15 +85,21 @@ export default async function DashboardPage() {
       </section>
       <section className="mt-10">
         <div className="flex justify-between">
-          <h2 className="text-lg font-semibold">최근 공연</h2>
-          <Link className="text-sm text-emerald-700" href="/dashboard/events">
+          <div>
+            <p className="ha-kicker">Recent shows</p>
+            <h2 className="ha-title mt-1 text-xl">최근 공연</h2>
+          </div>
+          <Link
+            className="text-sm font-bold text-[#420093]"
+            href="/dashboard/events"
+          >
             전체 보기
           </Link>
         </div>
         <div className="mt-4 space-y-3">
           {recent.map((row) => (
             <article
-              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border bg-white p-4"
+              className="ha-card flex flex-wrap items-center justify-between gap-3 p-5"
               key={String(row.id)}
             >
               <div>
@@ -109,13 +117,13 @@ export default async function DashboardPage() {
               </div>
               <div className="flex gap-2">
                 <Link
-                  className="rounded border px-3 py-2 text-sm"
+                  className="ha-button-secondary px-3 py-2 text-sm"
                   href={`/dashboard/events/${String(row.id)}/reservations`}
                 >
                   예매자
                 </Link>
                 <Link
-                  className="rounded bg-zinc-900 px-3 py-2 text-sm text-white"
+                  className="ha-button-primary px-3 py-2 text-sm"
                   href={`/dashboard/events/${String(row.id)}/check-in`}
                 >
                   QR 체크인

@@ -20,19 +20,22 @@ export default async function Page({
   const events =
     await getSql()`SELECT e.id,e.title,e.event_start_at,e.status,e.reservation_type,COUNT(r.id) FILTER(WHERE r.status NOT IN('CANCELLED','WAITLISTED'))::int reservations,COUNT(r.id) FILTER(WHERE r.status='PENDING_PAYMENT')::int pending,COUNT(r.id) FILTER(WHERE r.status='CHECKED_IN')::int checked_in FROM events e LEFT JOIN reservations r ON r.event_id=e.id WHERE e.organizer_id=${session.organizerId} AND (${status}='' OR e.status=${status}) GROUP BY e.id ORDER BY e.created_at DESC`;
   return (
-    <main className="mx-auto min-h-screen max-w-6xl px-6 py-10">
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">공연 목록</h1>
+        <div>
+          <p className="ha-kicker">Shows</p>
+          <h1 className="ha-title mt-1 text-3xl">공연 목록</h1>
+        </div>
         <Link
-          className="rounded-lg bg-emerald-700 px-4 py-2 text-sm text-white"
+          className="ha-button-primary px-5 py-3 text-sm"
           href="/dashboard/events/new"
         >
           공연 생성
         </Link>
       </div>
-      <form className="mt-6">
+      <form className="ha-panel mt-7 flex gap-2 p-3">
         <select
-          className="rounded-lg border px-3 py-2"
+          className="ha-input max-w-xs"
           defaultValue={status}
           name="status"
         >
@@ -43,13 +46,13 @@ export default async function Page({
             </option>
           ))}
         </select>
-        <button className="ml-2 rounded-lg border px-3 py-2">필터</button>
+        <button className="ha-button-secondary px-4 py-2">필터</button>
       </form>
       {events.length ? (
-        <div className="mt-6 overflow-x-auto rounded-xl border bg-white">
+        <div className="ha-panel mt-6 overflow-x-auto">
           <table className="min-w-full text-left text-sm">
             <thead>
-              <tr className="border-b bg-zinc-50">
+              <tr className="border-b border-[#dfe3ec] bg-[#eff3ff] text-xs uppercase tracking-wider text-[#60687a]">
                 <th className="p-4">공연명</th>
                 <th className="p-4">날짜</th>
                 <th className="p-4">상태</th>
@@ -61,10 +64,13 @@ export default async function Page({
             </thead>
             <tbody>
               {events.map((event) => (
-                <tr className="border-b" key={String(event.id)}>
+                <tr
+                  className="border-b border-[#e5e7eb] transition hover:bg-[#f8f9ff]"
+                  key={String(event.id)}
+                >
                   <td className="p-4">
                     <Link
-                      className="font-medium hover:text-emerald-700"
+                      className="font-bold hover:text-[#420093]"
                       href={`/dashboard/events/${String(event.id)}/overview`}
                     >
                       {String(event.title)}
@@ -86,7 +92,7 @@ export default async function Page({
                   <td className="p-4">{Number(event.checked_in)}건</td>
                   <td className="p-4">
                     <Link
-                      className="rounded border px-3 py-2 text-emerald-700"
+                      className="ha-button-secondary px-3 py-2 text-[#420093]"
                       href={`/dashboard/events/${String(event.id)}/reservations`}
                     >
                       예매 운영

@@ -8,7 +8,7 @@ import { ConfirmSubmitButton } from "@/features/events/components/confirm-submit
 import { EventTabs } from "@/features/events/components/event-tabs";
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
-const input = "mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2";
+const input = "ha-input mt-2";
 export default async function Page({
   params,
 }: {
@@ -22,12 +22,13 @@ export default async function Page({
   const posts =
     await sql`SELECT id,image_url,content FROM feed_posts WHERE event_id=${id} ORDER BY created_at DESC`;
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
-      <h1 className="text-2xl font-semibold">{String(events[0].title)}</h1>
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
+      <p className="ha-kicker">Feed manager</p>
+      <h1 className="ha-title mt-1 text-3xl">{String(events[0].title)}</h1>
       <EventTabs current="feed" eventId={id} />
       <form
         action={createFeedPost}
-        className="mt-8 space-y-4 rounded-xl border bg-white p-5"
+        className="ha-card mt-8 space-y-4 p-5 sm:p-7"
       >
         <input name="eventId" type="hidden" value={id} />
         <label className="block font-medium">
@@ -42,16 +43,11 @@ export default async function Page({
           본문
           <textarea className={input} name="content" required rows={4} />
         </label>
-        <button className="rounded-lg bg-emerald-700 px-4 py-2 text-white">
-          게시글 작성
-        </button>
+        <button className="ha-button-primary px-4 py-2">게시글 작성</button>
       </form>
       <div className="mt-8 space-y-4">
         {posts.map((post) => (
-          <article
-            className="rounded-xl border bg-white p-5"
-            key={String(post.id)}
-          >
+          <article className="ha-card p-5" key={String(post.id)}>
             <form action={updateFeedPost} className="space-y-3">
               <input name="eventId" type="hidden" value={id} />
               <input name="postId" type="hidden" value={String(post.id)} />

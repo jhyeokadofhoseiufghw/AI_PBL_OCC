@@ -16,13 +16,13 @@ export function EventTabs({
 }) {
   return (
     <nav
-      className="mt-6 flex gap-1 overflow-x-auto border-b"
+      className="mt-6 flex gap-1 overflow-x-auto border-b border-[#dfe3ec]"
       aria-label="공연 관리"
     >
       <>
         {tabs.map(([path, label]) => (
           <Link
-            className={`whitespace-nowrap border-b-2 px-3 py-2 text-sm ${current === path ? "border-emerald-700 font-medium text-emerald-800" : "border-transparent text-zinc-500"}`}
+            className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold ${current === path ? "border-[#712ae2] text-[#420093]" : "border-transparent text-[#60687a] hover:text-[#420093]"}`}
             href={`/dashboard/events/${eventId}/${path}`}
             key={path}
           >

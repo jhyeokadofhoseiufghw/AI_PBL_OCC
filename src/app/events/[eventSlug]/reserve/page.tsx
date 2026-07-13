@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { PublicHeader } from "@/components/public-header";
 import {
   getEventReservationOptions,
   getPublicEvent,
@@ -30,46 +31,59 @@ export default async function ReservePage({
     accountHolder: String(event.account_holder),
   };
   return (
-    <main className="mx-auto min-h-screen max-w-3xl px-5 py-8">
-      <Link className="text-sm text-emerald-700" href={`/events/${eventSlug}`}>
-        ← 공연 상세
-      </Link>
-      <h1 className="mt-6 text-2xl font-semibold">
-        {String(event.title)} {remaining > 0 ? "예매" : "매진"}
-      </h1>
-      <p className="mt-2 text-zinc-600">
-        잔여 {remaining}석/매 · 기본 가격 1매{" "}
-        {Number(event.ticket_price).toLocaleString("ko-KR")}원
-      </p>
-      {remaining > 0 ? (
-        <div className="mt-8">
-          <ReservationForm
-            event={info}
-            ticketTypes={options.ticketTypes.map((row) => ({
-              id: String(row.id),
-              name: String(row.name),
-              price: Number(row.price),
-            }))}
-            seats={options.seats.map((row) => ({
-              id: String(row.id),
-              label: String(row.label),
-              occupied: Boolean(row.occupied),
-              layoutRow: row.layout_row ? Number(row.layout_row) : null,
-              layoutColumn: row.layout_column
-                ? Number(row.layout_column)
-                : null,
-            }))}
-          />
+    <div className="min-h-screen bg-[#f8f9ff]">
+      <PublicHeader />
+      <main className="public-shell py-8 sm:py-12">
+        <Link
+          className="text-sm font-bold text-[#420093]"
+          href={`/events/${eventSlug}`}
+        >
+          ← 공연 상세
+        </Link>
+        <div className="mt-7 border-b border-[#e5e7eb] pb-7 text-center">
+          <p className="ha-kicker">Ticket reservation</p>
+          <h1 className="ha-title mt-2 text-3xl sm:text-4xl">
+            {String(event.title)}
+          </h1>
+          <p className="mt-3 text-sm text-[#60687a]">
+            잔여 {remaining}석/매 · 기본 가격 1매{" "}
+            {Number(event.ticket_price).toLocaleString("ko-KR")}원
+          </p>
         </div>
-      ) : info.reservationType === "FIRST_COME" ? (
-        <WaitlistForm
-          event={{ id: info.id, slug: info.slug, maxTickets: info.maxTickets }}
-        />
-      ) : (
-        <p className="mt-8 rounded-xl bg-zinc-100 p-6 text-zinc-600">
-          현재 선택 가능한 좌석이 없습니다.
-        </p>
-      )}
-    </main>
+        {remaining > 0 ? (
+          <div className="mt-8">
+            <ReservationForm
+              event={info}
+              ticketTypes={options.ticketTypes.map((row) => ({
+                id: String(row.id),
+                name: String(row.name),
+                price: Number(row.price),
+              }))}
+              seats={options.seats.map((row) => ({
+                id: String(row.id),
+                label: String(row.label),
+                occupied: Boolean(row.occupied),
+                layoutRow: row.layout_row ? Number(row.layout_row) : null,
+                layoutColumn: row.layout_column
+                  ? Number(row.layout_column)
+                  : null,
+              }))}
+            />
+          </div>
+        ) : info.reservationType === "FIRST_COME" ? (
+          <WaitlistForm
+            event={{
+              id: info.id,
+              slug: info.slug,
+              maxTickets: info.maxTickets,
+            }}
+          />
+        ) : (
+          <p className="ha-card mt-8 p-8 text-center text-[#60687a]">
+            현재 선택 가능한 좌석이 없습니다.
+          </p>
+        )}
+      </main>
+    </div>
   );
 }

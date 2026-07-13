@@ -4,8 +4,7 @@ import { useActionState } from "react";
 
 import { updateEventOverview } from "../actions";
 
-const input =
-  "mt-1 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 outline-none focus:border-emerald-600";
+const input = "ha-input mt-2";
 type EventData = Record<string, string | number | null>;
 
 function dateTime(value: unknown) {
@@ -20,7 +19,7 @@ export function EventOverviewForm({ event }: { event: EventData }) {
   return (
     <form
       action={action}
-      className="mt-6 grid gap-4 rounded-xl border border-zinc-200 bg-white p-6 sm:grid-cols-2"
+      className="ha-card mt-6 grid gap-5 p-6 sm:grid-cols-2 sm:p-8"
     >
       <input name="eventId" type="hidden" value={String(event.id)} />
       <label className="font-medium sm:col-span-2">
@@ -187,7 +186,7 @@ export function EventOverviewForm({ event }: { event: EventData }) {
         </p>
       ) : null}
       <button
-        className="rounded-lg bg-zinc-900 px-5 py-3 font-medium text-white disabled:opacity-50 sm:col-span-2"
+        className="ha-button-primary px-5 py-3 disabled:opacity-50 sm:col-span-2"
         disabled={pending}
         type="submit"
       >

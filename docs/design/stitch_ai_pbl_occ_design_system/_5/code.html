@@ -1,0 +1,162 @@
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={theme:{extend:{"colors":{"on-surface-variant":"#4a4453","secondary-fixed-dim":"#d2bbff","tertiary-container":"#533a8b","secondary-container":"#8a4cfc","on-secondary-fixed-variant":"#5a00c6","surface-bright":"#f8f9ff","background-public":"#f8f9fa","primary":"#420093","surface-tint":"#713dcc","surface-container-low":"#eff4ff","primary-container":"#5b21b6","on-error":"#ffffff","on-tertiary-fixed":"#24005b","secondary-fixed":"#eaddff","surface-container-highest":"#d9e3f6","surface-white":"#ffffff","error-container":"#ffdad6","outline":"#7b7485","status-active":"#10b981","on-secondary":"#ffffff","inverse-primary":"#d3bbff","status-error":"#ef4444","inverse-on-surface":"#eaf1ff","on-primary-fixed-variant":"#581db3","on-primary-fixed":"#250059","on-primary-container":"#c7aaff","primary-fixed-dim":"#d3bbff","on-secondary-fixed":"#25005a","surface-dim":"#d0dbed","surface":"#f8f9ff","on-surface":"#121c2a","admin-sidebar":"#2e1065","surface-container-lowest":"#ffffff","on-error-container":"#93000a","grid-border-dark":"#d1d5db","outline-variant":"#ccc3d6","surface-container-high":"#dee9fc","on-tertiary-fixed-variant":"#503788","background":"#f8f9ff","grid-border":"#e5e7eb","status-warning":"#f59e0b","primary-fixed":"#ebddff","on-background":"#121c2a","error":"#ba1a1a","tertiary-fixed-dim":"#d1bcff","tertiary-fixed":"#eaddff","on-tertiary":"#ffffff","inverse-surface":"#27313f","on-tertiary-container":"#c5acff","on-secondary-container":"#fffbff","surface-container":"#e6eeff","secondary":"#712ae2","surface-variant":"#d9e3f6","on-primary":"#ffffff","tertiary":"#3c2173"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"xl":"32px","margin-mobile":"16px","sm":"8px","lg":"24px","md":"16px","max-width-public":"390px","xs":"4px","base-unit":"4px"},"fontFamily":{"stat-lg":["Inter"],"label-caps":["Inter"],"headline-md":["Inter"],"display-lg":["Inter"],"body-base":["Inter"],"body-bold":["Inter"],"table-cell":["Inter"]},"fontSize":{"stat-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-caps":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"700"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-base":["16px",{"lineHeight":"24px","fontWeight":"400"}],"body-bold":["16px",{"lineHeight":"24px","fontWeight":"600"}],"table-cell":["14px",{"lineHeight":"20px","fontWeight":"400"}]}}}}</script><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;display=swap" rel="stylesheet"/></head><body class="bg-background font-body-base text-on-surface"><div class="w-full min-h-screen flex flex-col"><header class="fixed top-0 right-0 h-16 bg-surface-white border-b border-grid-border z-40 flex items-center justify-between px-lg left-0"><div class="max-w-[1200px] mx-auto w-full flex items-center justify-between h-full px-lg"><div class="flex items-center gap-md"><span class="material-symbols-outlined text-on-surface-variant">menu_open</span><h1 class="text-body-bold text-on-surface">Homely Arts Admin</h1></div><div class="flex items-center gap-lg"><div class="flex items-center gap-sm px-md py-xs bg-surface-container rounded-full border border-grid-border"><span class="material-symbols-outlined text-status-active text-[14px]">fiber_manual_record</span><span class="text-table-cell font-table-cell text-on-surface-variant">System Operational</span></div><div class="flex items-center gap-md border-l border-grid-border pl-lg"><div class="text-right hidden sm:block"><p class="text-table-cell font-body-bold text-on-surface leading-none">Admin User</p><p class="text-[12px] text-on-surface-variant">Super Administrator</p></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida/AP1WRLtzEiLh0EHbb2rs6pyyNzWrfJ7-sNq5ivilm513laheO6msYTYcLnYqDSerP61Uw6L3SZ6M74UJVtk1TH9NopgVDGYu4ZiH4ZbMtmJcbfx4BVW7TYjiIarKfmhibjdmhs1Nk7EQ3NZKw4JoiHBPTk93aXaP57oInf8O6cUfzHXjD8qWEoNtRt1mqFxiyKs3fooS1qZi_4PxGI5Ws7X9I-LILmv9Z4DtblRzQsfq14kVbrvl8tWf5zdw7CAZJ-if9Blx0srtOWkysA"/></div></div></div></header><main class="flex-1 pt-16 bg-background max-w-[1200px] mx-auto"><div class="flex flex-col w-full h-full p-lg gap-lg">
+<!-- Header & Performance Selector -->
+<div class="flex items-center justify-between">
+<h2 class="font-display-lg text-display-lg text-on-surface">예매/입금 관리</h2>
+<div class="flex items-center gap-md">
+<label class="font-body-bold text-body-bold text-on-surface-variant whitespace-nowrap">공연 선택</label>
+<div class="relative w-64 border border-grid-border rounded bg-surface-white">
+<select class="w-full appearance-none bg-transparent px-md py-sm font-body-base text-body-base text-on-surface focus:outline-none focus:border-secondary focus:ring-1 focus:ring-secondary">
+<option>2023 정기공연: 리어왕 (10/24 19:00)</option>
+<option>2023 정기공연: 리어왕 (10/25 15:00)</option>
+<option>2023 정기공연: 리어왕 (10/26 19:00)</option>
+</select>
+<span class="material-symbols-outlined absolute right-md top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant">arrow_drop_down</span>
+</div>
+</div>
+</div>
+<!-- Stats Cards -->
+<div class="grid grid-cols-4 gap-md">
+<div class="bg-surface-white border border-grid-border p-md flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="font-body-bold text-body-bold text-on-surface-variant">총 매출 (입금완료)</span>
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<div class="font-stat-lg text-stat-lg text-on-surface">₩ 3,450,000</div>
+</div>
+<div class="bg-surface-white border border-grid-border p-md flex flex-col gap-sm border-l-4 border-l-status-warning">
+<div class="flex items-center justify-between">
+<span class="font-body-bold text-body-bold text-on-surface-variant">입금 대기</span>
+<span class="material-symbols-outlined text-status-warning">hourglass_empty</span>
+</div>
+<div class="flex items-baseline gap-xs">
+<span class="font-stat-lg text-stat-lg text-on-surface">12</span>
+<span class="font-body-base text-body-base text-on-surface-variant">건</span>
+</div>
+</div>
+<div class="bg-surface-white border border-grid-border p-md flex flex-col gap-sm border-l-4 border-l-status-active">
+<div class="flex items-center justify-between">
+<span class="font-body-bold text-body-bold text-on-surface-variant">예매 확정</span>
+<span class="material-symbols-outlined text-status-active">check_circle</span>
+</div>
+<div class="flex items-baseline gap-xs">
+<span class="font-stat-lg text-stat-lg text-on-surface">115</span>
+<span class="font-body-base text-body-base text-on-surface-variant">건</span>
+</div>
+</div>
+<div class="bg-surface-white border border-grid-border p-md flex flex-col gap-sm">
+<div class="flex items-center justify-between">
+<span class="font-body-bold text-body-bold text-on-surface-variant">잔여 좌석</span>
+<span class="material-symbols-outlined text-secondary">event_seat</span>
+</div>
+<div class="flex items-baseline gap-xs">
+<span class="font-stat-lg text-stat-lg text-on-surface">32</span>
+<span class="font-body-base text-body-base text-on-surface-variant">/ 200</span>
+</div>
+</div>
+</div>
+<!-- Master Table Actions & Filter -->
+<div class="flex items-center justify-between bg-surface-white border border-grid-border p-sm mt-md">
+<div class="flex gap-sm">
+<button class="px-md py-sm border border-grid-border bg-surface-container font-label-caps text-label-caps text-on-surface hover:bg-surface-container-high transition-colors">전체 보기</button>
+<button class="px-md py-sm border border-grid-border bg-surface-white font-label-caps text-label-caps text-on-surface hover:bg-surface-container transition-colors">입금 대기만</button>
+<button class="px-md py-sm border border-grid-border bg-surface-white font-label-caps text-label-caps text-on-surface hover:bg-surface-container transition-colors">예매 확정만</button>
+</div>
+<div class="flex items-center gap-sm">
+<div class="relative border border-grid-border bg-surface-white w-64">
+<input class="w-full pl-md pr-xl py-sm font-table-cell text-table-cell text-on-surface focus:outline-none focus:border-secondary" placeholder="예매자명, 연락처 검색..." type="text"/>
+<span class="material-symbols-outlined absolute right-sm top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+</div>
+</div>
+</div>
+<!-- Master Table -->
+<div class="flex-1 overflow-auto border border-grid-border bg-surface-white">
+<table class="w-full text-left border-collapse">
+<thead class="sticky top-0 bg-surface-container-low border-b border-grid-border z-10">
+<tr>
+<th class="p-sm w-[40px] border-r border-grid-border text-center">
+<input class="w-4 h-4 accent-primary" type="checkbox"/>
+</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant border-r border-grid-border">예매번호</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant border-r border-grid-border">예매자</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant border-r border-grid-border">연락처</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant border-r border-grid-border text-center">매수</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant border-r border-grid-border">좌석</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant border-r border-grid-border text-right">결제금액</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant border-r border-grid-border text-center">상태</th>
+<th class="p-sm font-label-caps text-label-caps text-on-surface-variant text-center w-[200px]">관리</th>
+</tr>
+</thead>
+<tbody class="font-table-cell text-table-cell text-on-surface">
+<tr class="border-b border-grid-border hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm border-r border-grid-border text-center"><input class="w-4 h-4 accent-primary" type="checkbox"/></td>
+<td class="p-sm border-r border-grid-border font-mono text-[13px]">R-231024-001</td>
+<td class="p-sm border-r border-grid-border font-body-bold text-body-bold">김철수</td>
+<td class="p-sm border-r border-grid-border font-mono text-[13px]">010-1234-5678</td>
+<td class="p-sm border-r border-grid-border text-center">2</td>
+<td class="p-sm border-r border-grid-border">A12, A13</td>
+<td class="p-sm border-r border-grid-border text-right">₩ 60,000</td>
+<td class="p-sm border-r border-grid-border text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-surface-variant text-on-surface-variant font-label-caps text-[11px] border border-grid-border">입금 대기</span>
+</td>
+<td class="p-sm text-center">
+<div class="flex items-center justify-center gap-xs">
+<button class="px-2 py-1 bg-primary text-on-primary font-table-cell text-[12px] border border-primary hover:bg-primary/90">입금확인</button>
+<button class="px-2 py-1 bg-surface-white text-error border border-error font-table-cell text-[12px] hover:bg-error/10">취소</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-grid-border hover:bg-surface-container-lowest transition-colors">
+<td class="p-sm border-r border-grid-border text-center"><input class="w-4 h-4 accent-primary" type="checkbox"/></td>
+<td class="p-sm border-r border-grid-border font-mono text-[13px]">R-231024-002</td>
+<td class="p-sm border-r border-grid-border font-body-bold text-body-bold">이영희</td>
+<td class="p-sm border-r border-grid-border font-mono text-[13px]">010-9876-5432</td>
+<td class="p-sm border-r border-grid-border text-center">4</td>
+<td class="p-sm border-r border-grid-border">B01, B02, B03, B04</td>
+<td class="p-sm border-r border-grid-border text-right">₩ 120,000</td>
+<td class="p-sm border-r border-grid-border text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-status-active/10 text-status-active font-label-caps text-[11px] border border-status-active/30">예매 확정</span>
+</td>
+<td class="p-sm text-center">
+<div class="flex items-center justify-center gap-xs">
+<button class="px-2 py-1 bg-surface-white text-on-surface border border-grid-border font-table-cell text-[12px] hover:bg-surface-container flex items-center gap-xs"><span class="material-symbols-outlined text-[14px]">qr_code</span>발권</button>
+<button class="px-2 py-1 bg-surface-white text-error border border-error font-table-cell text-[12px] hover:bg-error/10">취소</button>
+</div>
+</td>
+</tr>
+<tr class="border-b border-grid-border hover:bg-surface-container-lowest transition-colors bg-error-container/20">
+<td class="p-sm border-r border-grid-border text-center"><input class="w-4 h-4 accent-primary" type="checkbox"/></td>
+<td class="p-sm border-r border-grid-border font-mono text-[13px]">R-231024-003</td>
+<td class="p-sm border-r border-grid-border font-body-bold text-body-bold">박민수</td>
+<td class="p-sm border-r border-grid-border font-mono text-[13px]">010-5555-4444</td>
+<td class="p-sm border-r border-grid-border text-center">1</td>
+<td class="p-sm border-r border-grid-border text-on-surface-variant line-through">C15</td>
+<td class="p-sm border-r border-grid-border text-right text-on-surface-variant">₩ 0</td>
+<td class="p-sm border-r border-grid-border text-center">
+<span class="inline-flex items-center px-2 py-0.5 rounded bg-error-container text-error font-label-caps text-[11px] border border-error/30">취소됨</span>
+</td>
+<td class="p-sm text-center">
+<span class="font-table-cell text-[12px] text-on-surface-variant">미입금 자동취소</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Bulk Actions Bottom Bar -->
+<div class="flex items-center justify-between border-t border-grid-border pt-md">
+<div class="flex items-center gap-sm">
+<span class="font-table-cell text-table-cell text-on-surface-variant">선택된 항목: <span class="font-body-bold text-body-bold text-on-surface">0</span>개</span>
+<div class="h-6 w-px bg-grid-border mx-sm"></div>
+<button class="px-md py-sm bg-primary text-on-primary font-body-bold text-body-bold border border-primary hover:bg-primary/90 flex items-center gap-sm disabled:opacity-50 disabled:cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">done_all</span>일괄 입금확인
+      </button>
+<button class="px-md py-sm bg-surface-white text-error font-body-bold text-body-bold border border-error hover:bg-error/10 flex items-center gap-sm disabled:opacity-50 disabled:cursor-not-allowed">
+<span class="material-symbols-outlined text-[18px]">delete</span>선택 취소
+      </button>
+</div>
+<button class="px-md py-sm bg-surface-white text-on-surface font-body-bold text-body-bold border border-grid-border hover:bg-surface-container flex items-center gap-sm">
+<span class="material-symbols-outlined text-[18px]">download</span>엑셀 다운로드
+    </button>
+</div>
+</div></main></div></body></html>

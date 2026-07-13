@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+
+<html lang="ko" style=""><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=block" rel="stylesheet"/><link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&amp;family=Playfair+Display:ital,wght@0,400..900;1,400..900&amp;display=swap" rel="stylesheet"/><script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script><script id="tailwind-config">try{
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        "colors": {
+                "tertiary-container": "#533a8b",
+                "on-error-container": "#93000a",
+                "on-error": "#ffffff",
+                "secondary": "#712ae2",
+                "tertiary": "#3c2173",
+                "status-warning": "#f59e0b",
+                "on-surface": "#121c2a",
+                "outline-variant": "#ccc3d6",
+                "on-tertiary": "#ffffff",
+                "background": "#f8f9ff",
+                "surface-tint": "#6f43c1",
+                "surface-container": "#e6eeff",
+                "tertiary-fixed": "#eaddff",
+                "inverse-surface": "#273140",
+                "surface-container-high": "#dfe9fc",
+                "primary-fixed-dim": "#d3bbff",
+                "inverse-on-surface": "#ebf1ff",
+                "primary-fixed": "#ebddff",
+                "surface-dim": "#d0daee",
+                "on-primary-container": "#c7aaff",
+                "grid-border": "#e5e7eb",
+                "on-tertiary-fixed-variant": "#503788",
+                "surface-container-highest": "#d9e3f7",
+                "secondary-fixed-dim": "#d2bbff",
+                "tertiary-fixed-dim": "#d1bcff",
+                "on-surface-variant": "#4a4453",
+                "on-primary": "#ffffff",
+                "secondary-fixed": "#eaddff",
+                "on-tertiary-fixed": "#24005b",
+                "surface": "#f8f9ff",
+                "surface-container-lowest": "#ffffff",
+                "on-primary-fixed-variant": "#5726a7",
+                "on-secondary-container": "#fffbff",
+                "primary": "#420093",
+                "on-secondary-fixed": "#25005a",
+                "on-background": "#121c2a",
+                "inverse-primary": "#d3bbff",
+                "on-primary-fixed": "#250059",
+                "surface-variant": "#d9e3f7",
+                "primary-container": "#592aaa",
+                "secondary-container": "#8b4bfc",
+                "on-tertiary-container": "#c5abff",
+                "error-container": "#ffdad6",
+                "surface-bright": "#f8f9ff",
+                "on-secondary": "#ffffff",
+                "on-secondary-fixed-variant": "#5a00c6",
+                "error": "#ba1a1a",
+                "status-active": "#10b981",
+                "surface-container-low": "#eff3ff",
+                "status-error": "#ef4444",
+                "outline": "#7b7485"
+        },
+        "borderRadius": {
+                "DEFAULT": "0.25rem",
+                "lg": "0.5rem",
+                "xl": "0.75rem",
+                "full": "9999px"
+        },
+        "spacing": {
+                "lg": "24px",
+                "xl": "32px",
+                "md": "16px",
+                "xs": "4px",
+                "max-width": "1280px",
+                "margin-mobile": "16px",
+                "sm": "8px"
+        },
+        "fontFamily": {
+                "display-hero": [
+                        "Inter"
+                ],
+                "table-cell": [
+                        "Inter"
+                ],
+                "display-hero-mobile": [
+                        "Inter"
+                ],
+                "body-bold": [
+                        "Inter"
+                ],
+                "body-base": [
+                        "Inter"
+                ],
+                "label-caps": [
+                        "Inter"
+                ],
+                "headline-md": [
+                        "Inter"
+                ]
+        }
+},
+    },
+  }
+}catch(_e){}</script><style>
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+</style></head><body class="bg-[#f2f2f2] text-on-surface font-body-base relative min-h-screen flex flex-col">
+<!-- Background Rain Layer (SVG) -->
+<svg class="fixed inset-0 w-full h-full pointer-events-none z-[1]" id="rain-svg" style="mix-blend-mode: multiply; will-change: transform; transform: translateY(calc(var(--scroll-y, 0px) * 0.5));">
+<!-- Dense sophisticated rainfall -->
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.2" stroke-width="0.5" style="transform: translateX(9.478px) rotate(1.263733deg);" x1="2%" x2="2%" y1="120" y2="210"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="2" style="filter: blur(1px); transform: translateX(13.645px) rotate(1.819333deg);" x1="5%" x2="5%" y1="450" y2="570"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.3" stroke-width="1" style="transform: translateX(-12.188px) rotate(-1.625067deg);" x1="8%" x2="8%" y1="-10" y2="90"></line>
+<line class="rain-line" stroke="#64748b" stroke-opacity="0.15" stroke-width="4" style="filter: blur(2px); transform: translateX(-8.021px) rotate(-1.069467deg);" x1="11%" x2="11%" y1="600" y2="780"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.5" stroke-width="0.5" style="transform: translateX(-3.854px) rotate(-0.513867deg);" x1="14%" x2="14%" y1="320" y2="460"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.25" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="17%" x2="17%" y1="50" y2="180"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.3" stroke-width="2" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="20%" x2="20%" y1="700" y2="850"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.4" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="23%" x2="23%" y1="210" y2="350"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.35" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="26%" x2="26%" y1="150" y2="280"></line>
+<line class="rain-line" stroke="#64748b" stroke-opacity="0.2" stroke-width="3" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="29%" x2="29%" y1="-40" y2="120"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.3" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="32%" x2="32%" y1="480" y2="560"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="35%" x2="35%" y1="620" y2="790"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.25" stroke-width="2" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="38%" x2="38%" y1="80" y2="210"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.5" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="41%" x2="41%" y1="350" y2="500"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.3" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="44%" x2="44%" y1="-20" y2="150"></line>
+<line class="rain-line" stroke="#64748b" stroke-opacity="0.1" stroke-width="4" style="filter: blur(2px); transform: translateX(0px) rotate(0deg);" x1="47%" x2="47%" y1="550" y2="680"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.4" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="50%" x2="50%" y1="280" y2="420"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.35" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="53%" x2="53%" y1="120" y2="250"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.2" stroke-width="2" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="56%" x2="56%" y1="710" y2="860"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.3" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="59%" x2="59%" y1="-10" y2="130"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="62%" x2="62%" y1="410" y2="580"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.15" stroke-width="3" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="65%" x2="65%" y1="180" y2="310"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.5" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="68%" x2="68%" y1="650" y2="770"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.3" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="71%" x2="71%" y1="50" y2="190"></line>
+<line class="rain-line" stroke="#64748b" stroke-opacity="0.25" stroke-width="2" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="74%" x2="74%" y1="320" y2="480"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.4" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="77%" x2="77%" y1="-30" y2="110"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.35" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="80%" x2="80%" y1="520" y2="660"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.1" stroke-width="4" style="filter: blur(2px); transform: translateX(0px) rotate(0deg);" x1="83%" x2="83%" y1="150" y2="300"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.3" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="86%" x2="86%" y1="780" y2="920"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.4" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="89%" x2="89%" y1="250" y2="380"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.2" stroke-width="2" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="92%" x2="92%" y1="-20" y2="140"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.5" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="95%" x2="95%" y1="480" y2="610"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.3" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="98%" x2="98%" y1="110" y2="260"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.4" stroke-width="1" style="transform: translateX(-6.632px) rotate(-0.884267deg);" x1="12%" x2="12%" y1="180" y2="250"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.2" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="28%" x2="28%" y1="580" y2="670"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.3" stroke-width="1.5" style="filter: blur(0.5px); transform: translateX(0px) rotate(0deg);" x1="42%" x2="42%" y1="750" y2="890"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.2" stroke-width="2" style="filter: blur(1px); transform: translateX(0px) rotate(0deg);" x1="68%" x2="68%" y1="50" y2="120"></line>
+<line class="rain-line" stroke="#cbd5e1" stroke-opacity="0.4" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="85%" x2="85%" y1="420" y2="550"></line>
+<line class="rain-line" stroke="#64748b" stroke-opacity="0.15" stroke-width="3" style="filter: blur(1.5px); transform: translateX(0px) rotate(0deg);" x1="94%" x2="94%" y1="680" y2="820"></line>
+<line class="rain-line" stroke="#e2e8f0" stroke-opacity="0.35" stroke-width="1" style="transform: translateX(0px) rotate(0deg);" x1="33%" x2="33%" y1="290" y2="410"></line>
+<line class="rain-line" stroke="#94a3b8" stroke-opacity="0.5" stroke-width="0.5" style="transform: translateX(0px) rotate(0deg);" x1="58%" x2="58%" y1="-40" y2="80"></line>
+</svg>
+<script>
+    document.addEventListener('mousemove', (e) => {
+        const mouseX = e.clientX;
+        const svg = document.getElementById('rain-svg');
+        const lines = svg.querySelectorAll('.rain-line');
+        const windowWidth = window.innerWidth;
+        
+        lines.forEach(line => {
+            const xPercentStr = line.getAttribute('x1');
+            if (xPercentStr && xPercentStr.endsWith('%')) {
+                const xPercent = parseFloat(xPercentStr);
+                const lineX = (xPercent / 100) * windowWidth;
+                
+                const distance = mouseX - lineX;
+                const maxDistance = 150; // Interaction radius
+                
+                if (Math.abs(distance) < maxDistance) {
+                    // Calculate a push factor: closer mouse = stronger push
+                    const pushFactor = (maxDistance - Math.abs(distance)) / maxDistance;
+                    const direction = distance < 0 ? -1 : 1; // Push away from mouse
+                    // For a more subtle effect, don't just push away, but add a slight angle
+                    const shiftX = direction * pushFactor * 15; 
+                    const rotate = direction * pushFactor * 2;
+                    
+                    line.style.transform = `translateX(${shiftX}px) rotate(${rotate}deg)`;
+                } else {
+                    line.style.transform = 'translateX(0) rotate(0deg)';
+                }
+            }
+        });
+    });
+
+    window.addEventListener('scroll', () => {
+        document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
+    });
+</script>
+<!-- Header GNB (z-50) -->
+<header class="fixed top-0 left-0 right-0 z-50 bg-[#f2f2f2]/90 backdrop-blur-md border-b border-grid-border">
+<div class="max-w-[1200px] mx-auto h-24 flex items-center justify-between px-8 gap-4">
+<div class="flex items-center gap-2 relative z-10">
+<img alt="Logo" class="rounded-full object-cover shadow-sm" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-Ldh8lePXY4_P3AIzb4hD880OFCcvXpVLa2U5th9yUvspXMbPtXNokSJbczPQ-3ITWvM6_e2BdWZfMrZo_IB63iWqfXTe0eqBfXuolr2qC3mqP-8Zj8JCpL7FrtgKjm8Kbobp7RW1eI3wbSLi8C0p4v_WvVsh1LOKna6YFcP95uTHt6YxldgC72fAR1KZdzkpx6zOVGCKDrfKtqj9_50pi1ViyhBBRIM9ySXcOwOffTGkTpFjIcGrqVpw3RfaNA9lM6ciB9EpNTA" style="width: 44px; height: 44px;"/>
+<span class="font-headline-md text-xl text-primary tracking-tight font-bold">OCC</span>
+</div>
+<nav class="hidden md:flex items-center font-medium text-xl gap-8 relative z-10">
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">로그인</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">공연 등록 신청</a>
+<a class="text-on-surface-variant hover:text-primary transition-colors" href="#">공연 관리</a>
+</nav>
+<button class="md:hidden text-on-surface relative z-10">
+<span class="material-symbols-outlined">menu</span>
+</button>
+</div>
+</header>
+<main class="flex-1 w-full relative flex flex-col pt-24 z-10">
+<!-- Hero Section -->
+<section class="w-full bg-transparent flex flex-col items-center justify-center py-20 md:py-32 relative z-10">
+<div class="w-full max-w-[1200px] mx-auto px-8 flex flex-col items-center justify-center relative">
+<div class="relative flex flex-col items-center mb-12">
+<h1 class="flex flex-col items-center text-center gap-4 md:gap-6" style="animation: fadeInUp 0.8s ease-out forwards;">
+<span class="text-5xl md:text-7xl lg:text-8xl font-black tracking-[0.2em] text-on-surface" style='font-family: "Playfair Display", serif;'>가장 가까운 곳에서</span>
+<span class="text-5xl md:text-7xl lg:text-8xl font-black tracking-[0.2em] text-on-surface" style='font-family: "Playfair Display", serif;'>만나는 오늘의 <span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-700 via-purple-600 to-primary shimmer-hover">무대</span></span>
+</h1>
+</div>
+<p class="text-center font-body-base text-lg md:text-xl text-on-surface-variant leading-relaxed max-w-3xl relative z-10" style="animation: fadeInUp 0.8s ease-out 0.3s forwards; opacity: 0;">
+                    대학 공연 동아리, 독립 극단, 버스킹 팀을 위한 올인원 피드.<br/>
+                    공연 홍보부터 비회원 예매, 입금 승인, QR 체크인까지 한 곳에서.
+                </p>
+</div>
+</section><section class="bg-white relative z-20 w-full border-b border-grid-border">
+<div class="max-w-[1200px] mx-auto px-8 py-12">
+<div class="flex items-center gap-2 mb-8">
+<span class="material-symbols-outlined text-primary">local_fire_department</span>
+<h2 class="font-headline-md text-2xl text-on-surface font-bold">지금 주목해야 할 인기 공연</h2>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+<!-- Card 1 -->
+<article class="flex flex-col gap-4 group cursor-pointer">
+<div class="aspect-[3/4] rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="청춘 랩소디" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLvdtNgwMvX0Q6y1vZeCx34mF7ZWXWlNqIHmfXBypAZoAhLPBou2sgtMdbvie0iBtfcHOgEUhHm9ZKU1IN1_Pk134DWj6hZmd4h28LEwKqUxmdYicMPwApiOmWGGti9i9mmISKJ35vXX3WmLAnxyCXiUeAmj1fbPeX1vXgwetLZ-t_-2c5HEr06imWcAD7ywe5xrrVNUiSpJ87AMZ9p-nlqLUSbRmJDc_9c3Ii3HhVG8LINSIZft9fUvKQ"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-body-bold text-lg text-on-surface group-hover:text-primary transition-colors">청춘 랩소디 - 우리들의 눈부신 여름날</h3>
+<p class="text-sm text-on-surface-variant">극단 청춘 | 2024.08.15 - 09.15</p>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="flex flex-col gap-4 group cursor-pointer">
+<div class="aspect-[3/4] rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="밤의 경계선에서" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLs1J5v9CUwoHcmeb58IW16NC6DCYHTGIQ3YHhorY7_dUWHvJ9r6_dN8AEsb-B2CyTMH0iNcrvXkGTbImRKHCIjTrQ_AhXWae7-UQy9-OA7ViEQlaOogegDYAZEP9JA-PqKCiNpr8yVqtoisdq2u3Rqs1UPc4ZGFj8I5DW_-tTvqx9tQqH3QS6g0WJRFUc-0NEju0j7YV8Glc5RrCwX1kz2y9KhibAC2bloF3ufKmOyOGnwUfSAhqSG4rZU"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-body-bold text-lg text-on-surface group-hover:text-primary transition-colors">밤의 경계선에서</h3>
+<p class="text-sm text-on-surface-variant">독립극단 그림자 | 2024.10.25 - 11.10</p>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="flex flex-col gap-4 group cursor-pointer">
+<div class="aspect-[3/4] rounded-xl overflow-hidden shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="인디 웨이브 Vol.4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLtKAXtNrKekJMXgf-CJwufhwU6Pdt-k1VqojNQg4XUR4OoeEDypZHktKXpREDrK_C6Z13KMw8aDHFab2vblg9Z6DXb2LS1uTt_0MjTUWoyMs4ZcPjXlxVGNRxg3VQ2vLxTVXKFNRtSWOeGW10t2b3yapDrB3QGqnexRltHfTzcEBWA7ajs1ASerKcP5_aYudX2DQMuFfIP7emxFdbpmXqWn7x2M7unI34AtbN7e8OSso1yiX4yTNuOVmBw"/>
+</div>
+<div class="flex flex-col gap-1">
+<h3 class="font-body-bold text-lg text-on-surface group-hover:text-primary transition-colors">인디 웨이브 Vol.4 - 홍대 버스킹 연합</h3>
+<p class="text-sm text-on-surface-variant">홍대 버스킹 연합 | 2024.09.20 - 09.21</p>
+</div>
+</article>
+</div>
+</div>
+</section>
+<!-- Bottom Section Wrapper (Solid White Background, Higher Z-Index) -->
+<div class="bg-white relative z-20 w-full flex-1 rounded-t-3xl shadow-[0_-10px_40px_-15px_rgba(0,0,0,0.1)]">
+<!-- Tab Filter Section -->
+<section class="w-full max-w-[1200px] mx-auto px-8 pt-12 pb-6 relative z-10"><div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">account_balance</span>
+<h2 class="font-headline-md text-2xl text-on-surface font-bold">🏛️ 카테고리별 공연 탐색</h2>
+</div>
+<div class="flex items-center gap-4 overflow-x-auto pb-4 scrollbar-hide border-b border-grid-border" id="category-tabs">
+<button class="px-6 py-3 rounded-t-lg bg-primary text-white font-body-bold whitespace-nowrap transition-colors z-10 border-b-2 border-primary" data-filter="all">전체</button>
+<button class="px-6 py-3 rounded-t-lg bg-transparent text-on-surface-variant font-body-bold whitespace-nowrap hover:text-primary transition-colors z-10 border-b-2 border-transparent hover:border-outline-variant" data-filter="연극">연극</button>
+<button class="px-6 py-3 rounded-t-lg bg-transparent text-on-surface-variant font-body-bold whitespace-nowrap hover:text-primary transition-colors z-10 border-b-2 border-transparent hover:border-outline-variant" data-filter="뮤지컬">뮤지컬</button>
+<button class="px-6 py-3 rounded-t-lg bg-transparent text-on-surface-variant font-body-bold whitespace-nowrap hover:text-primary transition-colors z-10 border-b-2 border-transparent hover:border-outline-variant" data-filter="밴드/라이브">밴드/라이브</button>
+<button class="px-6 py-3 rounded-t-lg bg-transparent text-on-surface-variant font-body-bold whitespace-nowrap hover:text-primary transition-colors z-10 border-b-2 border-transparent hover:border-outline-variant" data-filter="무용/댄스">무용/댄스</button>
+<button class="px-6 py-3 rounded-t-lg bg-transparent text-on-surface-variant font-body-bold whitespace-nowrap hover:text-primary transition-colors z-10 border-b-2 border-transparent hover:border-outline-variant" data-filter="기타">기타</button>
+</div>
+</section>
+<!-- 5-Column Grid Feed Section -->
+<section class="w-full max-w-[1200px] mx-auto px-8 pb-20 relative z-10">
+<div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6" id="performance-grid">
+<!-- Card 1 -->
+<article class="flex flex-col gap-3 group cursor-pointer" data-category="연극">
+<div class="aspect-[3/4] bg-surface-container-high rounded-xl overflow-hidden relative shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="청춘 랩소디" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLvdtNgwMvX0Q6y1vZeCx34mF7ZWXWlNqIHmfXBypAZoAhLPBou2sgtMdbvie0iBtfcHOgEUhHm9ZKU1IN1_Pk134DWj6hZmd4h28LEwKqUxmdYicMPwApiOmWGGti9i9mmISKJ35vXX3WmLAnxyCXiUeAmj1fbPeX1vXgwetLZ-t_-2c5HEr06imWcAD7ywe5xrrVNUiSpJ87AMZ9p-nlqLUSbRmJDc_9c3Ii3HhVG8LINSIZft9fUvKQ"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-bold px-2 py-1 rounded shadow-sm">연극</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-body-bold text-base text-on-surface line-clamp-1 group-hover:text-primary transition-colors">청춘 랩소디 - 우리들의 눈부신 여름날</h3>
+<div class="text-xs text-on-surface-variant flex flex-col gap-0.5">
+<span class="">극단 청춘</span>
+<span class="">2024.08.15 - 08.17</span>
+<span class="truncate">대학로 소극장 혜화</span>
+</div>
+<p class="text-sm font-bold text-on-surface mt-1">25,000원</p>
+</div>
+</article>
+<!-- Card 2 -->
+<article class="flex flex-col gap-3 group cursor-pointer" data-category="연극">
+<div class="aspect-[3/4] bg-surface-container-high rounded-xl overflow-hidden relative shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="밤의 경계선에서" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLs1J5v9CUwoHcmeb58IW16NC6DCYHTGIQ3YHhorY7_dUWHvJ9r6_dN8AEsb-B2CyTMH0iNcrvXkGTbImRKHCIjTrQ_AhXWae7-UQy9-OA7ViEQlaOogegDYAZEP9JA-PqKCiNpr8yVqtoisdq2u3Rqs1UPc4ZGFj8I5DW_-tTvqx9tQqH3QS6g0WJRFUc-0NEju0j7YV8Glc5RrCwX1kz2y9KhibAC2bloF3ufKmOyOGnwUfSAhqSG4rZU"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-bold px-2 py-1 rounded shadow-sm">연극</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-body-bold text-base text-on-surface line-clamp-1 group-hover:text-primary transition-colors">밤의 경계선에서</h3>
+<div class="text-xs text-on-surface-variant flex flex-col gap-0.5">
+<span class="">독립극단 그림자</span>
+<span class="">2024.09.01 - 09.10</span>
+<span class="truncate">성수동 독립극장</span>
+</div>
+<p class="text-sm font-bold text-on-surface mt-1">15,000원</p>
+</div>
+</article>
+<!-- Card 3 -->
+<article class="flex flex-col gap-3 group cursor-pointer" data-category="밴드/라이브">
+<div class="aspect-[3/4] bg-surface-container-high rounded-xl overflow-hidden relative shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="인디 웨이브 Vol.4" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLtKAXtNrKekJMXgf-CJwufhwU6Pdt-k1VqojNQg4XUR4OoeEDypZHktKXpREDrK_C6Z13KMw8aDHFab2vblg9Z6DXb2LS1uTt_0MjTUWoyMs4ZcPjXlxVGNRxg3VQ2vLxTVXKFNRtSWOeGW10t2b3yapDrB3QGqnexRltHfTzcEBWA7ajs1ASerKcP5_aYudX2DQMuFfIP7emxFdbpmXqWn7x2M7unI34AtbN7e8OSso1yiX4yTNuOVmBw"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-secondary text-[10px] font-bold px-2 py-1 rounded shadow-sm">밴드/라이브</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-body-bold text-base text-on-surface line-clamp-1 group-hover:text-primary transition-colors">인디 웨이브 Vol.4</h3>
+<div class="text-xs text-on-surface-variant flex flex-col gap-0.5">
+<span class="">홍대 버스킹 연합</span>
+<span class="">2024.07.28</span>
+<span class="truncate">홍대 걷고싶은거리 야외무대</span>
+</div>
+<p class="text-sm font-bold text-on-surface mt-1">무료</p>
+</div>
+</article>
+<!-- Card 4 -->
+<article class="flex flex-col gap-3 group cursor-pointer" data-category="뮤지컬">
+<div class="aspect-[3/4] bg-surface-container-high rounded-xl overflow-hidden relative shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="Red Book" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLvLzYSGSf-8JSGCL6kqmnlfdv_kJZxH-GMhA8AdmLzwcYN6cjJOKBNq8VPUTIZ98CBQkvlbBMTwBo2tx9zr1Z8cfm6s3WZ7hdWYJZA7QnYJyyjTheVvFzP7Hkd5-KZ_bBeHn9Z7PWoHr9ItVc0cpfx_VszkYBmYB6FUSHdQ3th2fvQiHsqGbu7UTHnWTkZN29XZALp1bvXl0PDhgE5i3uHjWoCGuAibOqVwdGmDxMyeMX6jJ0vSHucT4Q"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-tertiary-container text-[10px] font-bold px-2 py-1 rounded shadow-sm">뮤지컬</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-body-bold text-base text-on-surface line-clamp-1 group-hover:text-primary transition-colors">뮤지컬 레드북</h3>
+<div class="text-xs text-on-surface-variant flex flex-col gap-0.5">
+<span class="">홍익대 뮤지컬 동아리</span>
+<span class="">2024.10.15 - 10.20</span>
+<span class="truncate">홍대 대학로 아트센터</span>
+</div>
+<p class="text-sm font-bold text-on-surface mt-1">30,000원</p>
+</div>
+</article>
+<!-- Card 5 -->
+<article class="flex flex-col gap-3 group cursor-pointer" data-category="연극">
+<div class="aspect-[3/4] bg-surface-container-high rounded-xl overflow-hidden relative shadow-sm group-hover:shadow-md transition-shadow">
+<img alt="Death of a Salesman" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida/AP1WRLuzE90gqDpdndecY9LDt120qY8vNm5Wrveu95c2ccc60DUnuKaRxzEj1X1KmJExBFDZv196HQLdkz4EZbXmcGQteilWWPf3vdzUZcDY0UCLv5na1jFKrhslwOHxkc-7oQ2hvpLljqYS_FrV-MJyGF7IDLljj1o3wWRlQQRk88CyBMRhuM8Q2P3jWr4-5LKB99PKIhrlfzKz3_aJvzRC2xnkh5ypgmB0t6w4v8njQLamQKYEfpJhtMhZ0l4"/>
+<div class="absolute top-3 left-3 bg-white/90 backdrop-blur-sm text-primary text-[10px] font-bold px-2 py-1 rounded shadow-sm">연극</div>
+</div>
+<div class="flex flex-col gap-1 px-1">
+<h3 class="font-body-bold text-base text-on-surface line-clamp-1 group-hover:text-primary transition-colors">세일즈맨의 죽음</h3>
+<div class="text-xs text-on-surface-variant flex flex-col gap-0.5">
+<span class="">명동예술극장</span>
+<span class="">2024.11.01 - 11.30</span>
+<span class="truncate">명동예술극장 대공연장</span>
+</div>
+<p class="text-sm font-bold text-on-surface mt-1">40,000원</p>
+</div>
+</article>
+</div>
+</section>
+</div>
+</main>
+<script class="">
+(function() {
+  const tabsContainer = document.getElementById('category-tabs');
+  const tabs = tabsContainer.querySelectorAll('button');
+  const grid = document.getElementById('performance-grid');
+  const cards = grid.querySelectorAll('article');
+
+  tabsContainer.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if (!btn) return;
+
+    const filter = btn.dataset.filter;
+
+    // Update Tab Styles
+    tabs.forEach(t => {
+      t.classList.remove('bg-primary', 'text-white', 'border-primary');
+      t.classList.add('bg-transparent', 'text-on-surface-variant', 'border-transparent');
+    });
+
+    btn.classList.</script></body></html>

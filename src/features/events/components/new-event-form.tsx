@@ -6,8 +6,7 @@ import { createEvent } from "../actions";
 import { calculateReservationTotal, formatKrw } from "../pricing";
 import { SeatLayoutBuilder } from "./seat-layout-builder";
 
-const inputClassName =
-  "mt-2 w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 text-zinc-950 outline-none transition focus:border-emerald-600 focus:ring-2 focus:ring-emerald-100";
+const inputClassName = "ha-input mt-2";
 
 export function NewEventForm() {
   const [state, formAction, pending] = useActionState(createEvent, {});
@@ -50,11 +49,17 @@ export function NewEventForm() {
   return (
     <form
       action={formAction}
-      className="mt-8 space-y-8"
+      className="mt-8 space-y-6"
       onSubmit={rememberDraft}
       ref={formRef}
     >
-      <section className="grid gap-5 rounded-xl border border-zinc-200 bg-white p-6 shadow-sm sm:grid-cols-2">
+      <section className="ha-card grid gap-5 p-5 sm:grid-cols-2 sm:p-8 lg:p-10">
+        <div className="border-b border-[#e5e7eb] pb-5 sm:col-span-2">
+          <p className="ha-kicker">Show information</p>
+          <h2 className="ha-title mt-1 text-2xl">
+            공연 기본 정보 및 예매 정책
+          </h2>
+        </div>
         <label className="sm:col-span-2">
           <span className="text-sm font-medium text-zinc-800">공연명</span>
           <input className={inputClassName} name="title" required />
@@ -280,13 +285,13 @@ export function NewEventForm() {
         )}
       </section>
 
-      <section className="rounded-xl border border-emerald-200 bg-emerald-50 p-6">
-        <h2 className="font-semibold text-emerald-950">금액 계산 미리보기</h2>
+      <section className="rounded-xl border border-[#d3bbff] bg-[#ebddff] p-6">
+        <h2 className="font-semibold text-[#250059]">금액 계산 미리보기</h2>
         <div className="mt-4 flex flex-wrap items-end gap-4">
           <label>
-            <span className="block text-sm text-emerald-900">예매 매수</span>
+            <span className="block text-sm text-[#420093]">예매 매수</span>
             <input
-              className="mt-2 w-24 rounded-lg border border-emerald-300 bg-white px-3 py-2"
+              className="ha-input mt-2 w-24"
               max={99}
               min={1}
               onChange={(event) =>
@@ -296,7 +301,7 @@ export function NewEventForm() {
               value={previewQuantity}
             />
           </label>
-          <p className="pb-2 text-lg font-semibold text-emerald-950">
+          <p className="pb-2 text-lg font-semibold text-[#250059]">
             {formatKrw(ticketPrice === "" ? 0 : ticketPrice)} ×{" "}
             {previewQuantity}매 = {formatKrw(previewTotal)}
           </p>
@@ -321,11 +326,11 @@ export function NewEventForm() {
         </div>
       ) : null}
       <button
-        className="rounded-lg bg-emerald-700 px-5 py-3 text-sm font-medium text-white disabled:opacity-60"
+        className="ha-button-primary ml-auto flex px-6 py-3 text-sm disabled:opacity-60"
         disabled={pending}
         type="submit"
       >
-        {pending ? "저장 중..." : "비공개 공연으로 저장"}
+        {pending ? "저장 중..." : "다음 단계 준비 · 비공개 저장 →"}
       </button>
     </form>
   );

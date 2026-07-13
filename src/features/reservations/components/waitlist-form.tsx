@@ -1,7 +1,7 @@
 "use client";
 import { useActionState } from "react";
 import { createWaitlist } from "../actions";
-const input = "mt-1 w-full rounded-lg border border-zinc-300 px-3 py-2";
+const input = "ha-input mt-2";
 export function WaitlistForm({
   event,
 }: {
@@ -11,7 +11,7 @@ export function WaitlistForm({
   return (
     <form
       action={action}
-      className="mt-8 grid gap-4 rounded-xl border bg-white p-5 sm:grid-cols-2"
+      className="ha-card mt-8 grid gap-5 p-5 sm:grid-cols-2 sm:p-7"
     >
       <input name="eventId" type="hidden" value={event.id} />
       <input name="eventSlug" type="hidden" value={event.slug} />
@@ -53,7 +53,7 @@ export function WaitlistForm({
         <p className="text-sm text-red-700 sm:col-span-2">{state.error}</p>
       ) : null}
       <button
-        className="rounded-lg bg-emerald-700 px-5 py-3 text-white sm:col-span-2"
+        className="ha-button-primary px-5 py-3 sm:col-span-2"
         disabled={pending}
       >
         {pending ? "신청 중..." : "대기 신청"}

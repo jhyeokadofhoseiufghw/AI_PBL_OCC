@@ -1,0 +1,264 @@
+<html lang="en"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0" name="viewport"/><style>@layer base{html,body{margin:0;padding:0;}body{overscroll-behavior:none;}main>:first-child{margin-top:0!important;}main>:last-child{margin-bottom:0!important;}}::-webkit-scrollbar{display:none;}</style><script src="https://cdn.tailwindcss.com"></script><script>tailwind.config={theme:{extend:{"colors":{"on-surface-variant":"#4a4453","secondary-fixed-dim":"#d2bbff","tertiary-container":"#533a8b","secondary-container":"#8a4cfc","on-secondary-fixed-variant":"#5a00c6","surface-bright":"#f8f9ff","background-public":"#f8f9fa","primary":"#420093","surface-tint":"#713dcc","surface-container-low":"#eff4ff","primary-container":"#5b21b6","on-error":"#ffffff","on-tertiary-fixed":"#24005b","secondary-fixed":"#eaddff","surface-container-highest":"#d9e3f6","surface-white":"#ffffff","error-container":"#ffdad6","outline":"#7b7485","status-active":"#10b981","on-secondary":"#ffffff","inverse-primary":"#d3bbff","status-error":"#ef4444","inverse-on-surface":"#eaf1ff","on-primary-fixed-variant":"#581db3","on-primary-fixed":"#250059","on-primary-container":"#c7aaff","primary-fixed-dim":"#d3bbff","on-secondary-fixed":"#25005a","surface-dim":"#d0dbed","surface":"#f8f9ff","on-surface":"#121c2a","admin-sidebar":"#2e1065","surface-container-lowest":"#ffffff","on-error-container":"#93000a","grid-border-dark":"#d1d5db","outline-variant":"#ccc3d6","surface-container-high":"#dee9fc","on-tertiary-fixed-variant":"#503788","background":"#f8f9ff","grid-border":"#e5e7eb","status-warning":"#f59e0b","primary-fixed":"#ebddff","on-background":"#121c2a","error":"#ba1a1a","tertiary-fixed-dim":"#d1bcff","tertiary-fixed":"#eaddff","on-tertiary":"#ffffff","inverse-surface":"#27313f","on-tertiary-container":"#c5acff","on-secondary-container":"#fffbff","surface-container":"#e6eeff","secondary":"#712ae2","surface-variant":"#d9e3f6","on-primary":"#ffffff","tertiary":"#3c2173"},"borderRadius":{"DEFAULT":"0.125rem","lg":"0.25rem","xl":"0.5rem","full":"0.75rem"},"spacing":{"xl":"32px","margin-mobile":"16px","sm":"8px","lg":"24px","md":"16px","max-width-public":"390px","xs":"4px","base-unit":"4px"},"fontFamily":{"stat-lg":["Inter"],"label-caps":["Inter"],"headline-md":["Inter"],"display-lg":["Inter"],"body-base":["Inter"],"body-bold":["Inter"],"table-cell":["Inter"]},"fontSize":{"stat-lg":["28px",{"lineHeight":"36px","letterSpacing":"-0.02em","fontWeight":"700"}],"label-caps":["12px",{"lineHeight":"16px","letterSpacing":"0.05em","fontWeight":"700"}],"headline-md":["24px",{"lineHeight":"32px","letterSpacing":"-0.01em","fontWeight":"600"}],"display-lg":["32px",{"lineHeight":"40px","letterSpacing":"-0.02em","fontWeight":"700"}],"body-base":["16px",{"lineHeight":"24px","fontWeight":"400"}],"body-bold":["16px",{"lineHeight":"24px","fontWeight":"600"}],"table-cell":["14px",{"lineHeight":"20px","fontWeight":"400"}]}}}}</script><link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet"/></head><body class="bg-background font-body-base text-on-surface"><aside class="fixed left-0 top-0 h-full w-64 bg-admin-sidebar border-r border-grid-border-dark z-50 flex flex-col"><div class="p-lg flex items-center gap-md border-b border-white/10"><img alt="Logo" class="w-8 h-8 rounded-full border border-white/20" src="https://lh3.googleusercontent.com/aida/AP1WRLtzEiLh0EHbb2rs6pyyNzWrfJ7-sNq5ivilm513laheO6msYTYcLnYqDSerP61Uw6L3SZ6M74UJVtk1TH9NopgVDGYu4ZiH4ZbMtmJcbfx4BVW7TYjiIarKfmhibjdmhs1Nk7EQ3NZKw4JoiHBPTk93aXaP57oInf8O6cUfzHXjD8qWEoNtRt1mqFxiyKs3fooS1qZi_4PxGI5Ws7X9I-LILmv9Z4DtblRzQsfq14kVbrvl8tWf5zdw7CAZJ-if9Blx0srtOWkysA"/><span class="text-surface-white font-headline-md text-body-bold tracking-tight">Homely Arts</span></div><nav class="flex-1 py-md px-sm space-y-xs" data-active-classes="bg-primary text-on-primary"><a class="flex items-center px-md py-sm rounded text-surface-variant hover:bg-white/10 hover:text-surface-white transition-all" data-path="admin-dashboard" href="#"><span class="material-symbols-outlined mr-md">dashboard</span>Dashboard</a><a class="flex items-center px-md py-sm rounded text-surface-variant hover:bg-white/10 hover:text-surface-white transition-all" data-path="공연-생성" href="#"><span class="material-symbols-outlined mr-md">theater_comedy</span>공연 생성</a><a class="flex items-center px-md py-sm rounded text-surface-variant hover:bg-white/10 hover:text-surface-white transition-all" data-path="seat-builder" href="#"><span class="material-symbols-outlined mr-md">event_seat</span>Seat Builder</a><a class="flex items-center px-md py-sm rounded text-surface-variant hover:bg-white/10 hover:text-surface-white transition-all" data-path="예매-입금-관리" href="#"><span class="material-symbols-outlined mr-md">payments</span>예매/입금 관리</a><a aria-current="page" class="flex items-center px-md py-sm rounded transition-all bg-primary text-on-primary" data-path="super-admin-control" href="#"><span class="material-symbols-outlined mr-md">admin_panel_settings</span>시스템 제어</a></nav></aside><div class="pl-64 w-full min-h-screen flex flex-col"><header class="fixed top-0 left-64 right-0 h-16 bg-surface-white border-b border-grid-border z-40 flex items-center justify-between px-lg"><div class="flex items-center gap-md"><span class="material-symbols-outlined text-on-surface-variant">menu_open</span><h1 class="text-body-bold text-on-surface">Homely Arts Admin</h1></div><div class="flex items-center gap-lg"><div class="flex items-center gap-sm px-md py-xs bg-surface-container rounded-full border border-grid-border"><span class="material-symbols-outlined text-status-active text-[14px]">fiber_manual_record</span><span class="text-table-cell font-table-cell text-on-surface-variant">System Operational</span></div><div class="flex items-center gap-md border-l border-grid-border pl-lg"><div class="text-right hidden sm:block"><p class="text-table-cell font-body-bold text-on-surface leading-none">Admin User</p><p class="text-[12px] text-on-surface-variant">Super Administrator</p></div><img alt="Profile" class="w-8 h-8 rounded-full object-cover ring-2 ring-primary/10" src="https://lh3.googleusercontent.com/aida/AP1WRLtzEiLh0EHbb2rs6pyyNzWrfJ7-sNq5ivilm513laheO6msYTYcLnYqDSerP61Uw6L3SZ6M74UJVtk1TH9NopgVDGYu4ZiH4ZbMtmJcbfx4BVW7TYjiIarKfmhibjdmhs1Nk7EQ3NZKw4JoiHBPTk93aXaP57oInf8O6cUfzHXjD8qWEoNtRt1mqFxiyKs3fooS1qZi_4PxGI5Ws7X9I-LILmv9Z4DtblRzQsfq14kVbrvl8tWf5zdw7CAZJ-if9Blx0srtOWkysA"/></div></div></header><main class="flex-1 pt-16 bg-background"><div class="flex flex-col w-full px-lg py-xl">
+<div class="flex items-center justify-between mb-xl pb-md border-b border-grid-border">
+<div>
+<div class="flex items-center gap-sm mb-xs">
+<span class="px-sm py-xs bg-error text-on-error font-label-caps text-label-caps rounded-full border border-grid-border-dark flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">admin_panel_settings</span>
+                    SUPER ADMIN
+                </span>
+<span class="text-on-surface-variant font-table-cell text-table-cell">Master Control Access</span>
+</div>
+<h1 class="font-display-lg text-display-lg text-on-surface">System Control Center</h1>
+</div>
+<div class="flex items-center gap-md">
+<button class="bg-surface-white border border-grid-border text-on-surface font-body-bold text-body-bold px-md py-sm flex items-center gap-xs hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined">refresh</span>
+                Sync Data
+            </button>
+<button class="bg-primary text-on-primary border border-grid-border-dark font-body-bold text-body-bold px-md py-sm flex items-center gap-xs hover:bg-primary-container transition-colors shadow-[4px_4px_0_#2e1065]">
+<span class="material-symbols-outlined">add_business</span>
+                New Partner Account
+            </button>
+</div>
+</div>
+<div class="grid grid-cols-4 gap-md mb-xl">
+<div class="bg-surface-white border border-grid-border p-md flex flex-col justify-between hover:border-grid-border-dark transition-colors group relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-surface-container rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-lg relative z-10">
+<span class="text-on-surface-variant font-body-bold text-body-bold">Total Active Shows</span>
+<span class="material-symbols-outlined text-primary">theater_comedy</span>
+</div>
+<div class="relative z-10">
+<div class="font-stat-lg text-stat-lg text-on-surface">42</div>
+<div class="text-status-active font-table-cell text-table-cell flex items-center gap-xs mt-xs">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> +5 this week
+                </div>
+</div>
+</div>
+<div class="bg-surface-white border border-grid-border p-md flex flex-col justify-between hover:border-grid-border-dark transition-colors group relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-surface-container rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-lg relative z-10">
+<span class="text-on-surface-variant font-body-bold text-body-bold">Total Revenue (MTD)</span>
+<span class="material-symbols-outlined text-status-active">payments</span>
+</div>
+<div class="relative z-10">
+<div class="font-stat-lg text-stat-lg text-on-surface">₩1.28B</div>
+<div class="text-status-active font-table-cell text-table-cell flex items-center gap-xs mt-xs">
+<span class="material-symbols-outlined text-[16px]">trending_up</span> 12.5% vs last month
+                </div>
+</div>
+</div>
+<div class="bg-surface-white border border-grid-border p-md flex flex-col justify-between hover:border-grid-border-dark transition-colors group relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-surface-container rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-lg relative z-10">
+<span class="text-on-surface-variant font-body-bold text-body-bold">Pending Deposits</span>
+<span class="material-symbols-outlined text-status-warning">pending_actions</span>
+</div>
+<div class="relative z-10">
+<div class="font-stat-lg text-stat-lg text-on-surface">342</div>
+<div class="text-status-warning font-table-cell text-table-cell flex items-center gap-xs mt-xs">
+<span class="material-symbols-outlined text-[16px]">warning</span> Requires attention
+                </div>
+</div>
+</div>
+<div class="bg-surface-white border border-grid-border p-md flex flex-col justify-between hover:border-grid-border-dark transition-colors group relative overflow-hidden">
+<div class="absolute -right-4 -top-4 w-24 h-24 bg-error-container rounded-full opacity-50 group-hover:scale-150 transition-transform duration-500 pointer-events-none"></div>
+<div class="flex justify-between items-start mb-lg relative z-10">
+<span class="text-on-surface-variant font-body-bold text-body-bold">System Alerts</span>
+<span class="material-symbols-outlined text-error">report</span>
+</div>
+<div class="relative z-10">
+<div class="font-stat-lg text-stat-lg text-error">2</div>
+<div class="text-error font-table-cell text-table-cell flex items-center gap-xs mt-xs">
+<span class="material-symbols-outlined text-[16px]">priority_high</span> Sync failures
+                </div>
+</div>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-lg">
+<div class="col-span-2 flex flex-col gap-lg">
+<div class="bg-surface-white border border-grid-border relative">
+<div class="p-md border-b border-grid-border bg-surface-container-lowest flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Global Reserver Search</h2>
+<span class="px-sm py-xs bg-surface-variant text-on-surface-variant font-label-caps text-label-caps border border-grid-border">CROSS-DB</span>
+</div>
+<div class="p-lg">
+<div class="relative w-full max-w-2xl">
+<span class="material-symbols-outlined absolute left-md top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full pl-xl pr-md py-md bg-background border border-grid-border text-on-surface font-body-base text-body-base focus:outline-none focus:border-secondary transition-colors rounded-none placeholder:text-outline-variant" placeholder="Search by name, phone, or reservation ID across all shows..." type="text"/>
+<button class="absolute right-xs top-1/2 -translate-y-1/2 px-md py-xs bg-secondary text-on-secondary font-body-bold text-body-bold border border-grid-border hover:bg-secondary-container transition-colors">
+                            Search
+                        </button>
+</div>
+</div>
+</div>
+<div class="bg-surface-white border border-grid-border relative flex-1">
+<div class="p-md border-b border-grid-border bg-surface-container-lowest flex justify-between items-center">
+<h2 class="font-headline-md text-headline-md text-on-surface">Master Registry: Shows</h2>
+<div class="flex gap-sm">
+<select class="bg-background border border-grid-border px-sm py-xs font-table-cell text-table-cell text-on-surface focus:outline-none focus:border-secondary">
+<option>All Status</option>
+<option>Active</option>
+<option>Completed</option>
+<option>Suspended</option>
+</select>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="border-b border-grid-border bg-surface-dim/30">
+<th class="p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Performance</th>
+<th class="p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Company</th>
+<th class="p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Revenue</th>
+<th class="p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider">Status</th>
+<th class="p-md font-label-caps text-label-caps text-on-surface-variant uppercase tracking-wider text-right">Master Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-grid-border">
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-16 border border-grid-border bg-surface-variant shrink-0" data-alt="A moody, minimalist theatrical poster featuring a stark red chair on a dark stage, high contrast lighting, modern art style." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuB2figVngvKIIVc90ppI3_f54eDPFU_j-DBhMKpUikh01PffDlNzxE35kVNUqsseakVmY4DrlpOCRl5kerl9JilVelq6by_gWxoQik6yiIxsBJ6neZj-9PapbOGRro2y9zPT5-cJkCqGsx3NA4i8E5xlo39_f4PiynPjwxExnQbGybEvPzVS4jJfjx9CeCTZUTs8pO6mUqD7-7SeBpAPWGP7oeQNzhRGirf610yEMsQ6N5zfUw5sf3UuBY53Mk0R6N6eG4KkK0_o5E')"></div>
+<div>
+<p class="font-body-bold text-body-bold text-on-surface">The Glass Menagerie</p>
+<p class="font-table-cell text-table-cell text-on-surface-variant">ID: PRF-8492</p>
+</div>
+</div>
+</td>
+<td class="p-md font-body-base text-body-base text-on-surface">Seoul Arts Collective</td>
+<td class="p-md">
+<p class="font-body-bold text-body-bold text-on-surface">₩45.2M</p>
+<p class="font-table-cell text-table-cell text-on-surface-variant">84% Sold</p>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-xs px-sm py-xs bg-surface-container-high text-status-active border border-grid-border font-label-caps text-label-caps rounded-full">
+<span class="w-2 h-2 rounded-full bg-status-active"></span> ONGOING
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-sm py-xs bg-surface-white border border-grid-border text-on-surface font-table-cell text-table-cell hover:bg-surface-variant transition-colors">Manage</button>
+<button class="px-sm py-xs bg-error-container text-on-error-container border border-error/20 font-table-cell text-table-cell hover:bg-error hover:text-on-error transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">block</span> Force Stop
+                                        </button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors group">
+<td class="p-md">
+<div class="flex items-center gap-md">
+<div class="w-12 h-16 border border-grid-border bg-surface-variant shrink-0" data-alt="A bright, energetic poster for a modern dance performance, featuring sweeping abstract shapes in neon blue and purple against a white background." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuAF5qa_GV9Vp9fGIXGa5BMcPkOosq8N4WWDGWn25d8SEmXRIBsMRZRURjnvx_HYvZ9U8Paj2qStAQ-Lx4G0By74oNt-SLnUQZODLkSEQ5xRGlclTdnH-3etdHz7L4HgkLx5FkWHLcqXL3qRZRiV2Ug6UTLkU3hIwl-Ed9QpVaKfGGgzIVFns1561Tct8nvLXIKaBVVugbQdXWpsuBk9ms8FHKlYFjcUvG2si9gYNWqz5mlYPlwT7UBcxbAnSY7BEa3SYwN73nNk9mg')"></div>
+<div>
+<p class="font-body-bold text-body-bold text-on-surface">Rhythm & Motion</p>
+<p class="font-table-cell text-table-cell text-on-surface-variant">ID: PRF-8493</p>
+</div>
+</div>
+</td>
+<td class="p-md font-body-base text-body-base text-on-surface">Dynamic Movement Co.</td>
+<td class="p-md">
+<p class="font-body-bold text-body-bold text-on-surface">₩12.8M</p>
+<p class="font-table-cell text-table-cell text-on-surface-variant">42% Sold</p>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-xs px-sm py-xs bg-surface-container-high text-status-active border border-grid-border font-label-caps text-label-caps rounded-full">
+<span class="w-2 h-2 rounded-full bg-status-active"></span> ONGOING
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-sm py-xs bg-surface-white border border-grid-border text-on-surface font-table-cell text-table-cell hover:bg-surface-variant transition-colors">Manage</button>
+<button class="px-sm py-xs bg-error-container text-on-error-container border border-error/20 font-table-cell text-table-cell hover:bg-error hover:text-on-error transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">block</span> Force Stop
+                                        </button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-surface-container-lowest transition-colors group bg-surface-container-highest/20">
+<td class="p-md">
+<div class="flex items-center gap-md opacity-70">
+<div class="w-12 h-16 border border-grid-border bg-surface-variant shrink-0" data-alt="A vintage, slightly faded poster for a classic orchestra performance, sepia tones, elegant typography." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuCS1I25Y5FcqRy7LstjdciXcPX1e1V_DTF9BnTXexK_mAOtvqTUrx_Bd-18T-Iy-DlfcyG-5tvI_qEm429jeYJTb8I6oWhuh9VJkcV-eQwiOaDMlB4ECt-hMKDCmerepHyoUxht5FlSXybOIBkKrYV2MlURwV89hXRYruWSZfP4MLLLrM8twm0ZhrRbPm13k3bB-IdFxkSDt8RhqOy5HkQ6KeYFdoOFJkzbDw55DrV9qVhdtPfc6GBbAjyO-QuCSAJIwHmISfSZyXw')"></div>
+<div>
+<p class="font-body-bold text-body-bold text-on-surface">Winter Sonata</p>
+<p class="font-table-cell text-table-cell text-on-surface-variant">ID: PRF-8410</p>
+</div>
+</div>
+</td>
+<td class="p-md font-body-base text-body-base text-on-surface opacity-70">City Philharmonic</td>
+<td class="p-md opacity-70">
+<p class="font-body-bold text-body-bold text-on-surface">₩88.5M</p>
+<p class="font-table-cell text-table-cell text-on-surface-variant">100% Sold</p>
+</td>
+<td class="p-md">
+<span class="inline-flex items-center gap-xs px-sm py-xs bg-surface-variant text-on-surface-variant border border-grid-border font-label-caps text-label-caps rounded-full">
+<span class="w-2 h-2 rounded-full bg-outline"></span> COMPLETED
+                                    </span>
+</td>
+<td class="p-md text-right">
+<div class="flex justify-end gap-sm opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="px-sm py-xs bg-surface-white border border-grid-border text-on-surface font-table-cell text-table-cell hover:bg-surface-variant transition-colors">View Report</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="col-span-1 flex flex-col gap-lg">
+<div class="bg-surface-white border border-grid-border">
+<div class="p-md border-b border-grid-border bg-surface-container flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface">settings_system_daydream</span>
+<h2 class="font-headline-md text-headline-md text-on-surface">System Config</h2>
+</div>
+<div class="p-md border-b border-grid-border">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-sm">Global Emergency Notice</label>
+<textarea class="w-full bg-background border border-grid-border p-sm text-on-surface font-body-base text-body-base focus:outline-none focus:border-error transition-colors min-h-[100px] resize-y placeholder:text-outline-variant" placeholder="Enter a notice to display across all public ticketing pages..."></textarea>
+<div class="flex justify-between items-center mt-sm">
+<span class="text-table-cell font-table-cell text-on-surface-variant">Visible on all endpoints</span>
+<button class="px-sm py-xs bg-error text-on-error font-table-cell text-table-cell border border-grid-border-dark hover:bg-on-error-container transition-colors">Deploy Notice</button>
+</div>
+</div>
+<div class="p-md border-b border-grid-border">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-sm">Auto-Cancel Deposit Timeout</label>
+<div class="flex items-center gap-md">
+<input class="w-20 bg-background border border-grid-border p-sm text-on-surface font-body-bold text-body-bold text-center focus:outline-none focus:border-secondary transition-colors" type="number" value="24"/>
+<span class="text-on-surface font-body-base text-body-base">Hours</span>
+<div class="flex-1 text-right">
+<button class="px-sm py-xs bg-surface-white border border-grid-border text-on-surface font-table-cell text-table-cell hover:bg-surface-variant transition-colors">Save</button>
+</div>
+</div>
+<p class="font-table-cell text-table-cell text-on-surface-variant mt-xs">Pending reservations will be freed automatically after this duration.</p>
+</div>
+<div class="p-md bg-surface-container-lowest">
+<label class="block font-label-caps text-label-caps text-on-surface-variant mb-sm">Server Status</label>
+<div class="space-y-sm">
+<div class="flex justify-between items-center">
+<span class="font-table-cell text-table-cell text-on-surface">Database Load</span>
+<div class="w-32 h-2 bg-surface-variant rounded-full overflow-hidden border border-grid-border">
+<div class="w-[45%] h-full bg-status-active"></div>
+</div>
+</div>
+<div class="flex justify-between items-center">
+<span class="font-table-cell text-table-cell text-on-surface">Payment Gateway</span>
+<span class="text-status-active font-label-caps text-label-caps flex items-center gap-xs">
+<span class="material-symbols-outlined text-[14px]">check_circle</span> ONLINE
+                            </span>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-primary text-on-primary border border-grid-border-dark p-lg relative overflow-hidden shadow-[8px_8px_0_#25005a]">
+<div class="absolute -right-12 -bottom-12 w-48 h-48 bg-primary-container rounded-full opacity-50 blur-xl pointer-events-none"></div>
+<h3 class="font-headline-md text-headline-md mb-xs relative z-10">Generate Access Key</h3>
+<p class="font-body-base text-body-base text-primary-fixed-dim mb-lg relative z-10">Create a one-time setup link for a new theater company.</p>
+<div class="flex gap-sm relative z-10">
+<input class="flex-1 bg-surface-white/10 border border-on-primary/30 p-sm text-on-primary placeholder:text-on-primary/50 font-body-base text-body-base focus:outline-none focus:border-on-primary transition-colors" placeholder="Contact Email" type="email"/>
+<button class="px-md bg-surface-white text-primary font-body-bold text-body-bold hover:bg-surface-container-low transition-colors">Generate</button>
+</div>
+</div>
+</div>
+</div>
+</div></main></div></body></html>

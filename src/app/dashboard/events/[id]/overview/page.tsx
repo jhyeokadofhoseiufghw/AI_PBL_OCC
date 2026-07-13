@@ -35,13 +35,13 @@ export default async function Page({
   const event = rows[0];
   if (!event) notFound();
   return (
-    <main className="mx-auto min-h-screen max-w-5xl px-6 py-10">
+    <main className="mx-auto min-h-screen max-w-7xl px-5 py-8 sm:px-8 sm:py-10">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <p className="text-sm text-zinc-500">
             {labels[String(event.status)] ?? String(event.status)}
           </p>
-          <h1 className="text-2xl font-semibold">{String(event.title)}</h1>
+          <h1 className="ha-title text-3xl">{String(event.title)}</h1>
         </div>
         <div className="flex flex-wrap gap-2">
           <Link
@@ -53,7 +53,7 @@ export default async function Page({
           {event.status !== "HIDDEN" && event.status !== "CANCELLED" ? (
             <>
               <Link
-                className="rounded-lg border px-3 py-2 text-sm text-emerald-700"
+                className="ha-button-secondary px-3 py-2 text-sm text-[#420093]"
                 href={`/events/${String(event.slug)}`}
               >
                 공개 페이지
@@ -64,7 +64,7 @@ export default async function Page({
           {event.status === "HIDDEN" ? (
             <form action={publishEvent}>
               <input name="eventId" type="hidden" value={id} />
-              <button className="rounded-lg bg-emerald-700 px-4 py-2 text-sm font-medium text-white">
+              <button className="ha-button-primary px-4 py-2 text-sm">
                 공연 공개
               </button>
             </form>
@@ -73,7 +73,7 @@ export default async function Page({
       </div>
       <EventTabs current="overview" eventId={id} />
       {query.published ? (
-        <p className="mt-5 rounded-lg bg-emerald-50 p-3 text-sm text-emerald-800">
+        <p className="mt-5 rounded-lg bg-[#e8fff5] p-3 text-sm text-[#006c4c]">
           공연을 공개했습니다.
         </p>
       ) : null}
@@ -83,7 +83,7 @@ export default async function Page({
         </p>
       ) : null}
       {event.status !== "CANCELLED" ? (
-        <section className="mt-6 flex flex-wrap items-center gap-2 rounded-xl border bg-white p-4">
+        <section className="ha-panel mt-6 flex flex-wrap items-center gap-2 p-4">
           <span className="mr-2 text-sm font-medium">공연 상태</span>
           {[
             ["SCHEDULED", "예정"],
@@ -95,7 +95,7 @@ export default async function Page({
               <input name="eventId" type="hidden" value={id} />
               <input name="status" type="hidden" value={value} />
               <button
-                className={`rounded border px-3 py-2 text-sm ${event.status === value ? "bg-zinc-900 text-white" : ""}`}
+                className={`rounded-full border px-3 py-2 text-sm ${event.status === value ? "border-[#420093] bg-[#420093] text-white" : "border-[#dfe3ec] bg-white"}`}
               >
                 {label}
               </button>
@@ -123,7 +123,7 @@ export default async function Page({
       {event.status === "HIDDEN" ? (
         <form action={publishEvent} className="mt-5">
           <input name="eventId" type="hidden" value={id} />
-          <button className="w-full rounded-lg bg-emerald-700 px-5 py-3 font-medium text-white">
+          <button className="ha-button-primary w-full px-5 py-3">
             저장한 내용으로 공연 공개
           </button>
         </form>
