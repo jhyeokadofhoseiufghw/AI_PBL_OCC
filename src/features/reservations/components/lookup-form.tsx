@@ -264,6 +264,24 @@ export function LookupForm({
               </div>
             ) : null}
           </dl>
+          {reservation.inquiryContact ? (
+            <div className="mt-5 rounded-xl bg-[#f7f5ff] p-4 text-sm">
+              <p className="font-bold text-[#420093]">환불 및 공연 문의</p>
+              <p className="mt-2 whitespace-pre-wrap break-words leading-6 text-[#4a4453]">
+                {reservation.inquiryContact}
+              </p>
+              {/https?:\/\/\S+/.test(reservation.inquiryContact) ? (
+                <a
+                  className="mt-3 inline-flex font-bold text-[#420093] underline"
+                  href={reservation.inquiryContact.match(/https?:\/\/\S+/)?.[0]}
+                  rel="noreferrer"
+                  target="_blank"
+                >
+                  문의 링크 열기 ↗
+                </a>
+              ) : null}
+            </div>
+          ) : null}
           {reservation.checkedInAt ? (
             <p className="mt-5 rounded-lg bg-[#e8fff5] p-3 text-sm text-[#006c4c]">
               입장 완료 ·{" "}

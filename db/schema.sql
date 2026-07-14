@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS events (
     bank_name TEXT NOT NULL,
     account_number TEXT NOT NULL,
     account_holder TEXT NOT NULL,
+    inquiry_contact TEXT,
     reservation_type TEXT NOT NULL CHECK (reservation_type IN ('FIRST_COME', 'SEAT_SELECTION')),
     total_capacity INTEGER,
     max_tickets_per_person INTEGER NOT NULL DEFAULT 4 CHECK (max_tickets_per_person > 0),

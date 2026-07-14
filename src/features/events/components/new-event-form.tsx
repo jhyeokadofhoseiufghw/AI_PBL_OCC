@@ -275,6 +275,25 @@ export function NewEventForm() {
 
         <label className="sm:col-span-2">
           <span className="text-sm font-medium text-zinc-800">
+            환불 및 공연 문의
+          </span>
+          <textarea
+            className={inputClassName}
+            maxLength={1000}
+            name="inquiryContact"
+            placeholder={
+              "환불 절차와 문의 가능한 연락처 또는 오픈채팅 링크를 입력해주세요.\n예: 취소 후 환불은 카카오톡 오픈채팅 https://open.kakao.com/... 로 문의해주세요."
+            }
+            required
+            rows={4}
+          />
+          <span className="mt-2 block text-xs leading-5 text-zinc-500">
+            예매 화면과 예매 조회 화면에 안내됩니다.
+          </span>
+        </label>
+
+        <label className="sm:col-span-2">
+          <span className="text-sm font-medium text-zinc-800">
             티켓 등급별 가격
           </span>
           <textarea

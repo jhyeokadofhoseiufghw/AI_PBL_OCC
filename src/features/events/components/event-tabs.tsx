@@ -1,6 +1,8 @@
 import Link from "next/link";
+import type { Route } from "next";
 const tabs = [
   ["overview", "개요"],
+  ["inquiry", "환불 및 문의"],
   ["seats", "좌석"],
   ["ticket-types", "티켓 타입"],
   ["feed", "피드"],
@@ -23,7 +25,7 @@ export function EventTabs({
         {tabs.map(([path, label]) => (
           <Link
             className={`whitespace-nowrap border-b-2 px-4 py-3 text-sm font-semibold ${current === path ? "border-[#712ae2] text-[#420093]" : "border-transparent text-[#60687a] hover:text-[#420093]"}`}
-            href={`/dashboard/events/${eventId}/${path}`}
+            href={`/dashboard/events/${eventId}/${path}` as Route}
             key={path}
           >
             {label}

@@ -24,6 +24,7 @@ type Props = {
     bankName: string;
     accountNumber: string;
     accountHolder: string;
+    inquiryContact: string;
   };
   ticketTypes: Option[];
   seats: Option[];
@@ -238,6 +239,24 @@ export function ReservationForm({ event, ticketTypes, seats }: Props) {
                 <dd className="inline font-medium">{event.accountHolder}</dd>
               </div>
             </dl>
+            {event.inquiryContact ? (
+              <div className="mt-5 rounded-xl bg-[#f7f5ff] p-4 text-sm">
+                <p className="font-bold text-[#420093]">환불 및 공연 문의</p>
+                <p className="mt-2 whitespace-pre-wrap break-words leading-6 text-[#4a4453]">
+                  {event.inquiryContact}
+                </p>
+                {/https?:\/\/\S+/.test(event.inquiryContact) ? (
+                  <a
+                    className="mt-3 inline-flex font-bold text-[#420093] underline"
+                    href={event.inquiryContact.match(/https?:\/\/\S+/)?.[0]}
+                    rel="noreferrer"
+                    target="_blank"
+                  >
+                    문의 링크 열기 ↗
+                  </a>
+                ) : null}
+              </div>
+            ) : null}
             {state.error ? (
               <p
                 className="mt-4 rounded-lg bg-[#ffdad6] p-3 text-sm text-[#93000a]"

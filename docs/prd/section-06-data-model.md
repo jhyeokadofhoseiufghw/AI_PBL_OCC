@@ -58,6 +58,7 @@
 | bank_name              | text                 | 입금 은행명                                     |
 | account_number         | text                 | 입금 계좌번호                                   |
 | account_holder         | text                 | 예금주명                                        |
+| inquiry_contact        | text nullable        | 환불 절차 및 공연 문의 연락처/오픈채팅 링크     |
 | reservation_type       | text                 | `FIRST_COME` / `SEAT_SELECTION`                 |
 | total_capacity         | int nullable         | 선착순 공연 총 수용 인원(좌석 지정 공연은 null) |
 | max_tickets_per_person | int                  | 1인 최대 예매 매수                              |

@@ -29,6 +29,7 @@ export default async function ReservePage({
     bankName: String(event.bank_name),
     accountNumber: String(event.account_number),
     accountHolder: String(event.account_holder),
+    inquiryContact: String(event.inquiry_contact ?? ""),
   };
   return (
     <div className="min-h-screen bg-[#f8f9ff]">

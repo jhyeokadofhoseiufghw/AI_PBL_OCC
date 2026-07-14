@@ -1,6 +1,7 @@
 "use server";
 
 import { randomBytes } from "node:crypto";
+import type { Route } from "next";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
@@ -30,6 +31,11 @@ const eventSchema = z.object({
   bankName: z.string().trim().min(1).max(80),
   accountNumber: z.string().trim().min(1).max(80),
   accountHolder: z.string().trim().min(1).max(80),
+  inquiryContact: z
+    .string()
+    .trim()
+    .min(1, "환불 및 공연 문의 정보를 입력해주세요.")
+    .max(1000),
   reservationType: z.enum(["FIRST_COME", "SEAT_SELECTION"]),
   totalCapacity: z.union([z.literal(""), z.coerce.number().int().positive()]),
   maxTicketsPerPerson: z.coerce.number().int().positive().max(100),
@@ -131,6 +137,7 @@ export async function createEvent(
         "bankName",
         "accountNumber",
         "accountHolder",
+        "inquiryContact",
         "reservationType",
         "totalCapacity",
         "maxTicketsPerPerson",
@@ -193,12 +200,12 @@ export async function createEvent(
     tx`
       INSERT INTO events (
         id, organizer_id, title, slug, venue, description, poster_image_url, detail_image_url, runtime_minutes,
-        genre, ticket_price, bank_name, account_number, account_holder, reservation_type, total_capacity,
+        genre, ticket_price, bank_name, account_number, account_holder, inquiry_contact, reservation_type, total_capacity,
         max_tickets_per_person, cancel_deadline_at, event_start_at, event_end_at, status
       ) VALUES (
         ${eventId}, ${session.organizerId}, ${data.title}, ${slug}, ${data.venue}, ${data.description},
         ${data.posterImageUrl || null}, ${data.detailImageUrl || null}, ${data.runtimeMinutes || null}, ${data.genre || null},
-        ${data.ticketPrice}, ${data.bankName}, ${data.accountNumber}, ${data.accountHolder}, ${data.reservationType},
+        ${data.ticketPrice}, ${data.bankName}, ${data.accountNumber}, ${data.accountHolder}, ${data.inquiryContact}, ${data.reservationType},
         ${totalCapacity}, ${data.maxTicketsPerPerson}, ${data.cancelDeadlineAt.toISOString()}, ${data.eventStartAt.toISOString()},
         ${data.eventEndAt === "" ? null : data.eventEndAt.toISOString()}, 'HIDDEN'
       )
@@ -311,6 +318,23 @@ export async function updateEventOverview(
   return { success: "공연 정보를 저장했습니다." };
 }
 
+export async function updateEventInquiry(formData: FormData) {
+  const eventId = text(formData, "eventId");
+  const { event, sql } = await requireOwnedEvent(eventId);
+  const parsed = z
+    .string()
+    .trim()
+    .min(1, "환불 및 공연 문의 정보를 입력해주세요.")
+    .max(1000, "환불 및 공연 문의 정보는 1,000자 이내로 입력해주세요.")
+    .safeParse(text(formData, "inquiryContact"));
+  if (!parsed.success)
+    redirect(`/dashboard/events/${eventId}/inquiry?error=invalid` as Route);
+
+  await sql`UPDATE events SET inquiry_contact=${parsed.data} WHERE id=${eventId} AND organizer_id=${event.organizer_id}`;
+  revalidatePath(`/events/${event.slug}/reserve`);
+  redirect(`/dashboard/events/${eventId}/inquiry?saved=1` as Route);
+}
+
 export async function publishEvent(formData: FormData) {
   const eventId = text(formData, "eventId");
   const { event, sql } = await requireOwnedEvent(eventId);
@@ -325,6 +349,7 @@ export async function publishEvent(formData: FormData) {
     !event.bank_name ||
     !event.account_number ||
     !event.account_holder ||
+    !event.inquiry_contact ||
     Number(seatRows[0].count) < 1
   ) {
     redirect(`/dashboard/events/${eventId}/overview?error=publish`);

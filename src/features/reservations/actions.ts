@@ -45,6 +45,7 @@ type ReservationView = {
   seats: string[];
   cancelDeadline: string;
   checkedInAt: string | null;
+  inquiryContact: string;
 };
 
 const schema = z.object({
@@ -363,7 +364,7 @@ async function findReservation(formData: FormData, enforceRateLimit = true) {
   )
     return "RATE_LIMITED" as const;
   const rows =
-    await getSql()`SELECT r.*,e.slug event_slug,e.title event_title,e.event_start_at,e.cancel_deadline_at,COALESCE(array_agg(s.label ORDER BY s.label) FILTER(WHERE rs.released_at IS NULL),'{}') seats FROM reservations r JOIN events e ON e.id=r.event_id LEFT JOIN reservation_seats rs ON rs.reservation_id=r.id LEFT JOIN seats s ON s.id=rs.seat_id WHERE r.reserver_name=${name} AND regexp_replace(r.reserver_phone,'[^0-9]','','g')=${phone} AND (${reservationUuid}::uuid IS NULL OR r.id=${reservationUuid}::uuid) GROUP BY r.id,e.slug,e.title,e.event_start_at,e.cancel_deadline_at ORDER BY r.created_at DESC LIMIT 50`;
+    await getSql()`SELECT r.*,e.slug event_slug,e.title event_title,e.event_start_at,e.cancel_deadline_at,e.inquiry_contact,COALESCE(array_agg(s.label ORDER BY s.label) FILTER(WHERE rs.released_at IS NULL),'{}') seats FROM reservations r JOIN events e ON e.id=r.event_id LEFT JOIN reservation_seats rs ON rs.reservation_id=r.id LEFT JOIN seats s ON s.id=rs.seat_id WHERE r.reserver_name=${name} AND regexp_replace(r.reserver_phone,'[^0-9]','','g')=${phone} AND (${reservationUuid}::uuid IS NULL OR r.id=${reservationUuid}::uuid) GROUP BY r.id,e.slug,e.title,e.event_start_at,e.cancel_deadline_at,e.inquiry_contact ORDER BY r.created_at DESC LIMIT 50`;
   const password = text(formData, "lookupPassword");
   for (const row of rows) {
     if (await verifyPassword(password, String(row.lookup_password_hash)))
@@ -470,6 +471,7 @@ export async function lookupReservation(
       seats: (row.seats as string[]) ?? [],
       cancelDeadline: String(row.cancel_deadline_at),
       checkedInAt: row.checked_in_at ? String(row.checked_in_at) : null,
+      inquiryContact: String(row.inquiry_contact ?? ""),
     },
   };
 }
@@ -512,6 +514,7 @@ export async function cancelReservation(
       seats: [],
       cancelDeadline: String(row.cancel_deadline_at),
       checkedInAt: null,
+      inquiryContact: String(row.inquiry_contact ?? ""),
     },
   };
 }
