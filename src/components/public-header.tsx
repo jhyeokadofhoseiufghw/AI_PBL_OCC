@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand-logo";
 import { signOutOrganizer } from "@/features/auth/actions";
 import { getOrganizerSession } from "@/lib/auth/session";
 
@@ -13,10 +14,8 @@ export async function PublicHeader() {
           className="flex items-center gap-2.5 font-extrabold tracking-tight text-[#250059]"
           href="/feed"
         >
-          <span className="grid h-9 w-9 place-items-center rounded-full bg-[#250059] text-sm text-white shadow-sm">
-            HA
-          </span>
-          <span>Homely Arts</span>
+          <BrandLogo />
+          <span>Our Creative Catalyst</span>
         </Link>
         <nav
           className="flex items-center gap-2 text-sm sm:gap-5"

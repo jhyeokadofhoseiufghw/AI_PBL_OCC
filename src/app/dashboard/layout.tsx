@@ -1,5 +1,6 @@
 import Link from "next/link";
 
+import { BrandLogo } from "@/components/brand-logo";
 import { signOutOrganizer } from "@/features/auth/actions";
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
@@ -27,10 +28,8 @@ export default async function DashboardLayout({
           className="flex h-20 items-center gap-3 border-b border-white/10 px-6 text-lg font-extrabold"
           href="/feed"
         >
-          <span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-xs text-[#2e1065]">
-            HA
-          </span>
-          Homely Arts
+          <BrandLogo variant="dashboard" />
+          <span className="leading-tight">Our Creative Catalyst</span>
         </Link>
         <nav className="flex-1 space-y-1 p-4" aria-label="운영 메뉴">
           {nav.map(([href, icon, label]) => (
@@ -71,7 +70,7 @@ export default async function DashboardLayout({
               className="font-extrabold text-[#250059] lg:hidden"
               href="/feed"
             >
-              Homely Arts Admin
+              Our Creative Catalyst Admin
             </Link>
             <p className="hidden text-sm font-semibold text-[#4a4453] lg:block">
               공연 운영 센터
@@ -90,7 +89,7 @@ export default async function DashboardLayout({
                 className="grid h-9 w-9 place-items-center rounded-full bg-[#ebddff] text-xs font-black text-[#420093]"
                 href="/dashboard"
               >
-                HA
+                OCC
               </Link>
             </div>
           </div>

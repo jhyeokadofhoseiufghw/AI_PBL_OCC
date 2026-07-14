@@ -202,7 +202,7 @@ export default async function FeedPage({
       </main>
       <footer className="border-t border-[#e5e7eb] bg-white py-8">
         <div className="public-shell flex flex-wrap justify-between gap-3 text-xs text-[#60687a]">
-          <b className="text-[#250059]">Homely Arts</b>
+          <b className="text-[#250059]">Our Creative Catalyst</b>
           <span>작은 무대를 위한 가장 가까운 공연 플랫폼</span>
         </div>
       </footer>
