@@ -22,7 +22,9 @@ const eventSchema = z.object({
   description: z.string().trim().min(1),
   posterImageUrl: optionalUrl,
   detailImageUrl: optionalUrl,
-  genre: z.string().trim().max(80),
+  genre: z.enum(["연극", "뮤지컬", "밴드/라이브", "무용/댄스", "기타"], {
+    error: "공연 카테고리를 선택해주세요.",
+  }),
   runtimeMinutes: z.union([z.literal(""), z.coerce.number().int().positive()]),
   ticketPrice: z.coerce.number().int().nonnegative(),
   bankName: z.string().trim().min(1).max(80),

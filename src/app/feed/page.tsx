@@ -135,16 +135,18 @@ export default async function FeedPage({
                 aria-label="공연 장르"
               >
                 <Link
-                  className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-bold ${!genre ? "border-[#420093] bg-[#420093] text-white" : "border-[#dfe3ec] bg-white"}`}
+                  className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-bold ${!genre ? "border-[#420093] bg-[#420093] !text-white" : "border-[#dfe3ec] bg-white"}`}
                   href="/feed"
+                  scroll={false}
                 >
                   전체
                 </Link>
                 {genres.map((row) => (
                   <Link
-                    className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-bold ${genre === row.genre ? "border-[#420093] bg-[#420093] text-white" : "border-[#dfe3ec] bg-white"}`}
+                    className={`whitespace-nowrap rounded-full border px-4 py-2 text-sm font-bold ${genre === row.genre ? "border-[#420093] bg-[#420093] !text-white" : "border-[#dfe3ec] bg-white"}`}
                     href={`/feed?genre=${encodeURIComponent(String(row.genre))}`}
                     key={String(row.genre)}
+                    scroll={false}
                   >
                     {String(row.genre)}
                   </Link>

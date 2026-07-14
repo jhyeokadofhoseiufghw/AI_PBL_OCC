@@ -67,11 +67,21 @@ export function NewEventForm() {
 
         <label>
           <span className="text-sm font-medium text-zinc-800">장르</span>
-          <input
+          <select
             className={inputClassName}
+            defaultValue=""
             name="genre"
-            placeholder="연극, 뮤지컬, 밴드/음악"
-          />
+            required
+          >
+            <option disabled value="">
+              카테고리를 선택해주세요
+            </option>
+            <option value="연극">연극</option>
+            <option value="뮤지컬">뮤지컬</option>
+            <option value="밴드/라이브">밴드/라이브</option>
+            <option value="무용/댄스">무용/댄스</option>
+            <option value="기타">기타</option>
+          </select>
         </label>
 
         <label>
