@@ -354,16 +354,7 @@ export async function publishEvent(formData: FormData) {
   ) {
     redirect(`/dashboard/events/${eventId}/overview?error=publish`);
   }
-  await sql.transaction((tx) => [
-    tx`UPDATE events SET status='SCHEDULED',published_at=COALESCE(published_at,NOW()) WHERE id=${eventId} AND organizer_id=${event.organizer_id}`,
-    tx`
-      INSERT INTO feed_posts (event_id, image_url, content)
-      SELECT id, poster_image_url, description
-      FROM events
-      WHERE id=${eventId} AND organizer_id=${event.organizer_id}
-        AND NOT EXISTS (SELECT 1 FROM feed_posts WHERE event_id=${eventId})
-    `,
-  ]);
+  await sql`UPDATE events SET status='SCHEDULED',published_at=COALESCE(published_at,NOW()) WHERE id=${eventId} AND organizer_id=${event.organizer_id}`;
   revalidatePath("/feed");
   revalidatePath(`/events/${event.slug}`);
   redirect(`/dashboard/events/${eventId}/overview?published=1`);
