@@ -4,7 +4,6 @@ import Link from "next/link";
 import { PublicHeader } from "@/components/public-header";
 import { CopyLinkButton } from "@/features/events/components/copy-link-button";
 import { getEventFeed, getPublicEvent } from "@/features/events/queries";
-import { getOrganizerSession } from "@/lib/auth/session";
 
 export const dynamic = "force-dynamic";
 
@@ -13,10 +12,7 @@ export default async function Page({
 }: {
   params: Promise<{ eventSlug: string }>;
 }) {
-  const [{ eventSlug }, session] = await Promise.all([
-    params,
-    getOrganizerSession(),
-  ]);
+  const { eventSlug } = await params;
   const event = await getPublicEvent(eventSlug);
   const posts = await getEventFeed(String(event.id));
   const remaining = Number(event.remaining_count);
@@ -30,7 +26,7 @@ export default async function Page({
 
   return (
     <div className="min-h-screen bg-[#f8f9ff]">
-      <PublicHeader signedIn={Boolean(session)} />
+      <PublicHeader />
       <main>
         <div className="public-shell py-6">
           <div className="flex items-center justify-between gap-4">

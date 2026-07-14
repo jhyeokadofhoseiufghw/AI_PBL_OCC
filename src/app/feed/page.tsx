@@ -33,7 +33,7 @@ export default async function FeedPage({
 
   return (
     <div className="min-h-screen bg-[#fbfbfd]">
-      <PublicHeader signedIn={Boolean(session)} />
+      <PublicHeader />
       <main>
         <section className="relative overflow-hidden border-b border-[#e5e7eb] bg-[#f7f7f8]">
           <div className="rain-texture pointer-events-none absolute inset-0 opacity-80" />
