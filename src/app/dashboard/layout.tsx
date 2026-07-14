@@ -25,7 +25,7 @@ export default async function DashboardLayout({
       <aside className="fixed inset-y-0 left-0 z-50 hidden w-64 flex-col bg-[#2e1065] text-white lg:flex">
         <Link
           className="flex h-20 items-center gap-3 border-b border-white/10 px-6 text-lg font-extrabold"
-          href="/dashboard"
+          href="/feed"
         >
           <span className="grid h-10 w-10 place-items-center rounded-xl bg-white text-xs text-[#2e1065]">
             HA
@@ -45,14 +45,6 @@ export default async function DashboardLayout({
               {label}
             </Link>
           ))}
-          <div className="my-4 border-t border-white/10" />
-          <Link
-            className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm text-[#d3bbff] hover:bg-white/10"
-            href="/feed"
-          >
-            <span className="grid h-7 w-7 place-items-center">↗</span>공개 공연
-            피드
-          </Link>
         </nav>
         <div className="border-t border-white/10 p-5">
           <p className="truncate text-sm font-bold">
@@ -77,7 +69,7 @@ export default async function DashboardLayout({
           <div className="flex h-16 items-center justify-between px-5 sm:px-8">
             <Link
               className="font-extrabold text-[#250059] lg:hidden"
-              href="/dashboard"
+              href="/feed"
             >
               Homely Arts Admin
             </Link>
