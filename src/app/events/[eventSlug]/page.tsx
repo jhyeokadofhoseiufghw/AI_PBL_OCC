@@ -3,7 +3,7 @@ import Link from "next/link";
 
 import { PublicHeader } from "@/components/public-header";
 import { CopyLinkButton } from "@/features/events/components/copy-link-button";
-import { getEventFeed, getPublicEvent } from "@/features/events/queries";
+import { getPublicEvent } from "@/features/events/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,6 @@ export default async function Page({
 }) {
   const { eventSlug } = await params;
   const event = await getPublicEvent(eventSlug);
-  const posts = await getEventFeed(String(event.id));
   const remaining = Number(event.remaining_count);
   const cta =
     remaining > 0
@@ -127,37 +126,8 @@ export default async function Page({
             ) : null}
           </section>
 
-          {posts.length ? (
-            <section className="mx-auto mt-20 max-w-4xl">
-              <p className="ha-kicker">02. News & scenes</p>
-              <h2 className="ha-title mt-2 text-3xl">공연 피드</h2>
-              <div className="mt-7 grid gap-5 sm:grid-cols-2">
-                {posts.map((post) => (
-                  <article
-                    className="ha-card overflow-hidden"
-                    key={String(post.id)}
-                  >
-                    <div
-                      className={`aspect-[4/3] bg-cover bg-center ${post.image_url ? "" : "poster-fallback"}`}
-                      style={
-                        post.image_url
-                          ? {
-                              backgroundImage: `url(${String(post.image_url)})`,
-                            }
-                          : undefined
-                      }
-                    />
-                    <p className="whitespace-pre-wrap p-5 text-sm leading-6 text-[#4a4453]">
-                      {String(post.content)}
-                    </p>
-                  </article>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
           <section className="mx-auto mt-20 max-w-4xl rounded-2xl bg-[#e6eeff] p-6 sm:p-8">
-            <p className="ha-kicker">03. Ticket policy</p>
+            <p className="ha-kicker">02. Ticket policy</p>
             <h2 className="ha-title mt-2 text-2xl">예매 및 판매 정책</h2>
             <div className="mt-5 grid gap-4 text-sm sm:grid-cols-2">
               <p>

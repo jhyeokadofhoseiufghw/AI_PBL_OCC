@@ -42,7 +42,3 @@ export async function getEventReservationOptions(eventId: string) {
   ]);
   return { ticketTypes, seats };
 }
-
-export async function getEventFeed(eventId: string) {
-  return getSql()`SELECT id, image_url, content, created_at FROM feed_posts WHERE event_id = ${eventId} ORDER BY created_at DESC`;
-}

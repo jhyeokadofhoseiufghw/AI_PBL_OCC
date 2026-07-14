@@ -3,12 +3,14 @@
 ## 1. 권장 기술 스택
 
 ### 프론트엔드
+
 - **Next.js (App Router)**
 - TypeScript
 - Tailwind CSS
 - shadcn/ui (선택)
 
 ### 백엔드 / DB
+
 - **Neon DB (최종 선택)**
   - Serverless Postgres
   - 서버 전용 `DATABASE_URL` 기반 연결
@@ -20,6 +22,7 @@
   - 실제 파일 업로드가 필요하면 Vercel Blob, Cloudinary, S3 같은 외부 스토리지 사용
 
 ### QR
+
 - QR 생성:
   - `lincolnloop/python-qrcode` GitHub 저장소를 클론해 사용
   - 권장 위치: `vendor/python-qrcode`
@@ -33,9 +36,11 @@
 ## 2. 구현 전략
 
 ## 원칙 1. Server Actions 우선
+
 폼 제출 / 승인 / 취소 / 체크인 같은 핵심 액션은 Server Action으로 처리한다.
 
 ## 원칙 2. 페이지보다 도메인 우선
+
 아래 단위로 코드를 나누는 것을 권장한다.
 
 ```txt
@@ -59,7 +64,9 @@ vendor/
 ```
 
 ## 원칙 3. UI보다 운영 흐름 우선
+
 예쁜 애니메이션보다 아래 흐름이 먼저 완성되어야 한다.
+
 - 공연 생성
 - 예매 신청
 - 입금 승인
@@ -72,11 +79,13 @@ vendor/
 ## 3. Neon DB 사용 가이드
 
 ### 연결 방식
+
 - 서버 코드에서만 `DATABASE_URL`을 사용한다.
 - 브라우저에 DB 연결 문자열을 노출하지 않는다.
 - Server Actions 또는 서버 전용 repository/helper 함수에서만 쿼리를 실행한다.
 
 ### 파일 저장
+
 - `event-posters`, `feed-images` 같은 파일은 Neon DB에 직접 저장하지 않는다.
 - MVP에서는 이미지 URL 입력 방식으로 시작할 수 있다.
 - 업로드 기능이 필요해지면 별도 스토리지 서비스를 붙인다.
@@ -84,6 +93,7 @@ vendor/
 - 생성된 QR 파일을 보관해야 할 경우에도 DB에는 파일이 아니라 URL만 저장한다.
 
 ### DB 테이블
+
 - organizers
 - events
 - ticket_types
@@ -97,6 +107,7 @@ vendor/
 ## 4. AI 바이브 코딩 운영 방식
 
 ## QR 생성 구현 메모
+
 - `vendor/python-qrcode`에 `https://github.com/lincolnloop/python-qrcode`를 클론한다.
 - Python 실행 환경에는 `qrcode[pil]` 또는 클론 저장소의 의존성을 설치한다.
 - 서버에서는 `scripts/qr/generate_qr.py` wrapper를 통해 로컬 클론 코드를 호출한다.
@@ -106,6 +117,7 @@ vendor/
 - Python QR 생성 실패 시 상세 조회 화면은 QR 대신 재시도 가능한 오류 상태를 보여준다.
 
 ## QR 체크인 스캐너 구현 메모
+
 - 설치 대상 패키지: `@yudiel/react-qr-scanner`
 - 체크인 화면은 클라이언트 컴포넌트로 구현한다.
 - `@yudiel/react-qr-scanner`의 `Scanner` 컴포넌트를 사용한다.
@@ -119,22 +131,28 @@ vendor/
 - 카메라 권한 거부, 지원하지 않는 브라우저, HTTPS가 아닌 환경에 대한 오류 상태를 제공한다.
 
 ## Gemini CLI / Antigravity 사용 시 작업 단위 추천
+
 ### Step 1. 인증
+
 - Organizer 회원가입 / 로그인
 - 보호 라우트
 
 ### Step 2. 공연 생성
+
 - 이벤트 생성 폼
 - 단일 티켓 가격 / 티켓 타입 / 좌석 생성
 
 ### Step 3. 피드
-- 게시글 작성 / 홈 피드 / 공연 상세 피드
+
+- 공연별 최대 3개 게시글 작성 / 홈 통합 피드
 
 ### Step 4. 예매
+
 - 선착순 / 좌석 지정 예매
 - 승인 여부 확인 / 상세 조회
 
 ### Step 5. 운영
+
 - 입금 승인 / 대기열 / 체크인
 - Python QR 생성기 연동
 - `@yudiel/react-qr-scanner` 기반 휴대폰 카메라 체크인
@@ -144,6 +162,7 @@ vendor/
 ## 5. 구현 우선순위
 
 ### P0
+
 - Organizer 인증
 - 공연 생성
 - 공연 목록
@@ -155,12 +174,13 @@ vendor/
 - `@yudiel/react-qr-scanner` 기반 체크인
 
 ### P1
+
 - 홈 피드
-- 공연 상세 피드
 - 대시보드 통계
 - 대기열 전환
 
 ### P2
+
 - UI polish
 - 검색/필터 강화
 - 운영 편의 개선
@@ -168,7 +188,9 @@ vendor/
 ---
 
 ## 6. 좌석 지정 UI 구현 메모
+
 4일 MVP 기준에서는 다음 정도가 적절하다.
+
 - 공연에 단일 티켓 가격을 설정
 - 좌석을 카드/버튼 그리드로 렌더링
 - 좌석 카드에는 좌석명과 공연 단일 가격을 표시
@@ -179,6 +201,7 @@ vendor/
 ---
 
 ## 7. 테스트 포인트
+
 - 같은 좌석 중복 예약 방지
 - 한 예매의 복수 좌석 연결 수와 `quantity` 일치 여부 확인
 - 취소 후 좌석 재예매 가능 여부와 기존 선택 좌석 이력 보존 확인

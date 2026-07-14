@@ -517,28 +517,51 @@ export async function deleteTicketType(formData: FormData) {
 
 export async function createFeedPost(formData: FormData) {
   const eventId = text(formData, "eventId");
-  const { event, sql } = await requireOwnedEvent(eventId);
-  const imageUrl = z
-    .string()
-    .trim()
-    .url()
-    .parse(await resolveImageUrl(formData, "imageUrl", "image"));
-  const content = z
+  const { sql } = await requireOwnedEvent(eventId);
+  const countRows =
+    await sql`SELECT COUNT(*)::int count FROM feed_posts WHERE event_id=${eventId}`;
+  if (Number(countRows[0].count) >= 3)
+    redirect(`/dashboard/events/${eventId}/feed?error=limit` as Route);
+  const parsedContent = z
     .string()
     .trim()
     .min(1)
     .max(3000)
-    .parse(text(formData, "content"));
-  await sql`INSERT INTO feed_posts (event_id, image_url, content) VALUES (${eventId}, ${imageUrl}, ${content})`;
+    .safeParse(text(formData, "content"));
+  if (!parsedContent.success)
+    redirect(`/dashboard/events/${eventId}/feed?error=content` as Route);
+
+  let resolvedImageUrl: string;
+  try {
+    resolvedImageUrl = await resolveImageUrl(formData, "imageUrl", "image");
+  } catch {
+    redirect(`/dashboard/events/${eventId}/feed?error=image-file` as Route);
+  }
+  const parsedImageUrl = z.string().trim().url().safeParse(resolvedImageUrl);
+  if (!parsedImageUrl.success)
+    redirect(`/dashboard/events/${eventId}/feed?error=image` as Route);
+
+  const imageUrl = parsedImageUrl.data;
+  const content = parsedContent.data;
+  const [, inserted] = await sql.transaction((tx) => [
+    tx`UPDATE events SET updated_at=updated_at WHERE id=${eventId} RETURNING id`,
+    tx`
+      INSERT INTO feed_posts (event_id,image_url,content)
+      SELECT ${eventId},${imageUrl},${content}
+      WHERE (SELECT COUNT(*) FROM feed_posts WHERE event_id=${eventId}) < 3
+      RETURNING id
+    `,
+  ]);
+  if (!inserted[0])
+    redirect(`/dashboard/events/${eventId}/feed?error=limit` as Route);
   revalidatePath(`/dashboard/events/${eventId}/feed`);
-  revalidatePath(`/events/${event.slug}`);
   revalidatePath("/feed");
 }
 
 export async function updateFeedPost(formData: FormData) {
   const eventId = text(formData, "eventId");
   const postId = text(formData, "postId");
-  const { event, sql } = await requireOwnedEvent(eventId);
+  const { sql } = await requireOwnedEvent(eventId);
   const imageUrl = z
     .string()
     .trim()
@@ -552,16 +575,14 @@ export async function updateFeedPost(formData: FormData) {
     .parse(text(formData, "content"));
   await sql`UPDATE feed_posts SET image_url=${imageUrl}, content=${content} WHERE id=${postId} AND event_id=${eventId}`;
   revalidatePath(`/dashboard/events/${eventId}/feed`);
-  revalidatePath(`/events/${event.slug}`);
   revalidatePath("/feed");
 }
 
 export async function deleteFeedPost(formData: FormData) {
   const eventId = text(formData, "eventId");
   const postId = text(formData, "postId");
-  const { event, sql } = await requireOwnedEvent(eventId);
+  const { sql } = await requireOwnedEvent(eventId);
   await sql`DELETE FROM feed_posts WHERE id=${postId} AND event_id=${eventId}`;
   revalidatePath(`/dashboard/events/${eventId}/feed`);
-  revalidatePath(`/events/${event.slug}`);
   revalidatePath("/feed");
 }
