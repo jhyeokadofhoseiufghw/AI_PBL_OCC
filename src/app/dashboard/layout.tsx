@@ -1,4 +1,5 @@
 import Link from "next/link";
+import type { Route } from "next";
 
 import { BrandLogo } from "@/components/brand-logo";
 import { signOutOrganizer } from "@/features/auth/actions";
@@ -9,6 +10,7 @@ const nav = [
   ["/dashboard", "▦", "대시보드"],
   ["/dashboard/events", "◫", "공연 관리"],
   ["/dashboard/events/new", "+", "공연 생성"],
+  ["/dashboard/profile", "●", "기획자 정보"],
 ] as const;
 
 export default async function DashboardLayout({
@@ -35,7 +37,7 @@ export default async function DashboardLayout({
           {nav.map(([href, icon, label]) => (
             <Link
               className="flex items-center gap-3 rounded-xl px-4 py-3 text-sm font-semibold text-[#eaddff] transition hover:bg-white/10 hover:text-white"
-              href={href}
+              href={href as Route}
               key={href}
             >
               <span className="grid h-7 w-7 place-items-center text-lg">
@@ -100,7 +102,7 @@ export default async function DashboardLayout({
             {nav.map(([href, , label]) => (
               <Link
                 className="whitespace-nowrap rounded-full bg-[#eff3ff] px-3 py-1.5 text-xs font-bold text-[#420093]"
-                href={href}
+                href={href as Route}
                 key={href}
               >
                 {label}

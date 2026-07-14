@@ -1,6 +1,7 @@
 "use server";
 
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { getSql } from "@/lib/db/client";
@@ -8,10 +9,12 @@ import { hashPassword, verifyPassword } from "@/lib/auth/password";
 import {
   createOrganizerSession,
   deleteOrganizerSession,
+  requireOrganizer,
 } from "@/lib/auth/session";
 import { consumeRateLimit } from "@/lib/security/rate-limit";
 
 export type AuthActionState = { error?: string };
+export type OrganizerProfileState = { error?: string; success?: string };
 
 const emailSchema = z
   .string()
@@ -104,4 +107,39 @@ export async function signInOrganizer(
 export async function signOutOrganizer() {
   await deleteOrganizerSession();
   redirect("/login");
+}
+
+export async function updateOrganizerProfile(
+  _: OrganizerProfileState,
+  formData: FormData,
+): Promise<OrganizerProfileState> {
+  const session = await requireOrganizer();
+  const result = signUpSchema.omit({ password: true }).safeParse({
+    email: value(formData, "email"),
+    name: value(formData, "name"),
+    phone: value(formData, "phone"),
+    organizationName: value(formData, "organizationName"),
+  });
+  if (!result.success)
+    return {
+      error: result.error.issues[0]?.message ?? "입력값을 확인해주세요.",
+    };
+
+  const sql = getSql();
+  const duplicate = await sql`
+    SELECT 1 FROM organizers
+    WHERE email=${result.data.email} AND id<>${session.organizerId}
+    LIMIT 1
+  `;
+  if (duplicate[0]) return { error: "이미 사용 중인 이메일입니다." };
+
+  const rows = await sql`
+    UPDATE organizers
+    SET email=${result.data.email},name=${result.data.name},phone=${result.data.phone},organization_name=${result.data.organizationName}
+    WHERE id=${session.organizerId}
+    RETURNING id
+  `;
+  if (!rows[0]) return { error: "기획자 정보를 찾을 수 없습니다." };
+  revalidatePath("/dashboard", "layout");
+  return { success: "기획자 정보를 저장했습니다." };
 }
