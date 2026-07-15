@@ -26,6 +26,14 @@ export default async function EventPreviewPage({
       <p className="mt-6 rounded-lg bg-amber-50 p-3 text-center text-sm text-amber-800">
         관객용 모바일 미리보기
       </p>
+      {event.status === "HIDDEN" ? (
+        <div className="mt-3 rounded-lg bg-[#f3efff] p-3 text-sm leading-6 text-[#420093]">
+          <p className="font-bold">지금은 비공개 상태입니다.</p>
+          <p>
+            공연을 공개한 후 피드를 추가하면 홈 화면에 노출됩니다.
+          </p>
+        </div>
+      ) : null}
       <div
         className={`mt-5 aspect-[1/1.414] rounded-xl bg-cover bg-center shadow-lg ${event.poster_image_url ? "" : "poster-fallback"}`}
         style={
