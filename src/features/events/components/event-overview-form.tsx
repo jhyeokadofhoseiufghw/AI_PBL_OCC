@@ -1,7 +1,8 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useRef, useState } from "react";
 
+import { generateEventDescriptionDraft } from "@/features/promotion/actions";
 import { updateEventOverview } from "../actions";
 
 const input = "ha-input mt-2";
@@ -16,10 +17,37 @@ function dateTime(value: unknown) {
 
 export function EventOverviewForm({ event }: { event: EventData }) {
   const [state, action, pending] = useActionState(updateEventOverview, {});
+  const formRef = useRef<HTMLFormElement>(null);
+  const [descriptionAiPending, setDescriptionAiPending] = useState(false);
+  const [descriptionAiError, setDescriptionAiError] = useState<string>();
+  async function generateDescription() {
+    if (!formRef.current) return;
+    setDescriptionAiPending(true);
+    setDescriptionAiError(undefined);
+    try {
+      const formData = new FormData();
+      for (const name of ["title", "genre", "venue", "description"]) {
+        const field = formRef.current.elements.namedItem(name);
+        if (
+          field instanceof HTMLInputElement ||
+          field instanceof HTMLTextAreaElement
+        )
+          formData.set(name, field.value);
+      }
+      const result = await generateEventDescriptionDraft(formData);
+      if (result.error) return setDescriptionAiError(result.error);
+      const field = formRef.current.elements.namedItem("description");
+      if (field instanceof HTMLTextAreaElement && result.description)
+        field.value = result.description;
+    } finally {
+      setDescriptionAiPending(false);
+    }
+  }
   return (
     <form
       action={action}
       className="ha-card mt-6 grid gap-5 p-6 sm:grid-cols-2 sm:p-8"
+      ref={formRef}
     >
       <input name="eventId" type="hidden" value={String(event.id)} />
       <label className="font-medium sm:col-span-2">
@@ -59,7 +87,17 @@ export function EventOverviewForm({ event }: { event: EventData }) {
         />
       </label>
       <label className="font-medium sm:col-span-2">
-        상세 설명
+        <span className="flex flex-wrap items-center justify-between gap-2">
+          상세 설명
+          <button
+            className="rounded-lg border border-[#d3bbff] bg-[#f5efff] px-3 py-2 text-xs font-bold text-[#420093] transition hover:bg-[#ebddff] disabled:opacity-60"
+            disabled={descriptionAiPending}
+            onClick={generateDescription}
+            type="button"
+          >
+            {descriptionAiPending ? "AI 작성 중..." : "✨ AI 상세 설명"}
+          </button>
+        </span>
         <textarea
           className={input}
           defaultValue={String(event.description)}
@@ -67,6 +105,15 @@ export function EventOverviewForm({ event }: { event: EventData }) {
           required
           rows={5}
         />
+        {descriptionAiError ? (
+          <span className="mt-2 block text-sm font-normal text-red-700" role="alert">
+            {descriptionAiError}
+          </span>
+        ) : (
+          <span className="mt-2 block text-xs font-normal leading-5 text-zinc-500">
+            기존 설명을 바탕으로 AI가 공연 상세 소개를 다시 작성합니다.
+          </span>
+        )}
       </label>
       <label className="font-medium">
         포스터 URL

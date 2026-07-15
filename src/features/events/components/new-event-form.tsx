@@ -5,6 +5,7 @@ import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 import { createEvent } from "../actions";
 import { validateEventImage } from "../image-upload";
 import { calculateReservationTotal, formatKrw } from "../pricing";
+import { generateEventDescriptionDraft } from "@/features/promotion/actions";
 import { SeatLayoutBuilder } from "./seat-layout-builder";
 
 const inputClassName = "ha-input mt-2";
@@ -22,6 +23,8 @@ export function NewEventForm() {
   const [imageFileNames, setImageFileNames] = useState<
     Partial<Record<"posterImage" | "detailImage", string>>
   >({});
+  const [descriptionAiPending, setDescriptionAiPending] = useState(false);
+  const [descriptionAiError, setDescriptionAiError] = useState<string>();
   const previewTotal = useMemo(
     () =>
       calculateReservationTotal(
@@ -64,6 +67,33 @@ export function NewEventForm() {
       [field]: file && !error ? file.name : undefined,
     }));
     if (error) event.target.value = "";
+  }
+  async function generateDescription() {
+    if (!formRef.current) return;
+    setDescriptionAiPending(true);
+    setDescriptionAiError(undefined);
+    try {
+      const formData = new FormData();
+      for (const name of ["title", "genre", "venue", "description"]) {
+        const field = formRef.current.elements.namedItem(name);
+        if (
+          field instanceof HTMLInputElement ||
+          field instanceof HTMLTextAreaElement ||
+          field instanceof HTMLSelectElement
+        )
+          formData.set(name, field.value);
+      }
+      const result = await generateEventDescriptionDraft(formData);
+      if (result.error) {
+        setDescriptionAiError(result.error);
+        return;
+      }
+      const field = formRef.current.elements.namedItem("description");
+      if (field instanceof HTMLTextAreaElement && result.description)
+        field.value = result.description;
+    } finally {
+      setDescriptionAiPending(false);
+    }
   }
 
   return (
@@ -192,13 +222,34 @@ export function NewEventForm() {
         </label>
 
         <label className="sm:col-span-2">
-          <span className="text-sm font-medium text-zinc-800">상세 설명</span>
+          <span className="flex flex-wrap items-center justify-between gap-2 text-sm font-medium text-zinc-800">
+            상세 설명
+            <button
+              className="rounded-lg border border-[#d3bbff] bg-[#f5efff] px-3 py-2 text-xs font-bold text-[#420093] transition hover:bg-[#ebddff] disabled:opacity-60"
+              disabled={descriptionAiPending}
+              onClick={generateDescription}
+              type="button"
+            >
+              {descriptionAiPending ? "AI 작성 중..." : "✨ AI 상세 설명"}
+            </button>
+          </span>
           <textarea
             className={inputClassName}
             name="description"
+            placeholder="핵심 줄거리나 전달하고 싶은 내용을 간단히 적은 뒤 AI 상세 설명을 눌러보세요."
             required
             rows={5}
           />
+          {descriptionAiError ? (
+            <span className="mt-2 block text-sm text-red-700" role="alert">
+              {descriptionAiError}
+            </span>
+          ) : (
+            <span className="mt-2 block text-xs leading-5 text-zinc-500">
+              공연명과 장르를 입력하면 AI가 초안을 작성합니다. 작성한 핵심
+              이야기가 있으면 해당 내용을 살려 다듬습니다.
+            </span>
+          )}
         </label>
 
         <div>
