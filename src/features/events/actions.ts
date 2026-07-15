@@ -510,7 +510,7 @@ export async function createFeedPost(formData: FormData) {
   const { sql } = await requireOwnedEvent(eventId);
   const countRows =
     await sql`SELECT COUNT(*)::int count FROM feed_posts WHERE event_id=${eventId}`;
-  if (Number(countRows[0].count) >= 3)
+  if (Number(countRows[0].count) >= 1)
     redirect(`/dashboard/events/${eventId}/feed?error=limit` as Route);
   const parsedContent = z
     .string()
@@ -538,7 +538,7 @@ export async function createFeedPost(formData: FormData) {
     tx`
       INSERT INTO feed_posts (event_id,image_url,content)
       SELECT ${eventId},${imageUrl},${content}
-      WHERE (SELECT COUNT(*) FROM feed_posts WHERE event_id=${eventId}) < 3
+      WHERE (SELECT COUNT(*) FROM feed_posts WHERE event_id=${eventId}) < 1
       RETURNING id
     `,
   ]);

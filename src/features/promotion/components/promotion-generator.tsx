@@ -12,7 +12,13 @@ type PromotionInput = {
   venue: string;
 };
 
-export function PromotionGenerator({ initial }: { initial: PromotionInput }) {
+export function PromotionGenerator({
+  initial,
+  onUse,
+}: {
+  initial: PromotionInput;
+  onUse?: (content: string) => void;
+}) {
   const [state, action, pending] = useActionState(generatePromotionCopy, {});
   const [copied, setCopied] = useState(false);
   const [selectedOption, setSelectedOption] = useState<string>();
@@ -72,13 +78,20 @@ export function PromotionGenerator({ initial }: { initial: PromotionInput }) {
               className="ha-button-primary w-full px-5 py-3"
               onClick={async () => {
                 if (!selected) return;
-                await navigator.clipboard.writeText(selected);
+                if (onUse) onUse(selected);
+                else await navigator.clipboard.writeText(selected);
                 setCopied(true);
                 window.setTimeout(() => setCopied(false), 1500);
               }}
               type="button"
             >
-              {copied ? "선택한 문구를 복사했습니다" : "선택한 피드 문구 복사"}
+              {copied
+                ? onUse
+                  ? "피드 본문에 적용했습니다"
+                  : "선택한 문구를 복사했습니다"
+                : onUse
+                  ? "선택한 문구를 피드에 적용"
+                  : "선택한 피드 문구 복사"}
             </button>
           </div>
         ) : (

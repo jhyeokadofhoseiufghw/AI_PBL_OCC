@@ -465,10 +465,10 @@ for (const seats of seatsByEvent.values()) {
 }
 
 events.forEach((event, eventIndex) => {
-  event.feeds.forEach(([imageUrl, content], feedIndex) => {
+  event.feeds.slice(0, 1).forEach(([imageUrl, content]) => {
     queries.push(sql`
       INSERT INTO feed_posts (event_id,image_url,content,created_at)
-      VALUES (${event.id},${imageUrl},${content},NOW()-${eventIndex * 3 + feedIndex + 1}*INTERVAL '3 hours')
+      VALUES (${event.id},${imageUrl},${content},NOW()-${eventIndex + 1}*INTERVAL '3 hours')
     `);
   });
 });

@@ -163,7 +163,7 @@ CREATE INDEX IF NOT EXISTS idx_reservation_tickets_checked_in ON reservation_tic
 CREATE UNIQUE INDEX IF NOT EXISTS idx_reservation_seats_active_seat
     ON reservation_seats(seat_id)
     WHERE released_at IS NULL;
-CREATE INDEX IF NOT EXISTS idx_feed_posts_event ON feed_posts(event_id);
+CREATE UNIQUE INDEX IF NOT EXISTS idx_feed_posts_event_unique ON feed_posts(event_id);
 CREATE INDEX IF NOT EXISTS idx_feed_posts_recent ON feed_posts(event_id, created_at DESC);
 
 -- Automatic updated_at triggers

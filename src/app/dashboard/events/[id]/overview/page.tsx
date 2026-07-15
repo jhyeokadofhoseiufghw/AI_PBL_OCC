@@ -74,7 +74,8 @@ export default async function Page({
       <EventTabs current="overview" eventId={id} />
       {query.published ? (
         <p className="mt-5 rounded-lg bg-[#e8fff5] p-3 text-sm text-[#006c4c]">
-          공연을 공개했습니다.
+          공개 완료! 피드를 만들면 홈 화면에서 공연을 홍보할 수 있습니다. 상단의
+          피드 탭에서 대표 홍보 피드를 만들어보세요.
         </p>
       ) : null}
       {query.error ? (

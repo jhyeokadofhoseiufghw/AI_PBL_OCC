@@ -6,7 +6,6 @@ const tabs = [
   ["seats", "좌석"],
   ["ticket-types", "티켓 타입"],
   ["feed", "피드"],
-  ["promotion", "AI 피드"],
   ["reservations", "예매"],
   ["check-in", "체크인"],
 ] as const;
