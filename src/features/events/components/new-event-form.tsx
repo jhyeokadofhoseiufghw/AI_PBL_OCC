@@ -128,8 +128,11 @@ export function NewEventForm() {
             </option>
             <option value="연극">연극</option>
             <option value="뮤지컬">뮤지컬</option>
-            <option value="밴드/라이브">밴드/라이브</option>
+            <option value="음악">음악</option>
             <option value="무용/댄스">무용/댄스</option>
+            <option value="전시">전시</option>
+            <option value="강연/토크">강연/토크</option>
+            <option value="영화/영상">영화/영상</option>
             <option value="기타">기타</option>
           </select>
         </label>
