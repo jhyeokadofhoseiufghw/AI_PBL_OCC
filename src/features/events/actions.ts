@@ -552,18 +552,28 @@ export async function updateFeedPost(formData: FormData) {
   const eventId = text(formData, "eventId");
   const postId = text(formData, "postId");
   const { sql } = await requireOwnedEvent(eventId);
-  const imageUrl = z
+  let resolvedImageUrl: string;
+  try {
+    resolvedImageUrl = await resolveImageUrl(formData, "imageUrl", "image");
+  } catch {
+    redirect(`/dashboard/events/${eventId}/feed?error=image-file` as Route);
+  }
+  const parsedImageUrl = z
     .string()
     .trim()
     .url()
-    .parse(await resolveImageUrl(formData, "imageUrl", "image"));
-  const content = z
+    .safeParse(resolvedImageUrl);
+  if (!parsedImageUrl.success)
+    redirect(`/dashboard/events/${eventId}/feed?error=image` as Route);
+  const parsedContent = z
     .string()
     .trim()
     .min(1)
     .max(3000)
-    .parse(text(formData, "content"));
-  await sql`UPDATE feed_posts SET image_url=${imageUrl}, content=${content} WHERE id=${postId} AND event_id=${eventId}`;
+    .safeParse(text(formData, "content"));
+  if (!parsedContent.success)
+    redirect(`/dashboard/events/${eventId}/feed?error=content` as Route);
+  await sql`UPDATE feed_posts SET image_url=${parsedImageUrl.data}, content=${parsedContent.data} WHERE id=${postId} AND event_id=${eventId}`;
   revalidatePath(`/dashboard/events/${eventId}/feed`);
   revalidatePath("/feed");
 }
