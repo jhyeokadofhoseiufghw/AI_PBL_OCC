@@ -77,7 +77,7 @@ function TicketQrCarousel({ tickets }: { tickets: TicketView[] }) {
         ) : ticket.qrImageData ? (
           <Image
             alt={`티켓 ${ticket.number} 입장 QR 코드`}
-            className="mx-auto mt-3 h-56 w-56"
+            className="mx-auto mt-3 h-56 w-56 max-sm:h-auto max-sm:max-w-full"
             height={224}
             src={ticket.qrImageData}
             unoptimized

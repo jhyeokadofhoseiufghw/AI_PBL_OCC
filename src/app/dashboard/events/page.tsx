@@ -53,13 +53,15 @@ export default async function Page({
           <table className="min-w-full text-left text-sm">
             <thead>
               <tr className="border-b border-[#dfe3ec] bg-[#eff3ff] text-xs uppercase tracking-wider text-[#60687a]">
-                <th className="p-4">공연명</th>
+                <th className="p-4 max-sm:min-w-48">공연명</th>
                 <th className="p-4">날짜</th>
                 <th className="p-4">상태</th>
                 <th className="p-4">예매</th>
                 <th className="p-4">입금 대기</th>
                 <th className="p-4">체크인</th>
-                <th className="p-4">관리</th>
+                <th className="p-4 max-sm:sticky max-sm:right-0 max-sm:z-10 max-sm:bg-[#eff3ff] max-sm:shadow-[-8px_0_12px_-12px_rgba(37,0,89,0.45)]">
+                  관리
+                </th>
               </tr>
             </thead>
             <tbody>
@@ -68,7 +70,7 @@ export default async function Page({
                   className="border-b border-[#e5e7eb] transition hover:bg-[#f8f9ff]"
                   key={String(event.id)}
                 >
-                  <td className="p-4">
+                  <td className="p-4 max-sm:min-w-48">
                     <Link
                       className="font-bold hover:text-[#420093]"
                       href={`/dashboard/events/${String(event.id)}/overview`}
@@ -90,7 +92,7 @@ export default async function Page({
                   <td className="p-4">{Number(event.reservations)}건</td>
                   <td className="p-4">{Number(event.pending)}건</td>
                   <td className="p-4">{Number(event.checked_in)}건</td>
-                  <td className="p-4">
+                  <td className="p-4 max-sm:sticky max-sm:right-0 max-sm:bg-white max-sm:shadow-[-8px_0_12px_-12px_rgba(37,0,89,0.45)]">
                     <Link
                       className="ha-button-secondary px-3 py-2 text-[#420093]"
                       href={`/dashboard/events/${String(event.id)}/reservations`}

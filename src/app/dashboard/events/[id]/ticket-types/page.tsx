@@ -52,7 +52,10 @@ export default async function Page({
             className="ha-card flex flex-wrap gap-2 p-3"
             key={String(type.id)}
           >
-            <form action={updateTicketType} className="flex flex-1 gap-2">
+            <form
+              action={updateTicketType}
+              className="flex flex-1 gap-2 max-sm:min-w-0 max-sm:flex-wrap"
+            >
               <input name="eventId" type="hidden" value={id} />
               <input
                 name="ticketTypeId"
@@ -60,7 +63,7 @@ export default async function Page({
                 value={String(type.id)}
               />
               <input
-                className="w-36 rounded border px-3 py-2"
+                className="w-36 rounded border px-3 py-2 max-sm:w-full"
                 defaultValue={Number(type.price)}
                 min={0}
                 name="price"
@@ -69,7 +72,7 @@ export default async function Page({
                 type="number"
               />
               <input
-                className="flex-1 rounded border px-3 py-2"
+                className="flex-1 rounded border px-3 py-2 max-sm:min-w-0"
                 name="name"
                 defaultValue={String(type.name)}
               />

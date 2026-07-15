@@ -173,7 +173,9 @@ export default async function Page({
               <th className="p-3">입금 / 금액</th>
               <th className="p-3">상태</th>
               <th className="p-3">체크인</th>
-              <th className="p-3">처리</th>
+              <th className="p-3 max-sm:sticky max-sm:right-0 max-sm:z-10 max-sm:min-w-36 max-sm:bg-[#eff3ff] max-sm:shadow-[-8px_0_12px_-12px_rgba(37,0,89,0.45)]">
+                처리
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -232,7 +234,7 @@ export default async function Page({
                     <span className="text-zinc-400">미체크인</span>
                   )}
                 </td>
-                <td className="p-3">
+                <td className="p-3 max-sm:sticky max-sm:right-0 max-sm:min-w-36 max-sm:bg-white max-sm:shadow-[-8px_0_12px_-12px_rgba(37,0,89,0.45)]">
                   <div className="flex flex-wrap gap-2">
                     <OrganizerReservationDetail
                       reservation={{

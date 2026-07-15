@@ -96,7 +96,7 @@ export default async function DashboardLayout({
             </div>
           </div>
           <nav
-            className="flex gap-2 overflow-x-auto border-t border-[#e5e7eb] px-4 py-2 lg:hidden"
+            className="flex gap-2 overflow-x-auto border-t border-[#e5e7eb] px-4 py-2 max-sm:flex-wrap max-sm:overflow-visible lg:hidden"
             aria-label="모바일 운영 메뉴"
           >
             {nav.map(([href, , label]) => (

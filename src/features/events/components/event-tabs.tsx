@@ -18,7 +18,7 @@ export function EventTabs({
 }) {
   return (
     <nav
-      className="mt-6 flex gap-1 overflow-x-auto border-b border-[#dfe3ec]"
+      className="mt-6 flex gap-1 overflow-x-auto border-b border-[#dfe3ec] max-sm:flex-wrap max-sm:overflow-visible"
       aria-label="공연 관리"
     >
       <>

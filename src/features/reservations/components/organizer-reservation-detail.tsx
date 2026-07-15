@@ -74,7 +74,7 @@ export function OrganizerReservationDetail({
                 ) : ticket.qr ? (
                   <Image
                     alt={`티켓 ${ticket.number} QR`}
-                    className="mx-auto mt-2"
+                    className="mx-auto mt-2 max-sm:h-auto max-sm:max-w-full"
                     height={160}
                     src={ticket.qr}
                     unoptimized
