@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { useFormStatus } from "react-dom";
 
 import { createFeedPost, updateFeedPost } from "../actions";
 import { PromotionGenerator } from "@/features/promotion/components/promotion-generator";
@@ -15,6 +16,23 @@ type EventInput = {
 };
 
 type ExistingFeed = { id: string; imageUrl: string; content: string } | null;
+
+function FeedSubmitButton({ existing }: { existing: boolean }) {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      className="ha-button-primary w-full px-5 py-3 disabled:cursor-wait disabled:opacity-60"
+      disabled={pending}
+      type="submit"
+    >
+      {pending
+        ? "이미지 업로드 및 저장 중..."
+        : existing
+          ? "피드 변경사항 저장"
+          : "홈 피드 게시"}
+    </button>
+  );
+}
 
 export function UnifiedFeedManager({
   event,
@@ -90,8 +108,9 @@ export function UnifiedFeedManager({
                   setImageUrl(event.target.value);
                   setPreviewUrl(event.target.value.trim());
                 }}
+                inputMode="url"
                 placeholder="https://..."
-                type="url"
+                type="text"
                 value={imageUrl}
               />
             </label>
@@ -134,9 +153,7 @@ export function UnifiedFeedManager({
                 value={content}
               />
             </label>
-            <button className="ha-button-primary w-full px-5 py-3" type="submit">
-              {existing ? "피드 변경사항 저장" : "홈 피드 게시"}
-            </button>
+            <FeedSubmitButton existing={Boolean(existing)} />
           </div>
 
           <aside className="ha-card overflow-hidden p-4 sm:p-5">

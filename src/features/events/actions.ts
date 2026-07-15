@@ -18,6 +18,18 @@ const optionalUrl = z.union([
   z.literal(""),
   z.string().trim().url("이미지 URL 형식을 확인해주세요."),
 ]);
+const feedImageUrl = z.string().trim().refine(
+  (value) => {
+    if (value.startsWith("/") && !value.startsWith("//")) return true;
+    try {
+      const url = new URL(value);
+      return url.protocol === "http:" || url.protocol === "https:";
+    } catch {
+      return false;
+    }
+  },
+  { message: "이미지 URL 형식을 확인해주세요." },
+);
 const eventSchema = z.object({
   title: z.string().trim().min(1).max(150),
   venue: z.string().trim().min(1).max(200),
@@ -527,7 +539,7 @@ export async function createFeedPost(formData: FormData) {
   } catch {
     redirect(`/dashboard/events/${eventId}/feed?error=image-file` as Route);
   }
-  const parsedImageUrl = z.string().trim().url().safeParse(resolvedImageUrl);
+  const parsedImageUrl = feedImageUrl.safeParse(resolvedImageUrl);
   if (!parsedImageUrl.success)
     redirect(`/dashboard/events/${eventId}/feed?error=image` as Route);
 
@@ -546,6 +558,7 @@ export async function createFeedPost(formData: FormData) {
     redirect(`/dashboard/events/${eventId}/feed?error=limit` as Route);
   revalidatePath(`/dashboard/events/${eventId}/feed`);
   revalidatePath("/feed");
+  redirect(`/dashboard/events/${eventId}/feed` as Route);
 }
 
 export async function updateFeedPost(formData: FormData) {
@@ -558,11 +571,7 @@ export async function updateFeedPost(formData: FormData) {
   } catch {
     redirect(`/dashboard/events/${eventId}/feed?error=image-file` as Route);
   }
-  const parsedImageUrl = z
-    .string()
-    .trim()
-    .url()
-    .safeParse(resolvedImageUrl);
+  const parsedImageUrl = feedImageUrl.safeParse(resolvedImageUrl);
   if (!parsedImageUrl.success)
     redirect(`/dashboard/events/${eventId}/feed?error=image` as Route);
   const parsedContent = z
@@ -576,6 +585,7 @@ export async function updateFeedPost(formData: FormData) {
   await sql`UPDATE feed_posts SET image_url=${parsedImageUrl.data}, content=${parsedContent.data} WHERE id=${postId} AND event_id=${eventId}`;
   revalidatePath(`/dashboard/events/${eventId}/feed`);
   revalidatePath("/feed");
+  redirect(`/dashboard/events/${eventId}/feed` as Route);
 }
 
 export async function deleteFeedPost(formData: FormData) {

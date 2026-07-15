@@ -77,16 +77,18 @@ export default async function DashboardLayout({
             <p className="hidden text-sm font-semibold text-[#4a4453] lg:block">
               공연 운영 센터
             </p>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <span className="ha-status hidden sm:inline-flex">
                 System Operational
               </span>
-              <Link
-                className="text-sm text-[#4a4453] lg:hidden"
-                href="/dashboard/events"
-              >
-                공연 목록
-              </Link>
+              <form action={signOutOrganizer} className="lg:hidden">
+                <button
+                  className="whitespace-nowrap text-xs font-semibold text-[#4a4453] sm:text-sm"
+                  type="submit"
+                >
+                  로그아웃
+                </button>
+              </form>
               <Link
                 className="grid h-9 w-9 place-items-center rounded-full bg-[#ebddff] text-xs font-black text-[#420093]"
                 href="/dashboard"
