@@ -75,7 +75,7 @@ export async function checkInByQr(
     RETURNING rt.reservation_id,rt.ticket_number,rt.seat_id,rt.checked_in_at
   `;
   if (checkedIn[0]) {
-    const at = String(checkedIn[0].checked_in_at);
+    const at = new Date(String(checkedIn[0].checked_in_at)).toISOString();
     const reservationRows = await sql`
       SELECT r.reserver_name,s.label seat_label
       FROM reservations r
