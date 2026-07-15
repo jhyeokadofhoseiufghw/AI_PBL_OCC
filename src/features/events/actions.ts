@@ -9,6 +9,7 @@ import { put } from "@vercel/blob";
 
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
+import { validateEventImage } from "./image-upload";
 
 export type CreateEventState = { error?: string };
 export type EventActionState = { error?: string; success?: string };
@@ -57,10 +58,8 @@ async function resolveImageUrl(
 ) {
   const file = formData.get(fileKey);
   if (file instanceof File && file.size > 0) {
-    if (!file.type.startsWith("image/"))
-      throw new Error("이미지 파일만 업로드할 수 있습니다.");
-    if (file.size > 4 * 1024 * 1024)
-      throw new Error("이미지는 4MB 이하여야 합니다.");
+    const validationError = validateEventImage(file);
+    if (validationError) throw new Error(validationError);
     const blob = await put(`events/${crypto.randomUUID()}-${file.name}`, file, {
       access: "public",
       addRandomSuffix: true,

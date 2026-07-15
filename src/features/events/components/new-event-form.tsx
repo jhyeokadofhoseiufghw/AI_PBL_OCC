@@ -3,6 +3,7 @@
 import { useActionState, useEffect, useMemo, useRef, useState } from "react";
 
 import { createEvent } from "../actions";
+import { validateEventImage } from "../image-upload";
 import { calculateReservationTotal, formatKrw } from "../pricing";
 import { SeatLayoutBuilder } from "./seat-layout-builder";
 
@@ -15,6 +16,12 @@ export function NewEventForm() {
   >("FIRST_COME");
   const [ticketPrice, setTicketPrice] = useState<number | "">(0);
   const [previewQuantity, setPreviewQuantity] = useState(1);
+  const [imageErrors, setImageErrors] = useState<
+    Partial<Record<"posterImage" | "detailImage", string>>
+  >({});
+  const [imageFileNames, setImageFileNames] = useState<
+    Partial<Record<"posterImage" | "detailImage", string>>
+  >({});
   const previewTotal = useMemo(
     () =>
       calculateReservationTotal(
@@ -44,6 +51,19 @@ export function NewEventForm() {
     for (const [name, value] of new FormData(formRef.current).entries())
       if (typeof value === "string") draft[name] = value;
     draftRef.current = draft;
+  }
+  function validateSelectedImage(
+    event: React.ChangeEvent<HTMLInputElement>,
+    field: "posterImage" | "detailImage",
+  ) {
+    const file = event.target.files?.[0];
+    const error = file ? validateEventImage(file) : null;
+    setImageErrors((current) => ({ ...current, [field]: error ?? undefined }));
+    setImageFileNames((current) => ({
+      ...current,
+      [field]: file && !error ? file.name : undefined,
+    }));
+    if (error) event.target.value = "";
   }
 
   return (
@@ -181,37 +201,93 @@ export function NewEventForm() {
           />
         </label>
 
-        <label>
+        <div>
           <span className="text-sm font-medium text-zinc-800">
             대표 포스터 URL
           </span>
           <input className={inputClassName} name="posterImageUrl" type="url" />
           <span className="mt-2 block text-xs text-zinc-500">
-            또는 이미지 파일 업로드
+            또는 이미지 파일 업로드 (최대 4MB)
           </span>
-          <input
-            accept="image/*"
-            className={inputClassName}
-            name="posterImage"
-            type="file"
-          />
-        </label>
+          <div className="mt-2 flex min-h-12 items-center gap-3 rounded-xl border border-[#ccc3d6] bg-white p-1.5">
+            <label
+              className="shrink-0 cursor-pointer rounded-lg bg-[#420093] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#712ae2]"
+              htmlFor="poster-image"
+            >
+              파일 선택
+            </label>
+            <span className="min-w-0 truncate text-sm text-zinc-500">
+              {imageFileNames.posterImage ?? "선택된 파일 없음"}
+            </span>
+            <input
+              accept="image/*"
+              aria-describedby={
+                imageErrors.posterImage ? "poster-image-error" : undefined
+              }
+              aria-invalid={Boolean(imageErrors.posterImage)}
+              className="sr-only"
+              id="poster-image"
+              name="posterImage"
+              onChange={(event) =>
+                validateSelectedImage(event, "posterImage")
+              }
+              type="file"
+            />
+          </div>
+          {imageErrors.posterImage ? (
+            <span
+              className="mt-2 block text-sm text-red-700"
+              id="poster-image-error"
+              role="alert"
+            >
+              {imageErrors.posterImage}
+            </span>
+          ) : null}
+        </div>
 
-        <label>
+        <div>
           <span className="text-sm font-medium text-zinc-800">
             상세 이미지 URL
           </span>
           <input className={inputClassName} name="detailImageUrl" type="url" />
           <span className="mt-2 block text-xs text-zinc-500">
-            또는 이미지 파일 업로드
+            또는 이미지 파일 업로드 (최대 4MB)
           </span>
-          <input
-            accept="image/*"
-            className={inputClassName}
-            name="detailImage"
-            type="file"
-          />
-        </label>
+          <div className="mt-2 flex min-h-12 items-center gap-3 rounded-xl border border-[#ccc3d6] bg-white p-1.5">
+            <label
+              className="shrink-0 cursor-pointer rounded-lg bg-[#420093] px-4 py-2.5 text-sm font-bold text-white transition-colors hover:bg-[#712ae2]"
+              htmlFor="detail-image"
+            >
+              파일 선택
+            </label>
+            <span className="min-w-0 truncate text-sm text-zinc-500">
+              {imageFileNames.detailImage ?? "선택된 파일 없음"}
+            </span>
+            <input
+              accept="image/*"
+              aria-describedby={
+                imageErrors.detailImage ? "detail-image-error" : undefined
+              }
+              aria-invalid={Boolean(imageErrors.detailImage)}
+              className="sr-only"
+              id="detail-image"
+              name="detailImage"
+              onChange={(event) =>
+                validateSelectedImage(event, "detailImage")
+              }
+              type="file"
+            />
+          </div>
+          {imageErrors.detailImage ? (
+            <span
+              className="mt-2 block text-sm text-red-700"
+              id="detail-image-error"
+              role="alert"
+            >
+              {imageErrors.detailImage}
+            </span>
+          ) : null}
+        </div>
 
         <label>
           <span className="text-sm font-medium text-zinc-800">공연 시작</span>
