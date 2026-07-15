@@ -341,26 +341,12 @@ const events = [
     venue: "대학로 소극장 틈",
     genre: "연극",
     description: "졸업 논문 마감을 앞둔 사학과 학생 네 명이 밤새 학과 자료실을 지키며 벌어지는 창작극입니다. 기록으로 남은 사실과 각자가 기억하는 진실이 엇갈리는 순간을 유쾌하고 따뜻하게 풀어냅니다.\n\n공연은 85분이며 48석 전석 자유석입니다. 공연 시작 20분 전부터 입장할 수 있습니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/night-without-footnotes/poster.png", detail: "/demo/night-without-footnotes/detail.png",
     runtime: 85, price: 14000, bank: ["토스뱅크", "1001-2847-6103", "박소은"],
     inquiry: "공연 하루 전까지 전액 환불됩니다. 문의: page.turner@example.com",
     type: "FIRST_COME", capacity: 48, max: 4, days: 23,
     ticketTypes: [["일반", 14000], ["대학생", 10000]],
-    feeds: [["/demo/placeholder-event-image.svg", "각주에 가려졌던 네 사람의 진짜 이야기가 오늘 밤 시작됩니다. 자료실 문이 닫힌 뒤 펼쳐지는 사학과 청춘극을 만나보세요."]],
-  },
-  {
-    organizer: 6,
-    title: "종이별의 지도",
-    slug: "map-of-paper-stars-2026",
-    venue: "성수 창작공간 모서리",
-    genre: "뮤지컬",
-    description: "천문 동아리방 철거를 하루 앞둔 밤, 다섯 학생이 오래된 관측 일지를 펼치며 잊고 있던 약속을 노래하는 창작 뮤지컬입니다. 피아노와 기타의 소박한 라이브 연주로 열 곡을 들려드립니다.\n\n러닝타임은 110분이며 인터미션 15분이 포함됩니다. 72석 지정 좌석제로 운영합니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
-    runtime: 110, price: 24000, bank: ["토스뱅크", "1001-2847-6103", "박소은"],
-    inquiry: "공연 3일 전까지 전액 환불됩니다. 문의: page.turner@example.com",
-    type: "SEAT_SELECTION", seatRows: 8, seatColumns: 9, max: 4, days: 38,
-    ticketTypes: [["일반", 24000], ["대학생", 19000]],
-    feeds: [["/demo/placeholder-event-image.svg", "접어둔 종이별마다 우리가 놓친 약속이 하나씩 남아 있습니다. 작은 동아리방에서 우주보다 넓게 펼쳐질 노래를 만나보세요."]],
+    feeds: [["/demo/night-without-footnotes/feed.png", "각주에 가려졌던 네 사람의 진짜 이야기가 오늘 밤 시작됩니다. 자료실 문이 닫힌 뒤 펼쳐지는 사학과 청춘극을 만나보세요."]],
   },
   {
     organizer: 7,
@@ -369,12 +355,12 @@ const events = [
     venue: "망원 생활음악실",
     genre: "음악",
     description: "수업을 마친 대학생 보컬 다섯 명이 준비한 아카펠라 공연입니다. 익숙한 대중음악을 새롭게 편곡한 곡과 짧은 자작곡을 목소리만으로 들려드립니다.\n\n공연은 75분이며 60명 선착순 입장입니다. 곡 사이에 편곡 과정에 관한 짧은 이야기가 이어집니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/harmony-at-four/poster.png", detail: "/demo/harmony-at-four/detail.png",
     runtime: 75, price: 16000, bank: ["신한은행", "110-638-274910", "윤태경"],
     inquiry: "공연 2일 전까지 전액 환불됩니다. 문의: orbit.music@example.com",
     type: "FIRST_COME", capacity: 60, max: 4, days: 16,
     ticketTypes: [["일반", 16000], ["대학생", 12000]],
-    feeds: [["/demo/placeholder-event-image.svg", "악기 없이 다섯 목소리만으로 오후의 공기를 채웁니다. 익숙한 노래가 새로운 화음으로 바뀌는 순간을 함께해주세요."]],
+    feeds: [["/demo/harmony-at-four/poster.png", "악기 없이 다섯 목소리만으로 오후의 공기를 채웁니다. 익숙한 노래가 새로운 화음으로 바뀌는 순간을 함께해주세요."]],
   },
   {
     organizer: 7,
@@ -383,12 +369,12 @@ const events = [
     venue: "연남 지하연습실 B1",
     genre: "음악",
     description: "학교와 아르바이트를 오가며 음악을 만든 세 팀이 함께 여는 소규모 라이브입니다. 포크, 인디 팝, 로파이 록을 오가며 각 팀의 자작곡을 가장 가까운 거리에서 들려드립니다.\n\n공연은 95분이며 50명 선착순 입장입니다. 플래시 없는 휴대폰 촬영은 가능합니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/concert-under-stairs/poster.png", detail: null,
     runtime: 95, price: 18000, bank: ["신한은행", "110-638-274910", "윤태경"],
     inquiry: "공연 전날까지 전액 환불됩니다. 문의: orbit.music@example.com",
     type: "FIRST_COME", capacity: 50, max: 4, days: 29,
     ticketTypes: [["일반", 18000], ["대학생", 14000]],
-    feeds: [["/demo/placeholder-event-image.svg", "계단 아래 작은 방에서 세 팀의 새 노래가 처음 울립니다. 무대 바로 앞에서 시작되는 가장 가까운 라이브에 초대합니다."]],
+    feeds: [["/demo/concert-under-stairs/feed.png", "계단 아래 작은 방에서 세 팀의 새 노래가 처음 울립니다. 무대 바로 앞에서 시작되는 가장 가까운 라이브에 초대합니다."]],
   },
   {
     organizer: 8,
@@ -397,12 +383,12 @@ const events = [
     venue: "문래 움직임연습장 2층",
     genre: "무용/댄스",
     description: "항상 조금씩 타이밍이 어긋나는 네 사람이 서로의 속도를 발견해가는 창작 무용 공연입니다. 운동화 마찰음과 손뼉, 짧은 전자음만으로 일상의 리듬을 무대에 옮깁니다.\n\n공연은 60분이며 56석 지정 좌석제입니다. 일부 장면에 빠른 조명 변화가 있습니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/half-beat-slower/poster.png", detail: null,
     runtime: 60, price: 20000, bank: ["국민은행", "451201-04-782196", "조유림"],
     inquiry: "공연 48시간 전까지 전액 환불됩니다. 문의: slow.step@example.com",
     type: "SEAT_SELECTION", seatRows: 7, seatColumns: 8, max: 3, days: 33,
     ticketTypes: [["일반", 20000], ["청년예술인", 15000]],
-    feeds: [["/demo/placeholder-event-image.svg", "조금 늦고 조금 다른 네 개의 박자가 마침내 한 장면에서 만납니다. 서두르지 않는 움직임의 시간을 함께 바라봐주세요."]],
+    feeds: [["/demo/half-beat-slower/feed.png", "조금 늦고 조금 다른 네 개의 박자가 마침내 한 장면에서 만납니다. 서두르지 않는 움직임의 시간을 함께 바라봐주세요."]],
   },
   {
     organizer: 9,
@@ -411,12 +397,12 @@ const events = [
     venue: "충무로 독립영화관 숨",
     genre: "영화/영상",
     description: "대학생 영화 제작팀 세 팀의 단편영화 상영회입니다. 실패한 인터뷰, 비어 있는 자취방, 새벽 편의점을 소재로 한 15분 안팎의 작품 세 편을 상영하고 감독과의 대화를 진행합니다.\n\n전체 프로그램은 100분이며 70석 전석 자유석입니다. 상영 시작 후 입장이 제한될 수 있습니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/sixth-take/poster.png", detail: null,
     runtime: 100, price: 9000, bank: ["카카오뱅크", "3333-19-4061827", "백승호"],
     inquiry: "상영 전날까지 전액 환불됩니다. 문의: frame.club@example.com",
     type: "FIRST_COME", capacity: 70, max: 4, days: 20,
     ticketTypes: [["일반", 9000], ["학생", 6000]],
-    feeds: [["/demo/placeholder-event-image.svg", "다섯 번의 실패 끝에 완성한 세 편의 짧은 영화가 처음 관객을 만납니다. 상영 뒤 제작진과 솔직한 이야기도 나눠요."]],
+    feeds: [["/demo/sixth-take/poster.png", "다섯 번의 실패 끝에 완성한 세 편의 짧은 영화가 처음 관객을 만납니다. 상영 뒤 제작진과 솔직한 이야기도 나눠요."]],
   },
   {
     organizer: 10,
@@ -425,12 +411,12 @@ const events = [
     venue: "신촌 청년문화공간 모임방",
     genre: "강연/토크",
     description: "대학 축제와 소규모 공연을 직접 기획한 학생 기획자 세 명이 시행착오를 나누는 공개 대화입니다. 예산표 만들기, 출연팀 섭외, 공간 협의와 당일 운영까지 실제 경험을 중심으로 이야기합니다.\n\n토크는 90분이며 마지막 25분은 자유 질의응답으로 진행합니다. 참가자는 45명으로 제한합니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/making-first-festival/poster.png", detail: "/demo/making-first-festival/detail.png",
     runtime: 90, price: 5000, bank: ["우리은행", "1002-938-164720", "이채린"],
     inquiry: "행사 전날까지 전액 환불됩니다. 문의: small.table@example.com",
     type: "FIRST_COME", capacity: 45, max: 2, days: 14,
     ticketTypes: [["참가권", 5000]],
-    feeds: [["/demo/placeholder-event-image.svg", "축제는 화려한 무대보다 한 장의 예산표에서 시작됐습니다. 처음 기획하는 사람을 위한 현실적인 시행착오를 함께 나눕니다."]],
+    feeds: [["/demo/making-first-festival/feed.png", "축제는 화려한 무대보다 한 장의 예산표에서 시작됐습니다. 처음 기획하는 사람을 위한 현실적인 시행착오를 함께 나눕니다."]],
   },
   {
     organizer: 11,
@@ -439,12 +425,12 @@ const events = [
     venue: "을지로 프로젝트룸 7",
     genre: "전시",
     description: "자취방과 기숙사 창문에서 바라본 풍경을 모은 대학생 사진·드로잉 전시입니다. 열두 명의 참여자가 같은 시각에 본 서로 다른 하늘과 골목을 작은 인화물과 기록 노트로 소개합니다.\n\n전시는 주말 사흘간 오후 1시부터 8시까지 열립니다. 회차별 30명까지 무료로 예약할 수 있습니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/windows-for-rent/poster.png", detail: "/demo/windows-for-rent/detail.png",
     runtime: 60, price: 0, bank: ["농협은행", "302-7619-4825-11", "김도윤"],
     inquiry: "무료 전시입니다. 단체 방문 문의: room.seven@example.com",
     type: "FIRST_COME", capacity: 30, max: 5, days: 27,
     ticketTypes: [["무료 관람", 0]],
-    feeds: [["/demo/placeholder-event-image.svg", "같은 시간, 열두 개의 창문에는 모두 다른 저녁이 걸렸습니다. 우리 곁의 평범한 풍경을 천천히 들여다보세요."]],
+    feeds: [["/demo/windows-for-rent/poster.png", "같은 시간, 열두 개의 창문에는 모두 다른 저녁이 걸렸습니다. 우리 곁의 평범한 풍경을 천천히 들여다보세요."]],
   },
   {
     organizer: 12,
@@ -453,12 +439,12 @@ const events = [
     venue: "서교 독립전시공간 점",
     genre: "전시",
     description: "스티커, 메모지, 영수증처럼 쉽게 붙이고 버리는 종이로 만든 설치 전시입니다. 시각디자인과 학생 여덟 명이 관계 속에서 남겨진 짧은 문장과 흔적을 각자의 방식으로 재구성했습니다.\n\n관람 시간은 약 40분이며 회차별 25명까지 입장합니다. 일부 작품에는 관객이 직접 메모를 붙일 수 있습니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/peel-stick-hearts/poster.png", detail: null,
     runtime: 40, price: 7000, bank: ["하나은행", "175-910482-63017", "장하은"],
     inquiry: "관람 하루 전까지 전액 환불됩니다. 문의: campus.canvas@example.com",
     type: "FIRST_COME", capacity: 25, max: 4, days: 36,
     ticketTypes: [["일반", 7000], ["학생", 5000]],
-    feeds: [["/demo/placeholder-event-image.svg", "쉽게 떼어낸 작은 종이에도 오래 남는 마음이 있습니다. 여덟 명의 학생이 모은 관계의 흔적을 직접 붙여 완성해주세요."]],
+    feeds: [["/demo/peel-stick-hearts/feed.png", "쉽게 떼어낸 작은 종이에도 오래 남는 마음이 있습니다. 여덟 명의 학생이 모은 관계의 흔적을 직접 붙여 완성해주세요."]],
   },
   {
     organizer: 13,
@@ -467,12 +453,12 @@ const events = [
     venue: "혜화 연습실 작은문",
     genre: "기타",
     description: "관객이 건넨 장소와 감정을 바탕으로 장면을 즉석에서 만드는 대학생 즉흥 공연입니다. 정해진 대본 없이 네 명의 출연자가 몸짓, 짧은 노래와 대화로 매회 다른 이야기를 완성합니다.\n\n공연은 70분이며 42명 선착순 입장입니다. 관객 참여는 선택 사항이며 편하게 관람만 해도 좋습니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/no-lines-today/poster.png", detail: null,
     runtime: 70, price: 13000, bank: ["카카오뱅크", "3333-22-7180462", "서민재"],
     inquiry: "공연 하루 전까지 전액 환불됩니다. 문의: after.class@example.com",
     type: "FIRST_COME", capacity: 42, max: 3, days: 18,
     ticketTypes: [["일반", 13000], ["대학생", 10000]],
-    feeds: [["/demo/placeholder-event-image.svg", "오늘 무대에는 정해진 대사도 결말도 없습니다. 여러분이 건넨 한 단어가 세상에 하나뿐인 장면으로 이어집니다."]],
+    feeds: [["/demo/no-lines-today/poster.png", "오늘 무대에는 정해진 대사도 결말도 없습니다. 여러분이 건넨 한 단어가 세상에 하나뿐인 장면으로 이어집니다."]],
   },
   {
     organizer: 14,
@@ -481,12 +467,12 @@ const events = [
     venue: "합정 커뮤니티 시네마 오후",
     genre: "영화/영상",
     description: "졸업을 앞둔 학생 감독 네 명이 완성한 10분 안팎의 초단편을 연속 상영합니다. 영화가 끝난 뒤 인물에게 남은 시간을 상상한 네 작품과 제작 노트를 함께 소개합니다.\n\n상영과 관객 대화를 포함해 85분이며 52석 전석 자유석입니다. 모든 작품에 한글 자막이 제공됩니다.",
-    poster: "/demo/placeholder-event-image.svg", detail: "/demo/placeholder-event-image.svg",
+    poster: "/demo/after-ending-credits/poster.png", detail: "/demo/after-ending-credits/detail.png",
     runtime: 85, price: 8000, bank: ["케이뱅크", "100-193-846205", "남지수"],
     inquiry: "상영 전날까지 전액 환불됩니다. 문의: lightbox.cinema@example.com",
     type: "FIRST_COME", capacity: 52, max: 4, days: 41,
     ticketTypes: [["일반", 8000], ["학생", 5000]],
-    feeds: [["/demo/placeholder-event-image.svg", "화면이 어두워진 뒤에도 인물들의 시간은 계속 흐릅니다. 네 명의 학생 감독이 상상한 엔딩 다음 장면을 만나보세요."]],
+    feeds: [["/demo/after-ending-credits/feed.png", "화면이 어두워진 뒤에도 인물들의 시간은 계속 흐릅니다. 네 명의 학생 감독이 상상한 엔딩 다음 장면을 만나보세요."]],
   },
 ].map((event) => ({ ...event, id: randomUUID() }));
 
@@ -550,8 +536,8 @@ const eventCountsByOrganizer = events.reduce((counts, event) => {
   counts.set(event.organizer, (counts.get(event.organizer) ?? 0) + 1);
   return counts;
 }, new Map());
-if (organizers.length !== 15 || events.length !== 20) {
-  throw new Error("Sample data must contain 15 organizers and 20 events.");
+if (organizers.length !== 15 || events.length !== 19) {
+  throw new Error("Sample data must contain 15 organizers and 19 events.");
 }
 if (events.some((event) => event.feeds.length !== 1)) {
   throw new Error("Every sample event must contain exactly one feed post.");
@@ -559,11 +545,24 @@ if (events.some((event) => event.feeds.length !== 1)) {
 if ([...eventCountsByOrganizer.values()].some((count) => count > 2)) {
   throw new Error("A sample organizer cannot own more than two events.");
 }
-if ([...eventCountsByOrganizer.entries()].filter(([index, count]) => index >= 6 && count === 2).length !== 2) {
-  throw new Error("Exactly two new organizers must own two events.");
+if ([...eventCountsByOrganizer.entries()].filter(([index, count]) => index >= 6 && count === 2).length !== 1) {
+  throw new Error("Exactly one new organizer must own two events.");
 }
 if (events.some((event) => !allowedGenres.has(event.genre))) {
   throw new Error("Every sample event must use an allowed genre.");
+}
+const newEvents = events.slice(9);
+const posterArtworkTitles = new Set([
+  "각주 없는 밤", "반 박자 느린 우리", "여섯 번째 테이크", "붙였다 떼는 마음",
+]);
+if (newEvents.filter((event) => posterArtworkTitles.has(event.title)).length !== 4) {
+  throw new Error("Exactly four new events must use text poster artwork.");
+}
+if (newEvents.filter((event) => event.detail).length !== 5) {
+  throw new Error("Exactly five new events must contain a detail image.");
+}
+if (newEvents.filter((event) => event.feeds[0][0] === event.poster).length !== 4) {
+  throw new Error("Exactly four new events must reuse the representative image in feed.");
 }
 
 const organizerHashes = await Promise.all(
