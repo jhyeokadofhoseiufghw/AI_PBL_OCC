@@ -137,6 +137,13 @@ export function LookupForm({
   const passwordChangeRequest = passwordChange.reservation
     ? undefined
     : (passwordChange.passwordChange ?? lookup.passwordChange);
+  const cancelDeadlineAt = reservation
+    ? new Date(reservation.cancelDeadline).getTime()
+    : Number.NaN;
+  const canCancel =
+    !!reservation &&
+    ["PENDING_PAYMENT", "CONFIRMED"].includes(reservation.status) &&
+    (!Number.isFinite(cancelDeadlineAt) || cancelDeadlineAt > openedAt);
   const fields = (
     <>
       {Object.entries(values).map(([key, value]) => (
@@ -359,23 +366,36 @@ export function LookupForm({
               tickets={reservation.tickets}
             />
           ) : null}
-          {mode === "detail" &&
-          ["PENDING_PAYMENT", "CONFIRMED"].includes(reservation.status) &&
-          new Date(reservation.cancelDeadline).getTime() > openedAt ? (
-            <form action={cancelAction} className="mt-6">
+          {canCancel ? (
+            <form
+              action={cancelAction}
+              className="mt-6 rounded-xl border border-red-200 bg-red-50 p-4"
+            >
               {fields}
               <input
                 name="reservationId"
                 type="hidden"
                 value={reservation.id}
               />
+              <p className="mb-3 text-sm text-red-800">
+                {mode === "status"
+                  ? "승인 확인 결과에서도 입금 승인 전·후 모두 예매를 취소할 수 있습니다."
+                  : "입금 승인 전·후 모두 예매를 취소할 수 있습니다."}{" "}
+                취소하면 해당 좌석 또는 예매 수량이 즉시 반환됩니다.
+              </p>
               <button
-                className="rounded-lg border border-red-300 px-4 py-2 text-sm text-red-700"
+                className="rounded-lg border border-red-400 bg-white px-4 py-2 text-sm font-bold text-red-700"
                 disabled={cancelPending}
               >
                 {cancelPending ? "취소 중..." : "예매 취소"}
               </button>
             </form>
+          ) : ["PENDING_PAYMENT", "CONFIRMED"].includes(
+              reservation.status,
+            ) ? (
+            <p className="mt-6 rounded-xl bg-[#f3f1f5] p-4 text-sm text-[#60687a]">
+              취소 마감 시간이 지나 온라인 취소가 종료되었습니다.
+            </p>
           ) : null}
           {cancel.error ? (
             <p className="mt-3 text-sm text-red-700">{cancel.error}</p>
