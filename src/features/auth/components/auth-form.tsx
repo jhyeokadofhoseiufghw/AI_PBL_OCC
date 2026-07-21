@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState } from "react";
+import { useActionState, useState, useTransition } from "react";
 
 import {
   sendEmailVerificationCode,
@@ -20,6 +20,7 @@ type Props = {
 export function AuthForm({ action, mode }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
   const [emailState, setEmailState] = useState("");
+  const [, startVerificationTransition] = useTransition();
   const [verificationState, sendVerificationAction, sendingVerification] =
     useActionState(sendEmailVerificationCode, {});
   const isSignUp = mode === "signup";
@@ -65,9 +66,14 @@ export function AuthForm({ action, mode }: Props) {
             <button
               className="ha-button-secondary mt-2 shrink-0 px-4 py-3 text-sm disabled:opacity-60"
               disabled={pending || sendingVerification || !emailState}
-              formAction={sendVerificationAction}
-              formNoValidate
-              type="submit"
+              onClick={() => {
+                const verificationData = new FormData();
+                verificationData.set("email", emailState);
+                startVerificationTransition(() => {
+                  sendVerificationAction(verificationData);
+                });
+              }}
+              type="button"
             >
               {sendingVerification ? "발송 중..." : "인증번호 보내기"}
             </button>
