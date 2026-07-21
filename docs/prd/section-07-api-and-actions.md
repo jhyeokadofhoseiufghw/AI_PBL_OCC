@@ -215,9 +215,32 @@
 - 예약 상태 변경
 - 좌석 지정 공연은 reservation_seats의 `released_at` 기록, 선착순 공연은 활성 예매 수량 합계에서 제외하여 좌석/수량 복구
 
+## `changeTemporaryLookupPassword`
+
+### 처리
+
+- 이름/연락처/임시 패스워드와 선택한 예약을 검증
+- 임시 상태인 예약에 한해 새 4~6자리 패스워드 해시로 교체
+- 변경 완료 후 강제 변경 상태를 해제하고 예약 상세 반환
+
 ---
 
 # 6. Organizer 운영 액션
+
+## `resetReservationLookupPassword`
+
+### 입력
+
+- eventId
+- reservationId
+- callbackConfirmed
+
+### 처리
+
+- 로그인한 기획자가 소유한 활성 예매인지 검증
+- 저장된 연락처로 역전화 확인했다는 명시적 체크를 요구
+- 임시 6자리 패스워드를 생성해 해시 저장하고 원문은 응답에서 한 번만 노출
+- 예약별 발급 요청에 rate limit 적용 및 발급자·발급 시각 기록
 
 ## `approveReservationPayment`
 

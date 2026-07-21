@@ -13,6 +13,7 @@ import { ConfirmSubmitButton } from "@/features/events/components/confirm-submit
 import { EventTabs } from "@/features/events/components/event-tabs";
 import { EventSwitcher } from "@/features/events/components/event-switcher";
 import { OrganizerReservationDetail } from "@/features/reservations/components/organizer-reservation-detail";
+import { ResetLookupPasswordForm } from "@/features/reservations/components/reset-lookup-password-form";
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
 const labels: Record<string, string> = {
@@ -51,7 +52,7 @@ export default async function Page({
   const [rows, countRows, summary, allEvents] = await Promise.all([
     sql`SELECT r.*,tt.name ticket_type,COALESCE(array_agg(s.label ORDER BY s.label) FILTER(WHERE rs.released_at IS NULL),'{}') seats,(SELECT COUNT(*)::int FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.checked_in_at IS NOT NULL) checked_ticket_count,(SELECT COUNT(*)::int FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.qr_generation_status<>'READY') pending_qr_count,COALESCE((SELECT jsonb_agg(jsonb_build_object('number',rt.ticket_number,'seat',seat.label,'qr',rt.qr_image_data,'checkedInAt',rt.checked_in_at) ORDER BY rt.ticket_number) FROM reservation_tickets rt LEFT JOIN seats seat ON seat.id=rt.seat_id WHERE rt.reservation_id=r.id),'[]'::jsonb) qr_tickets FROM reservations r LEFT JOIN ticket_types tt ON tt.id=r.ticket_type_id LEFT JOIN reservation_seats rs ON rs.reservation_id=r.id LEFT JOIN seats s ON s.id=rs.seat_id WHERE r.event_id=${id} AND (${q}='' OR r.depositor_name ILIKE ${`%${q}%`} OR r.reserver_phone ILIKE ${`%${q}%`} OR r.reserver_name ILIKE ${`%${q}%`}) AND (${status}='' OR r.status=${status}) GROUP BY r.id,tt.name ORDER BY r.created_at DESC LIMIT ${size} OFFSET ${offset}`,
     sql`SELECT COUNT(*)::int count FROM reservations r WHERE r.event_id=${id} AND (${q}='' OR r.depositor_name ILIKE ${`%${q}%`} OR r.reserver_phone ILIKE ${`%${q}%`} OR r.reserver_name ILIKE ${`%${q}%`}) AND (${status}='' OR r.status=${status})`,
-    sql`SELECT COALESCE(SUM(quantity) FILTER(WHERE status IN('PENDING_PAYMENT','CONFIRMED','CHECKED_IN')),0)::int tickets,COALESCE(SUM(total_price) FILTER(WHERE status IN('CONFIRMED','CHECKED_IN')),0)::int revenue,COUNT(*) FILTER(WHERE status='PENDING_PAYMENT')::int pending,COUNT(*) FILTER(WHERE status='CONFIRMED')::int confirmed,COUNT(*) FILTER(WHERE status='WAITLISTED')::int waitlisted FROM reservations WHERE event_id=${id}`,
+    sql`SELECT COALESCE(SUM(quantity) FILTER(WHERE status IN('PENDING_PAYMENT','CONFIRMED','CHECKED_IN')),0)::int tickets,COALESCE(SUM(total_price) FILTER(WHERE status IN('CONFIRMED','CHECKED_IN')),0)::int revenue,COUNT(*) FILTER(WHERE status='PENDING_PAYMENT')::int pending,COUNT(*) FILTER(WHERE status='CONFIRMED')::int confirmed,COUNT(*) FILTER(WHERE status='WAITLISTED')::int waitlisted,COUNT(*) FILTER(WHERE status='CANCELLED')::int cancelled FROM reservations WHERE event_id=${id}`,
     sql`SELECT id,title FROM events WHERE organizer_id=${session.organizerId} ORDER BY event_start_at DESC`,
   ]);
   const total = Number(countRows[0].count),
@@ -97,13 +98,14 @@ export default async function Page({
         />
       </div>
       <EventTabs current="reservations" eventId={id} />
-      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+      <section className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-7">
         {[
           ["활성 매수", s.tickets],
           ["확정 매출", `${Number(s.revenue).toLocaleString("ko-KR")}원`],
           ["입금 대기", s.pending],
           ["예매 확정", s.confirmed],
           ["대기 신청", s.waitlisted],
+          ["취소된 예매", s.cancelled],
           ["잔여 좌석/수량", remaining],
         ].map(([l, v]) => (
           <div
@@ -316,6 +318,15 @@ export default async function Page({
                           QR 재시도
                         </button>
                       </form>
+                    ) : null}
+                    {["PENDING_PAYMENT", "CONFIRMED", "WAITLISTED"].includes(
+                      String(row.status),
+                    ) ? (
+                      <ResetLookupPasswordForm
+                        eventId={id}
+                        phone={String(row.reserver_phone)}
+                        reservationId={String(row.id)}
+                      />
                     ) : null}
                   </div>
                 </td>

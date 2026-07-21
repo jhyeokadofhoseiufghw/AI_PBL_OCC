@@ -1,6 +1,6 @@
 "use server";
 
-import { randomBytes, randomUUID } from "node:crypto";
+import { randomBytes, randomInt, randomUUID } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -26,6 +26,14 @@ export type LookupActionState = {
     quantity: number;
     status: string;
   }[];
+  passwordChange?: {
+    reservationId: string;
+    eventTitle: string;
+  };
+};
+export type ResetLookupPasswordState = {
+  error?: string;
+  temporaryPassword?: string;
 };
 type ReservationView = {
   id: string;
@@ -424,7 +432,7 @@ export async function lookupReservation(
     };
 
   const rows =
-    await sql`SELECT r.id,r.created_at,r.quantity,r.status,r.lookup_password_hash,e.title event_title,e.event_start_at FROM reservations r JOIN events e ON e.id=r.event_id WHERE r.reserver_name=${name} AND regexp_replace(r.reserver_phone,'[^0-9]','','g')=${phone} ORDER BY e.event_start_at DESC,r.created_at DESC LIMIT 50`;
+    await sql`SELECT r.id,r.created_at,r.quantity,r.status,r.lookup_password_hash,r.lookup_password_must_change,e.title event_title,e.event_start_at FROM reservations r JOIN events e ON e.id=r.event_id WHERE r.reserver_name=${name} AND regexp_replace(r.reserver_phone,'[^0-9]','','g')=${phone} ORDER BY e.event_start_at DESC,r.created_at DESC LIMIT 50`;
   const matched = [];
   for (const candidate of rows)
     if (await verifyPassword(password, String(candidate.lookup_password_hash)))
@@ -437,6 +445,16 @@ export async function lookupReservation(
     quantity: Number(candidate.quantity),
     status: String(candidate.status),
   }));
+  const passwordChangeCandidate = matched.find(
+    (candidate) => candidate.lookup_password_must_change,
+  );
+  if (passwordChangeCandidate)
+    return {
+      passwordChange: {
+        reservationId: String(passwordChangeCandidate.id),
+        eventTitle: String(passwordChangeCandidate.event_title),
+      },
+    };
   if (candidates.length > 1 && !reservationId) return { candidates };
   if (
     !candidates.length ||
@@ -499,6 +517,70 @@ export async function lookupReservation(
   };
 }
 
+export async function changeTemporaryLookupPassword(
+  _: LookupActionState,
+  formData: FormData,
+): Promise<LookupActionState> {
+  const newPassword = text(formData, "newLookupPassword");
+  const confirmation = text(formData, "newLookupPasswordConfirmation");
+  if (!/^\d{4,6}$/.test(newPassword))
+    return { error: "새 조회 패스워드는 숫자 4~6자리로 입력해주세요." };
+  if (newPassword !== confirmation)
+    return { error: "새 조회 패스워드가 서로 일치하지 않습니다." };
+  const row = await findReservation(formData);
+  if (row === "RATE_LIMITED")
+    return { error: "변경 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
+  if (!row || !row.lookup_password_must_change)
+    return { error: "임시 조회 패스워드 변경 정보를 다시 확인해주세요." };
+
+  const passwordHash = await hashPassword(newPassword);
+  const updated = await getSql()`
+    UPDATE reservations
+    SET lookup_password_hash=${passwordHash},lookup_password_must_change=FALSE
+    WHERE id=${row.id} AND lookup_password_must_change
+    RETURNING id
+  `;
+  if (!updated[0]) return { error: "조회 패스워드를 변경하지 못했습니다." };
+  formData.set("lookupPassword", newPassword);
+  return lookupReservation({}, formData);
+}
+
+export async function resetReservationLookupPassword(
+  _: ResetLookupPasswordState,
+  formData: FormData,
+): Promise<ResetLookupPasswordState> {
+  const session = await requireOrganizer();
+  const eventId = text(formData, "eventId");
+  const reservationId = text(formData, "reservationId");
+  if (
+    !z.string().uuid().safeParse(eventId).success ||
+    !z.string().uuid().safeParse(reservationId).success
+  )
+    return { error: "예매 정보가 올바르지 않습니다." };
+  if (text(formData, "callbackConfirmed") !== "on")
+    return { error: "저장된 연락처로 역전화 확인을 완료해주세요." };
+  if (!(await consumeRateLimit("lookup-password-reset", reservationId, 3)))
+    return { error: "초기화 횟수가 너무 많습니다. 15분 후 다시 시도해주세요." };
+
+  const temporaryPassword = String(randomInt(100000, 1000000));
+  const passwordHash = await hashPassword(temporaryPassword);
+  const rows = await getSql()`
+    UPDATE reservations r
+    SET lookup_password_hash=${passwordHash},
+        lookup_password_must_change=TRUE,
+        lookup_password_reset_at=NOW(),
+        lookup_password_reset_by=${session.organizerId}
+    FROM events e
+    WHERE r.id=${reservationId} AND r.event_id=${eventId}
+      AND e.id=r.event_id AND e.organizer_id=${session.organizerId}
+      AND r.status IN ('PENDING_PAYMENT','CONFIRMED','WAITLISTED')
+    RETURNING r.id
+  `;
+  if (!rows[0]) return { error: "초기화할 수 없는 예매입니다." };
+  revalidatePath(`/dashboard/events/${eventId}/reservations`);
+  return { temporaryPassword };
+}
+
 export async function cancelReservation(
   _: LookupActionState,
   formData: FormData,
@@ -507,6 +589,8 @@ export async function cancelReservation(
   if (row === "RATE_LIMITED")
     return { error: "조회 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
   if (!row) return { error: "예매 조회 정보를 다시 확인해주세요." };
+  if (row.lookup_password_must_change)
+    return { error: "임시 조회 패스워드를 새 패스워드로 먼저 변경해주세요." };
   if (row.status === "CHECKED_IN")
     return { error: "입장 완료된 예매는 취소할 수 없습니다." };
   const entered =

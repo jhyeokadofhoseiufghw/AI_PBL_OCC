@@ -2,7 +2,11 @@
 
 import { useActionState, useRef, useState } from "react";
 import Image from "next/image";
-import { cancelReservation, lookupReservation } from "../actions";
+import {
+  cancelReservation,
+  changeTemporaryLookupPassword,
+  lookupReservation,
+} from "../actions";
 
 const input = "ha-input mt-2";
 const labels: Record<string, string> = {
@@ -120,13 +124,19 @@ export function LookupForm({
     cancelReservation,
     {},
   );
+  const [passwordChange, passwordChangeAction, passwordChangePending] =
+    useActionState(changeTemporaryLookupPassword, {});
   const [values, setValues] = useState({
     name: "",
     phone: "",
     lookupPassword: "",
   });
   const [openedAt] = useState(() => Date.now());
-  const reservation = cancel.reservation ?? lookup.reservation;
+  const reservation =
+    passwordChange.reservation ?? cancel.reservation ?? lookup.reservation;
+  const passwordChangeRequest = passwordChange.reservation
+    ? undefined
+    : (passwordChange.passwordChange ?? lookup.passwordChange);
   const fields = (
     <>
       {Object.entries(values).map(([key, value]) => (
@@ -234,6 +244,61 @@ export function LookupForm({
             ))}
           </div>
         </section>
+      ) : null}
+      {passwordChangeRequest ? (
+        <form
+          action={passwordChangeAction}
+          className="ha-card grid gap-5 border-2 border-[#d3bbff] p-5 sm:grid-cols-2 sm:p-7"
+        >
+          {fields}
+          <input
+            name="reservationId"
+            type="hidden"
+            value={passwordChangeRequest.reservationId}
+          />
+          <div className="sm:col-span-2">
+            <p className="ha-kicker">Temporary password</p>
+            <h2 className="ha-title mt-1 text-xl">새 조회 패스워드 설정</h2>
+            <p className="mt-2 text-sm text-[#60687a]">
+              {passwordChangeRequest.eventTitle}의 임시 패스워드를 확인했습니다.
+              계속하려면 직접 사용할 새 번호를 설정해주세요.
+            </p>
+          </div>
+          <label className="font-semibold">
+            새 조회 패스워드
+            <input
+              className={input}
+              inputMode="numeric"
+              name="newLookupPassword"
+              pattern="[0-9]{4,6}"
+              placeholder="숫자 4~6자리"
+              required
+              type="password"
+            />
+          </label>
+          <label className="font-semibold">
+            새 조회 패스워드 확인
+            <input
+              className={input}
+              inputMode="numeric"
+              name="newLookupPasswordConfirmation"
+              pattern="[0-9]{4,6}"
+              required
+              type="password"
+            />
+          </label>
+          {passwordChange.error ? (
+            <p className="text-sm text-red-700 sm:col-span-2" role="alert">
+              {passwordChange.error}
+            </p>
+          ) : null}
+          <button
+            className="ha-button-primary px-5 py-3 sm:col-span-2"
+            disabled={passwordChangePending}
+          >
+            {passwordChangePending ? "변경 중..." : "새 패스워드 저장 후 조회"}
+          </button>
+        </form>
       ) : null}
       {reservation ? (
         <section className="ha-card overflow-hidden p-6 sm:p-8">

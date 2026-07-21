@@ -121,6 +121,9 @@
 | reserver_phone       | text                 | 연락처                                               |
 | depositor_name       | text                 | 입금자명                                             |
 | lookup_password_hash | text                 | 관객 승인 여부 확인/상세 조회/취소용 패스워드 해시   |
+| lookup_password_must_change | boolean        | 임시 패스워드 발급 후 최초 조회 시 변경 강제 여부    |
+| lookup_password_reset_at | timestamptz nullable | 마지막 임시 패스워드 발급 시각                     |
+| lookup_password_reset_by | uuid nullable       | 초기화를 수행한 organizers FK                       |
 | quantity             | int                  | 예매 매수                                            |
 | unit_price           | int                  | 예매 생성 시점의 1매 단가                            |
 | total_price          | int                  | 예매 생성 시점의 총액                                |
@@ -135,6 +138,7 @@
 ### 핵심 정책
 
 - `lookup_password_hash`는 예매 신청 시 생성하며 원문 패스워드는 저장하지 않음
+- 임시 패스워드도 해시만 저장하며 `lookup_password_must_change = true`인 동안 상세·QR·취소 접근을 차단
 - 선착순 공연은 `quantity`로 수량을 저장하고 좌석 연결을 만들지 않음
 - 좌석 지정 공연은 `quantity`와 `reservation_seats` 연결 개수가 일치해야 함
 - 티켓 타입이 있으면 `ticket_types.price`, 없으면 `events.ticket_price`를 `unit_price`로 저장

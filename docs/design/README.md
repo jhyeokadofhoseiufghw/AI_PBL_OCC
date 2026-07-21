@@ -211,6 +211,7 @@ PRD: `section-04-feature-requirements.md` 기능 B·C, `section-05-dashboard-and
 - 연락처
 - 입금자명
 - 숫자 4~6자리 조회 패스워드
+- 분실 시 기획자의 저장 연락처 역전화 확인 후 임시 6자리 패스워드 발급, 최초 조회에서 변경 강제
 - 예매 매수
 
 선택 입력: 요청사항.
@@ -243,6 +244,7 @@ PRD: `section-04-feature-requirements.md` 기능 B·C, `section-05-dashboard-and
 - 잔여 수량 부족
 - 최대 매수 초과
 - 패스워드 형식 오류
+- 임시 패스워드 변경 필요
 - 취소되었거나 종료된 공연
 
 PRD: `section-04-feature-requirements.md` 기능 D, `section-07-api-and-actions.md` `createReservation`.
