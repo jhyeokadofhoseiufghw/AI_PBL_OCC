@@ -87,6 +87,9 @@ CREATE TABLE IF NOT EXISTS reservations (
     total_price INTEGER NOT NULL DEFAULT 0 CHECK (total_price >= 0),
     request_note TEXT,
     status TEXT NOT NULL DEFAULT 'PENDING_PAYMENT' CHECK (status IN ('PENDING_PAYMENT', 'CONFIRMED', 'CANCELLED', 'CHECKED_IN', 'WAITLISTED')),
+    cancellation_actor TEXT CHECK (cancellation_actor IN ('AUDIENCE', 'ORGANIZER')),
+    cancelled_at TIMESTAMPTZ,
+    cancelled_by_organizer UUID REFERENCES organizers(id) ON DELETE SET NULL,
     reservation_code TEXT UNIQUE, -- 입금 승인 시 생성
     qr_token TEXT UNIQUE,        -- 입금 승인 시 생성
     qr_image_data TEXT,          -- python-qrcode가 생성한 data URL

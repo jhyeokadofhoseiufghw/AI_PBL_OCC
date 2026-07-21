@@ -129,6 +129,9 @@
 | total_price          | int                  | 예매 생성 시점의 총액                                |
 | request_note         | text nullable        | 요청사항                                             |
 | status               | text                 | 입금 대기 / 예매 확정 / 취소 / 입장 완료 / 대기 신청 |
+| cancellation_actor   | text nullable        | 취소 주체: AUDIENCE / ORGANIZER                       |
+| cancelled_at         | timestamptz nullable | 취소 처리 시각                                        |
+| cancelled_by_organizer | uuid nullable      | 기획자 취소 시 처리한 organizers FK                   |
 | reservation_code     | text nullable        | 입금 승인 후 발급되는 예매번호                       |
 | qr_token             | text nullable        | 입금 승인 후 발급되는 QR 식별값                      |
 | checked_in_at        | timestamptz nullable | QR 체크인 완료 시각                                  |

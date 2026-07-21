@@ -14,7 +14,7 @@ export async function GET(
     q = searchParams.get("q") ?? "",
     status = searchParams.get("status") ?? "";
   const rows =
-    await getSql()`SELECT r.reserver_name,r.reserver_phone,r.depositor_name,r.quantity,r.total_price,r.status,r.reservation_code,r.checked_in_at,r.created_at,tt.name ticket_type,COALESCE(string_agg(s.label,', '),'') seats FROM reservations r JOIN events e ON e.id=r.event_id LEFT JOIN ticket_types tt ON tt.id=r.ticket_type_id LEFT JOIN reservation_seats rs ON rs.reservation_id=r.id AND rs.released_at IS NULL LEFT JOIN seats s ON s.id=rs.seat_id WHERE r.event_id=${id} AND e.organizer_id=${session.organizerId} AND (${q}='' OR r.depositor_name ILIKE ${`%${q}%`} OR r.reserver_phone ILIKE ${`%${q}%`} OR r.reserver_name ILIKE ${`%${q}%`}) AND (${status}='' OR r.status=${status}) GROUP BY r.id,tt.name ORDER BY r.created_at DESC`;
+    await getSql()`SELECT r.reserver_name,r.reserver_phone,r.depositor_name,r.quantity,r.total_price,r.status,r.cancellation_actor,r.cancelled_at,r.reservation_code,r.checked_in_at,r.created_at,tt.name ticket_type,COALESCE(string_agg(s.label,', '),'') seats FROM reservations r JOIN events e ON e.id=r.event_id LEFT JOIN ticket_types tt ON tt.id=r.ticket_type_id LEFT JOIN reservation_seats rs ON rs.reservation_id=r.id AND rs.released_at IS NULL LEFT JOIN seats s ON s.id=rs.seat_id WHERE r.event_id=${id} AND e.organizer_id=${session.organizerId} AND (${q}='' OR r.depositor_name ILIKE ${`%${q}%`} OR r.reserver_phone ILIKE ${`%${q}%`} OR r.reserver_name ILIKE ${`%${q}%`}) AND (${status}='' OR r.status=${status}) GROUP BY r.id,tt.name ORDER BY r.created_at DESC`;
   const header = [
     "예매자",
     "연락처",
@@ -24,6 +24,8 @@ export async function GET(
     "티켓 타입",
     "금액",
     "상태",
+    "취소 주체",
+    "취소 시각",
     "예매번호",
     "체크인 시각",
     "신청 시각",
@@ -38,6 +40,12 @@ export async function GET(
       r.ticket_type,
       r.total_price,
       r.status,
+      r.cancellation_actor === "AUDIENCE"
+        ? "예매자"
+        : r.cancellation_actor === "ORGANIZER"
+          ? "기획자"
+          : "",
+      r.cancelled_at,
       r.reservation_code,
       r.checked_in_at,
       r.created_at,

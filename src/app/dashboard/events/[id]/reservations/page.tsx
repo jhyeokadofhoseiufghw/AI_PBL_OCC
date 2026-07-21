@@ -220,6 +220,24 @@ export default async function Page({
                   <span className="inline-flex rounded-full bg-[#e6eeff] px-2.5 py-1 text-xs font-bold text-[#420093]">
                     {labels[String(row.status)]}
                   </span>
+                  {row.status === "CANCELLED" ? (
+                    <>
+                      <span className="mt-1 block w-fit rounded-full bg-[#f3eaff] px-2 py-1 text-xs font-bold text-[#5a189a]">
+                        {row.cancellation_actor === "AUDIENCE"
+                          ? "예매자 취소"
+                          : row.cancellation_actor === "ORGANIZER"
+                            ? "기획자 취소"
+                            : "주체 미기록"}
+                      </span>
+                      {row.cancelled_at ? (
+                        <span className="mt-1 block whitespace-nowrap text-xs text-zinc-500">
+                          {new Date(String(row.cancelled_at)).toLocaleString(
+                            "ko-KR",
+                          )}
+                        </span>
+                      ) : null}
+                    </>
+                  ) : null}
                   {Number(row.pending_qr_count) > 0 ? (
                     <span className="block text-amber-700">QR 생성 필요</span>
                   ) : null}

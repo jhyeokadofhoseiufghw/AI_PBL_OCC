@@ -339,7 +339,7 @@ export async function organizerCancelReservation(formData: FormData) {
     reservationId = text(formData, "reservationId");
   const sql = getSql();
   const rows =
-    await sql`UPDATE reservations r SET status='CANCELLED',reservation_code=NULL,qr_token=NULL,qr_image_data=NULL,qr_generation_status='NOT_REQUESTED',qr_generation_error=NULL FROM events e WHERE r.id=${reservationId} AND r.event_id=${eventId} AND e.id=r.event_id AND e.organizer_id=${session.organizerId} AND r.status IN('PENDING_PAYMENT','CONFIRMED','WAITLISTED') AND NOT EXISTS(SELECT 1 FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.checked_in_at IS NOT NULL) RETURNING r.id`;
+    await sql`UPDATE reservations r SET status='CANCELLED',cancellation_actor='ORGANIZER',cancelled_at=NOW(),cancelled_by_organizer=${session.organizerId},reservation_code=NULL,qr_token=NULL,qr_image_data=NULL,qr_generation_status='NOT_REQUESTED',qr_generation_error=NULL FROM events e WHERE r.id=${reservationId} AND r.event_id=${eventId} AND e.id=r.event_id AND e.organizer_id=${session.organizerId} AND r.status IN('PENDING_PAYMENT','CONFIRMED','WAITLISTED') AND NOT EXISTS(SELECT 1 FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.checked_in_at IS NOT NULL) RETURNING r.id`;
   if (rows[0])
     await sql`UPDATE reservation_seats SET released_at=NOW() WHERE reservation_id=${reservationId} AND released_at IS NULL`;
   revalidatePath(`/dashboard/events/${eventId}/reservations`);
@@ -361,7 +361,7 @@ export async function bulkCancelReservations(formData: FormData) {
   if (!ids.length) return;
   const sql = getSql();
   const rows =
-    await sql`UPDATE reservations r SET status='CANCELLED',reservation_code=NULL,qr_token=NULL,qr_image_data=NULL,qr_generation_status='NOT_REQUESTED',qr_generation_error=NULL FROM events e WHERE r.id=ANY(${ids}::uuid[]) AND r.event_id=${eventId} AND e.id=r.event_id AND e.organizer_id=${session.organizerId} AND r.status IN('PENDING_PAYMENT','CONFIRMED','WAITLISTED') AND NOT EXISTS(SELECT 1 FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.checked_in_at IS NOT NULL) RETURNING r.id`;
+    await sql`UPDATE reservations r SET status='CANCELLED',cancellation_actor='ORGANIZER',cancelled_at=NOW(),cancelled_by_organizer=${session.organizerId},reservation_code=NULL,qr_token=NULL,qr_image_data=NULL,qr_generation_status='NOT_REQUESTED',qr_generation_error=NULL FROM events e WHERE r.id=ANY(${ids}::uuid[]) AND r.event_id=${eventId} AND e.id=r.event_id AND e.organizer_id=${session.organizerId} AND r.status IN('PENDING_PAYMENT','CONFIRMED','WAITLISTED') AND NOT EXISTS(SELECT 1 FROM reservation_tickets rt WHERE rt.reservation_id=r.id AND rt.checked_in_at IS NOT NULL) RETURNING r.id`;
   const cancelled = rows.map((row) => String(row.id));
   if (cancelled.length)
     await sql`UPDATE reservation_seats SET released_at=NOW() WHERE reservation_id=ANY(${cancelled}::uuid[]) AND released_at IS NULL`;
@@ -617,7 +617,7 @@ export async function cancelReservation(
     return { error: "취소할 수 없는 예매 상태입니다." };
   const sql = getSql();
   await sql.transaction((tx) => [
-    tx`UPDATE reservations SET status='CANCELLED', reservation_code=NULL, qr_token=NULL, qr_image_data=NULL, qr_generation_status='NOT_REQUESTED', qr_generation_error=NULL WHERE id=${row.id} AND status IN ('PENDING_PAYMENT','CONFIRMED')`,
+    tx`UPDATE reservations SET status='CANCELLED', cancellation_actor='AUDIENCE', cancelled_at=NOW(), cancelled_by_organizer=NULL, reservation_code=NULL, qr_token=NULL, qr_image_data=NULL, qr_generation_status='NOT_REQUESTED', qr_generation_error=NULL WHERE id=${row.id} AND status IN ('PENDING_PAYMENT','CONFIRMED')`,
     tx`UPDATE reservation_seats SET released_at=NOW() WHERE reservation_id=${row.id} AND released_at IS NULL`,
   ]);
   return {
