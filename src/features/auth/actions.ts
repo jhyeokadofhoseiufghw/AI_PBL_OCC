@@ -1,6 +1,7 @@
 "use server";
 
 import { createHmac, randomInt } from "node:crypto";
+import { del } from "@vercel/blob";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { z } from "zod";
@@ -16,6 +17,7 @@ import { consumeRateLimit } from "@/lib/security/rate-limit";
 
 export type AuthActionState = { error?: string; success?: string };
 export type OrganizerProfileState = { error?: string; success?: string };
+export type DeleteOrganizerState = { error?: string };
 
 const emailSchema = z
   .string()
@@ -42,6 +44,19 @@ const signUpSchema = z.object({
 const signInSchema = z.object({
   email: emailSchema,
   password: z.string().min(1).max(72),
+});
+
+const profileSchema = z.object({
+  email: emailSchema,
+  verificationCode: z.string().trim(),
+  name: z.string().trim().min(1).max(80),
+  phone: z.string().trim().min(8).max(30),
+  organizationName: z.string().trim().min(1).max(120),
+});
+
+const deleteOrganizerSchema = z.object({
+  password: z.string().min(1).max(72),
+  confirmation: z.literal("탈퇴합니다"),
 });
 
 function value(formData: FormData, key: string) {
@@ -103,8 +118,8 @@ export async function sendEmailVerificationCode(
       body: JSON.stringify({
         from: process.env.EMAIL_FROM ?? "OCC <no-reply@occ.pics>",
         to: [email],
-        subject: "[OCC] 회원가입 이메일 인증번호",
-        text: `OCC 회원가입 인증번호는 ${code}입니다. 인증번호는 5분 동안 유효합니다.`,
+        subject: "[OCC] 이메일 인증번호",
+        text: `OCC 이메일 인증번호는 ${code}입니다. 인증번호는 5분 동안 유효합니다.`,
         html: `<div style="font-family:Arial,sans-serif;line-height:1.6"><h2>OCC 이메일 인증</h2><p>아래 인증번호를 회원가입 화면에 입력해주세요.</p><p style="font-size:30px;font-weight:700;letter-spacing:6px">${code}</p><p>인증번호는 5분 동안 유효합니다.</p></div>`,
       }),
     });
@@ -214,8 +229,9 @@ export async function updateOrganizerProfile(
   formData: FormData,
 ): Promise<OrganizerProfileState> {
   const session = await requireOrganizer();
-  const result = signUpSchema.omit({ password: true }).safeParse({
+  const result = profileSchema.safeParse({
     email: value(formData, "email"),
+    verificationCode: value(formData, "verificationCode"),
     name: value(formData, "name"),
     phone: value(formData, "phone"),
     organizationName: value(formData, "organizationName"),
@@ -226,6 +242,13 @@ export async function updateOrganizerProfile(
     };
 
   const sql = getSql();
+  const currentRows = await sql`
+    SELECT email FROM organizers WHERE id=${session.organizerId} LIMIT 1
+  `;
+  const current = currentRows[0];
+  if (!current) return { error: "기획자 정보를 찾을 수 없습니다." };
+  const emailChanged = String(current.email) !== result.data.email;
+
   const duplicate = await sql`
     SELECT 1 FROM organizers
     WHERE email=${result.data.email} AND id<>${session.organizerId}
@@ -233,13 +256,113 @@ export async function updateOrganizerProfile(
   `;
   if (duplicate[0]) return { error: "이미 사용 중인 이메일입니다." };
 
-  const rows = await sql`
-    UPDATE organizers
-    SET email=${result.data.email},name=${result.data.name},phone=${result.data.phone},organization_name=${result.data.organizationName}
-    WHERE id=${session.organizerId}
-    RETURNING id
-  `;
+  let rows;
+  if (emailChanged) {
+    if (!/^\d{6}$/.test(result.data.verificationCode))
+      return { error: "새 이메일로 받은 인증번호 6자리를 입력해주세요." };
+    const codeHash = verificationCodeHash(
+      result.data.email,
+      result.data.verificationCode,
+    );
+    rows = await sql`
+      WITH verification AS (
+        UPDATE email_verification_codes
+        SET attempts=attempts+1,
+            used_at=CASE WHEN code_hash=${codeHash} THEN NOW() ELSE used_at END,
+            updated_at=NOW()
+        WHERE email=${result.data.email}
+          AND used_at IS NULL
+          AND expires_at > NOW()
+          AND attempts < 5
+        RETURNING code_hash=${codeHash} AS valid
+      )
+      UPDATE organizers
+      SET email=${result.data.email},name=${result.data.name},phone=${result.data.phone},organization_name=${result.data.organizationName}
+      FROM verification
+      WHERE id=${session.organizerId} AND verification.valid
+      RETURNING id
+    `;
+    if (!rows[0])
+      return {
+        error: "인증번호가 올바르지 않거나 만료되었습니다. 다시 확인해주세요.",
+      };
+  } else {
+    rows = await sql`
+      UPDATE organizers
+      SET name=${result.data.name},phone=${result.data.phone},organization_name=${result.data.organizationName}
+      WHERE id=${session.organizerId}
+      RETURNING id
+    `;
+  }
   if (!rows[0]) return { error: "기획자 정보를 찾을 수 없습니다." };
   revalidatePath("/dashboard", "layout");
   return { success: "기획자 정보를 저장했습니다." };
+}
+
+export async function deleteOrganizerAccount(
+  _: DeleteOrganizerState,
+  formData: FormData,
+): Promise<DeleteOrganizerState> {
+  const session = await requireOrganizer();
+  const result = deleteOrganizerSchema.safeParse({
+    password: value(formData, "password"),
+    confirmation: value(formData, "confirmation"),
+  });
+  if (!result.success)
+    return { error: "현재 비밀번호와 ‘탈퇴합니다’ 문구를 정확히 입력해주세요." };
+  if (!(await consumeRateLimit("organizer-delete", session.organizerId, 5)))
+    return { error: "확인 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
+
+  const sql = getSql();
+  const rows = await sql`
+    SELECT password_hash,email FROM organizers WHERE id=${session.organizerId} LIMIT 1
+  `;
+  if (
+    !rows[0] ||
+    !(await verifyPassword(
+      result.data.password,
+      String(rows[0].password_hash),
+    ))
+  )
+    return { error: "현재 비밀번호가 올바르지 않습니다." };
+
+  const assetRows = await sql`
+    SELECT poster_image_url AS url FROM events WHERE organizer_id=${session.organizerId}
+    UNION ALL
+    SELECT detail_image_url AS url FROM events WHERE organizer_id=${session.organizerId}
+    UNION ALL
+    SELECT fp.image_url AS url
+    FROM feed_posts fp JOIN events e ON e.id=fp.event_id
+    WHERE e.organizer_id=${session.organizerId}
+  `;
+  const [deleted] = await sql.transaction((tx) => [
+    tx`DELETE FROM organizers WHERE id=${session.organizerId} RETURNING id`,
+    tx`DELETE FROM email_verification_codes WHERE email=${String(rows[0].email)} RETURNING email`,
+  ]);
+  if (!deleted[0]) return { error: "계정을 찾을 수 없습니다." };
+  const blobUrls = [
+    ...new Set(
+      assetRows
+        .map((row) => String(row.url ?? ""))
+        .filter((url) => {
+          try {
+            return new URL(url).hostname.endsWith(
+              ".public.blob.vercel-storage.com",
+            );
+          } catch {
+            return false;
+          }
+        }),
+    ),
+  ];
+  if (blobUrls.length) {
+    try {
+      await del(blobUrls);
+    } catch {
+      // The account and private database records are already removed. Blob
+      // cleanup is best-effort so a storage outage cannot restore the account.
+    }
+  }
+  await deleteOrganizerSession();
+  redirect("/");
 }

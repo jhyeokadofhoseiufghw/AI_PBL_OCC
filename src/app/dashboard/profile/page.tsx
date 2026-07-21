@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 
 import { OrganizerProfileForm } from "@/features/auth/components/organizer-profile-form";
+import { DeleteOrganizerForm } from "@/features/auth/components/delete-organizer-form";
 import { requireOrganizer } from "@/lib/auth/session";
 import { getSql } from "@/lib/db/client";
 
@@ -30,6 +31,7 @@ export default async function OrganizerProfilePage() {
           organizationName: String(organizer.organization_name),
         }}
       />
+      <DeleteOrganizerForm />
     </main>
   );
 }
