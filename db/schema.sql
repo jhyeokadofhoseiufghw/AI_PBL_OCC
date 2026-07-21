@@ -144,6 +144,17 @@ CREATE TABLE IF NOT EXISTS request_rate_limits (
     window_started_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
 
+CREATE TABLE IF NOT EXISTS email_verification_codes (
+    email TEXT PRIMARY KEY,
+    code_hash TEXT NOT NULL,
+    expires_at TIMESTAMPTZ NOT NULL,
+    attempts INTEGER NOT NULL DEFAULT 0 CHECK (attempts >= 0),
+    last_sent_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    used_at TIMESTAMPTZ,
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
+);
+
 -- Create Indexes for optimization
 CREATE INDEX IF NOT EXISTS idx_events_organizer ON events(organizer_id);
 CREATE INDEX IF NOT EXISTS idx_events_slug ON events(slug);
@@ -160,6 +171,7 @@ CREATE INDEX IF NOT EXISTS idx_reservations_checked_in_at ON reservations(event_
 CREATE INDEX IF NOT EXISTS idx_reservation_seats_reservation ON reservation_seats(reservation_id);
 CREATE INDEX IF NOT EXISTS idx_reservation_tickets_reservation ON reservation_tickets(reservation_id);
 CREATE INDEX IF NOT EXISTS idx_reservation_tickets_checked_in ON reservation_tickets(checked_in_at DESC);
+CREATE INDEX IF NOT EXISTS idx_email_verification_codes_expires_at ON email_verification_codes(expires_at);
 CREATE UNIQUE INDEX IF NOT EXISTS idx_reservation_seats_active_seat
     ON reservation_seats(seat_id)
     WHERE released_at IS NULL;

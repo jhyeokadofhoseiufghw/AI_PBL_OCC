@@ -13,6 +13,8 @@ import { normalizePhone } from "./phone";
 import { generateQrDataUrl } from "./qr";
 
 export type ReservationActionState = { error?: string };
+const OCCUPIED_SEAT_ERROR =
+  "선택한 좌석은 이미 예매된 자리입니다. 다른 좌석을 선택해주세요.";
 export type LookupActionState = {
   error?: string;
   reservation?: ReservationView;
@@ -105,9 +107,23 @@ export async function createReservation(
   if (event.reservation_type === "FIRST_COME" && seatIds.length > 0)
     return { error: "선착순 공연에는 좌석을 선택할 수 없습니다." };
 
+  const ticketTypeId = data.ticketTypeId || null;
+  const ticketTypeRows = await sql`
+    SELECT (
+      (${ticketTypeId}::uuid IS NOT NULL AND EXISTS (
+        SELECT 1 FROM ticket_types tt
+        WHERE tt.id = ${ticketTypeId}::uuid AND tt.event_id = ${data.eventId}
+      ))
+      OR (${ticketTypeId}::uuid IS NULL AND NOT EXISTS (
+        SELECT 1 FROM ticket_types tt WHERE tt.event_id = ${data.eventId}
+      ))
+    ) AS valid
+  `;
+  if (!ticketTypeRows[0]?.valid)
+    return { error: "티켓 타입을 다시 선택해주세요." };
+
   const reservationId = randomUUID();
   const passwordHash = await hashPassword(data.lookupPassword);
-  const ticketTypeId = data.ticketTypeId || null;
   try {
     if (event.reservation_type === "FIRST_COME") {
       const [, rows] = await sql.transaction((tx) => [
@@ -170,13 +186,20 @@ export async function createReservation(
       );
       if (reservationRows.length === 0)
         return {
-          error:
-            "선택한 좌석을 사용할 수 없거나 티켓 타입이 올바르지 않습니다.",
+          error: OCCUPIED_SEAT_ERROR,
         };
     }
-  } catch {
+  } catch (error) {
+    const databaseCode =
+      typeof error === "object" && error !== null && "code" in error
+        ? String(error.code)
+        : "";
     return {
-      error: "다른 관객이 먼저 좌석을 선택했습니다. 좌석을 다시 선택해주세요.",
+      error:
+        event.reservation_type === "SEAT_SELECTION" &&
+        (databaseCode === "23505" || databaseCode === "40001")
+          ? OCCUPIED_SEAT_ERROR
+          : "예매 처리 중 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
     };
   }
 

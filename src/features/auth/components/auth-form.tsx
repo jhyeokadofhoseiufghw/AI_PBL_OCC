@@ -1,8 +1,11 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 
-import type { AuthActionState } from "../actions";
+import {
+  sendEmailVerificationCode,
+  type AuthActionState,
+} from "../actions";
 
 const inputClassName = "ha-input mt-2";
 
@@ -16,6 +19,9 @@ type Props = {
 
 export function AuthForm({ action, mode }: Props) {
   const [state, formAction, pending] = useActionState(action, {});
+  const [emailState, setEmailState] = useState("");
+  const [verificationState, sendVerificationAction, sendingVerification] =
+    useActionState(sendEmailVerificationCode, {});
   const isSignUp = mode === "signup";
 
   return (
@@ -40,16 +46,49 @@ export function AuthForm({ action, mode }: Props) {
           </label>
         </>
       ) : null}
-      <label className="block text-sm font-semibold">
-        이메일
-        <input
-          autoComplete="email"
-          className={inputClassName}
-          name="email"
-          required
-          type="email"
-        />
-      </label>
+      <div>
+        <label className="block text-sm font-semibold" htmlFor="auth-email">
+          이메일
+        </label>
+        <div className={isSignUp ? "flex items-start gap-2" : undefined}>
+          <input
+            autoComplete="email"
+            className={inputClassName}
+            id="auth-email"
+            name="email"
+            onChange={(event) => setEmailState(event.target.value)}
+            required
+            type="email"
+            value={emailState}
+          />
+          {isSignUp ? (
+            <button
+              className="ha-button-secondary mt-2 shrink-0 px-4 py-3 text-sm disabled:opacity-60"
+              disabled={pending || sendingVerification || !emailState}
+              formAction={sendVerificationAction}
+              formNoValidate
+              type="submit"
+            >
+              {sendingVerification ? "발송 중..." : "인증번호 보내기"}
+            </button>
+          ) : null}
+        </div>
+      </div>
+      {isSignUp ? (
+        <label className="block text-sm font-semibold">
+          이메일 인증번호
+          <input
+            autoComplete="one-time-code"
+            className={inputClassName}
+            inputMode="numeric"
+            maxLength={6}
+            name="verificationCode"
+            pattern="[0-9]{6}"
+            placeholder="6자리 인증번호"
+            required
+          />
+        </label>
+      ) : null}
       <label className="block text-sm font-semibold">
         비밀번호
         <input
@@ -66,9 +105,19 @@ export function AuthForm({ action, mode }: Props) {
           {state.error}
         </p>
       ) : null}
+      {verificationState.error ? (
+        <p className="text-sm text-red-700" role="alert">
+          {verificationState.error}
+        </p>
+      ) : null}
+      {verificationState.success ? (
+        <p className="text-sm text-emerald-700" role="status">
+          {verificationState.success}
+        </p>
+      ) : null}
       <button
         className="ha-button-primary w-full px-4 py-3 text-sm disabled:opacity-60"
-        disabled={pending}
+        disabled={pending || sendingVerification}
         type="submit"
       >
         {pending ? "처리 중..." : isSignUp ? "회원가입" : "로그인"}
