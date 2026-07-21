@@ -70,7 +70,9 @@ export async function sendEmailVerificationCode(
   const sql = getSql();
   const existing = await sql`SELECT 1 FROM organizers WHERE email=${email} LIMIT 1`;
   if (existing[0])
-    return { success: "가입 여부와 관계없이, 발송 가능한 이메일에는 인증번호를 보냈습니다." };
+    return {
+      error: "이미 가입된 이메일입니다. 로그인하거나 다른 이메일을 사용해주세요.",
+    };
 
   const code = String(randomInt(100000, 1000000));
   const codeHash = verificationCodeHash(email, code);
