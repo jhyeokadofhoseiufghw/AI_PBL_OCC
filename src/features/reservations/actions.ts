@@ -384,14 +384,23 @@ export async function bulkApproveReservations(formData: FormData) {
   revalidatePath(`/dashboard/events/${eventId}/reservations`);
 }
 
-async function findReservation(formData: FormData, enforceRateLimit = true) {
+async function findReservation(
+  formData: FormData,
+  enforceRateLimit = true,
+  rateLimitNamespace = "reservation-lookup",
+  maxAttempts = 10,
+) {
   const name = text(formData, "name").trim();
   const phone = normalizePhone(text(formData, "phone"));
   const reservationId = text(formData, "reservationId");
   const reservationUuid = reservationId || null;
   if (
     enforceRateLimit &&
-    !(await consumeRateLimit("reservation-lookup", `${name}:${phone}`, 10))
+    !(await consumeRateLimit(
+      rateLimitNamespace,
+      `${name}:${phone}`,
+      maxAttempts,
+    ))
   )
     return "RATE_LIMITED" as const;
   const rows =
@@ -527,7 +536,12 @@ export async function changeTemporaryLookupPassword(
     return { error: "새 조회 패스워드는 숫자 4~6자리로 입력해주세요." };
   if (newPassword !== confirmation)
     return { error: "새 조회 패스워드가 서로 일치하지 않습니다." };
-  const row = await findReservation(formData);
+  const row = await findReservation(
+    formData,
+    true,
+    "reservation-password-change",
+    5,
+  );
   if (row === "RATE_LIMITED")
     return { error: "변경 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
   if (!row || !row.lookup_password_must_change)
@@ -585,9 +599,9 @@ export async function cancelReservation(
   _: LookupActionState,
   formData: FormData,
 ): Promise<LookupActionState> {
-  const row = await findReservation(formData);
+  const row = await findReservation(formData, true, "reservation-cancel", 5);
   if (row === "RATE_LIMITED")
-    return { error: "조회 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
+    return { error: "취소 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
   if (!row) return { error: "예매 조회 정보를 다시 확인해주세요." };
   if (row.lookup_password_must_change)
     return { error: "임시 조회 패스워드를 새 패스워드로 먼저 변경해주세요." };
