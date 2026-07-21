@@ -81,19 +81,19 @@ export default async function DashboardLayout({
               <span className="ha-status hidden sm:inline-flex">
                 System Operational
               </span>
-              <form action={signOutOrganizer} className="lg:hidden">
+              <form action={signOutOrganizer}>
                 <button
-                  className="whitespace-nowrap text-xs font-semibold text-[#4a4453] sm:text-sm"
+                  className="whitespace-nowrap text-sm font-semibold text-[#4a4453] hover:text-[#420093]"
                   type="submit"
                 >
                   로그아웃
                 </button>
               </form>
               <Link
-                className="grid h-9 w-9 place-items-center rounded-full bg-[#ebddff] text-xs font-black text-[#420093]"
-                href="/dashboard"
+                className="ha-button-primary whitespace-nowrap px-3.5 py-2 text-sm"
+                href="/dashboard/events"
               >
-                OCC
+                공연 관리
               </Link>
             </div>
           </div>

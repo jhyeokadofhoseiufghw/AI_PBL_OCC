@@ -6,8 +6,13 @@ import { signInOrganizer } from "@/features/auth/actions";
 import { AuthForm } from "@/features/auth/components/auth-form";
 import { getOrganizerSession } from "@/lib/auth/session";
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ reset?: string }>;
+}) {
   if (await getOrganizerSession()) redirect("/dashboard");
+  const query = await searchParams;
   return (
     <div className="min-h-screen bg-[#f8f9ff]">
       <PublicHeader />
@@ -18,6 +23,16 @@ export default async function LoginPage() {
           공연과 예매 운영 센터로 돌아오세요.
         </p>
         <AuthForm action={signInOrganizer} mode="login" />
+        {query.reset === "1" ? (
+          <p className="mt-4 text-center text-sm font-semibold text-emerald-700">
+            비밀번호를 변경했습니다. 새 비밀번호로 로그인해주세요.
+          </p>
+        ) : null}
+        <p className="mt-4 text-center text-sm">
+          <Link className="font-bold text-[#420093]" href="/forgot-password">
+            비밀번호를 잊으셨나요?
+          </Link>
+        </p>
         <p className="mt-5 text-center text-sm text-[#60687a]">
           계정이 없나요?{" "}
           <Link className="font-bold text-[#420093]" href="/signup">

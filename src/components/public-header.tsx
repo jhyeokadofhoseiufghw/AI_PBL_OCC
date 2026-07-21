@@ -21,12 +21,6 @@ export async function PublicHeader() {
           className="flex items-center gap-2 text-sm max-sm:hidden sm:gap-5"
           aria-label="주요 메뉴"
         >
-          <Link
-            className="hidden text-[#4a4453] hover:text-[#420093] sm:inline"
-            href="/reservation/status"
-          >
-            예매 조회
-          </Link>
           {signedIn ? (
             <>
               <form action={signOutOrganizer}>
@@ -44,13 +38,16 @@ export async function PublicHeader() {
           ) : (
             <>
               <Link
-                className="hidden text-[#4a4453] hover:text-[#420093] sm:inline"
+                className="text-[#4a4453] hover:text-[#420093]"
                 href="/login"
               >
-                로그인
+                기획자 로그인
               </Link>
-              <Link className="ha-button-primary px-3.5 py-2" href="/signup">
-                회원가입
+              <Link
+                className="ha-button-primary px-3.5 py-2"
+                href="/reservation/status"
+              >
+                예매 조회
               </Link>
             </>
           )}
@@ -63,12 +60,6 @@ export async function PublicHeader() {
             className="ha-card absolute right-0 top-12 flex min-w-36 flex-col gap-1 p-2 text-sm shadow-xl"
             aria-label="모바일 주요 메뉴"
           >
-            <Link
-              className="rounded-lg px-3 py-2 text-[#4a4453] hover:bg-[#f7f5ff] hover:text-[#420093]"
-              href="/reservation/status"
-            >
-              예매 조회
-            </Link>
             {signedIn ? (
               <>
                 <form action={signOutOrganizer}>
@@ -92,13 +83,13 @@ export async function PublicHeader() {
                   className="rounded-lg px-3 py-2 text-[#4a4453] hover:bg-[#f7f5ff] hover:text-[#420093]"
                   href="/login"
                 >
-                  로그인
+                  기획자 로그인
                 </Link>
                 <Link
                   className="ha-button-primary px-3 py-2 text-center"
-                  href="/signup"
+                  href="/reservation/status"
                 >
-                  회원가입
+                  예매 조회
                 </Link>
               </>
             )}

@@ -59,6 +59,18 @@ const deleteOrganizerSchema = z.object({
   confirmation: z.literal("탈퇴합니다"),
 });
 
+const resetPasswordSchema = z
+  .object({
+    email: emailSchema,
+    verificationCode: z.string().regex(/^\d{6}$/),
+    password: passwordSchema,
+    passwordConfirmation: z.string(),
+  })
+  .refine((data) => data.password === data.passwordConfirmation, {
+    message: "새 비밀번호가 서로 일치하지 않습니다.",
+    path: ["passwordConfirmation"],
+  });
+
 function value(formData: FormData, key: string) {
   return String(formData.get(key) ?? "");
 }
@@ -69,26 +81,12 @@ function verificationCodeHash(email: string, code: string) {
   return createHmac("sha256", secret).update(`${email}:${code}`).digest("hex");
 }
 
-export async function sendEmailVerificationCode(
-  _: AuthActionState,
-  formData: FormData,
+async function issueEmailVerificationCode(
+  email: string,
 ): Promise<AuthActionState> {
-  const parsedEmail = emailSchema.safeParse(value(formData, "email"));
-  if (!parsedEmail.success) return { error: "올바른 이메일을 입력해주세요." };
   if (!process.env.RESEND_API_KEY)
     return { error: "이메일 발송 설정이 완료되지 않았습니다." };
-
-  const email = parsedEmail.data;
-  if (!(await consumeRateLimit("email-verification-send", email, 4)))
-    return { error: "인증번호 요청이 너무 많습니다. 15분 후 다시 시도해주세요." };
-
   const sql = getSql();
-  const existing = await sql`SELECT 1 FROM organizers WHERE email=${email} LIMIT 1`;
-  if (existing[0])
-    return {
-      error: "이미 가입된 이메일입니다. 로그인하거나 다른 이메일을 사용해주세요.",
-    };
-
   const code = String(randomInt(100000, 1000000));
   const codeHash = verificationCodeHash(email, code);
   const stored = await sql`
@@ -120,7 +118,7 @@ export async function sendEmailVerificationCode(
         to: [email],
         subject: "[OCC] 이메일 인증번호",
         text: `OCC 이메일 인증번호는 ${code}입니다. 인증번호는 5분 동안 유효합니다.`,
-        html: `<div style="font-family:Arial,sans-serif;line-height:1.6"><h2>OCC 이메일 인증</h2><p>아래 인증번호를 회원가입 화면에 입력해주세요.</p><p style="font-size:30px;font-weight:700;letter-spacing:6px">${code}</p><p>인증번호는 5분 동안 유효합니다.</p></div>`,
+        html: `<div style="font-family:Arial,sans-serif;line-height:1.6"><h2>OCC 이메일 인증</h2><p>아래 인증번호를 화면에 입력해주세요.</p><p style="font-size:30px;font-weight:700;letter-spacing:6px">${code}</p><p>인증번호는 5분 동안 유효합니다.</p></div>`,
       }),
     });
     sent = response.ok;
@@ -131,8 +129,92 @@ export async function sendEmailVerificationCode(
     await sql`DELETE FROM email_verification_codes WHERE email=${email} AND code_hash=${codeHash}`;
     return { error: "인증 메일을 보내지 못했습니다. 잠시 후 다시 시도해주세요." };
   }
-
   return { success: "인증번호를 보냈습니다. 메일함과 스팸함을 확인해주세요." };
+}
+
+export async function sendEmailVerificationCode(
+  _: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsedEmail = emailSchema.safeParse(value(formData, "email"));
+  if (!parsedEmail.success) return { error: "올바른 이메일을 입력해주세요." };
+
+  const email = parsedEmail.data;
+  if (!(await consumeRateLimit("email-verification-send", email, 4)))
+    return { error: "인증번호 요청이 너무 많습니다. 15분 후 다시 시도해주세요." };
+
+  const sql = getSql();
+  const existing = await sql`SELECT 1 FROM organizers WHERE email=${email} LIMIT 1`;
+  if (existing[0])
+    return {
+      error: "이미 가입된 이메일입니다. 로그인하거나 다른 이메일을 사용해주세요.",
+    };
+
+  return issueEmailVerificationCode(email);
+}
+
+export async function sendPasswordResetCode(
+  _: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const parsedEmail = emailSchema.safeParse(value(formData, "email"));
+  if (!parsedEmail.success) return { error: "올바른 이메일을 입력해주세요." };
+  const email = parsedEmail.data;
+  if (!(await consumeRateLimit("password-reset-send", email, 4)))
+    return { error: "인증번호 요청이 너무 많습니다. 15분 후 다시 시도해주세요." };
+  const existing = await getSql()`SELECT 1 FROM organizers WHERE email=${email} LIMIT 1`;
+  if (!existing[0])
+    return {
+      success: "가입된 이메일이라면 인증번호를 보냈습니다. 메일함을 확인해주세요.",
+    };
+  return issueEmailVerificationCode(email);
+}
+
+export async function resetOrganizerPassword(
+  _: AuthActionState,
+  formData: FormData,
+): Promise<AuthActionState> {
+  const result = resetPasswordSchema.safeParse({
+    email: value(formData, "email"),
+    verificationCode: value(formData, "verificationCode"),
+    password: value(formData, "password"),
+    passwordConfirmation: value(formData, "passwordConfirmation"),
+  });
+  if (!result.success)
+    return {
+      error: result.error.issues[0]?.message ?? "입력값을 확인해주세요.",
+    };
+  if (!(await consumeRateLimit("password-reset", result.data.email, 6)))
+    return { error: "재설정 시도가 너무 많습니다. 15분 후 다시 시도해주세요." };
+
+  const passwordHash = await hashPassword(result.data.password);
+  const codeHash = verificationCodeHash(
+    result.data.email,
+    result.data.verificationCode,
+  );
+  const rows = await getSql()`
+    WITH verification AS (
+      UPDATE email_verification_codes
+      SET attempts=attempts+1,
+          used_at=CASE WHEN code_hash=${codeHash} THEN NOW() ELSE used_at END,
+          updated_at=NOW()
+      WHERE email=${result.data.email}
+        AND used_at IS NULL
+        AND expires_at > NOW()
+        AND attempts < 5
+      RETURNING code_hash=${codeHash} AS valid
+    )
+    UPDATE organizers
+    SET password_hash=${passwordHash}
+    FROM verification
+    WHERE organizers.email=${result.data.email} AND verification.valid
+    RETURNING organizers.id
+  `;
+  if (!rows[0])
+    return {
+      error: "인증번호가 올바르지 않거나 만료되었습니다. 다시 확인해주세요.",
+    };
+  redirect("/login?reset=1");
 }
 
 export async function signUpOrganizer(

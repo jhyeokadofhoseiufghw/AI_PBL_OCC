@@ -15,6 +15,7 @@
 ### 입력
 
 - email
+- verificationCode
 - password
 - name
 - phone
@@ -23,6 +24,7 @@
 ### 처리
 
 - organizer 생성
+- 이메일 인증번호 검증 및 일회성 소진
 - 비밀번호 해시 저장
 - 세션 생성 또는 로그인 페이지 이동
 
@@ -36,6 +38,21 @@
 ### 처리
 
 - 인증 성공 시 대시보드 이동
+
+## `sendPasswordResetCode` / `resetOrganizerPassword`
+
+### 입력
+
+- email
+- verificationCode
+- password
+- passwordConfirmation
+
+### 처리
+
+- 가입 이메일로 5분 유효 인증번호 발송
+- 인증번호와 새 비밀번호 확인 후 비밀번호 해시 교체
+- 코드 재사용 및 과도한 발송·재설정 시도 차단
 
 ---
 
